@@ -1,4 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
+// src/TransformerGraph.jsx
+import React, { useRef, useMemo, useState, useEffect } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 
 import houseIcon from "./assets/house.png";
@@ -7,184 +8,176 @@ import gridIcon from "./assets/grid.png";
 
 export default function TransformerGraph({ data, focusNode, onNodeClick }) {
     const fgRef = useRef();
-    const [faded, setFaded] = useState(null); // currently focused transformer/house
-    const [flowHouse, setFlowHouse] = useState(null); // clicked house for power flow
-    const [tick, setTick] = useState(0); // animation tick
+    const [hoverNode, setHoverNode] = useState(null);
 
-    // --- 1️⃣ Animation interval for dashed links ---
+    const [flowLinks, setFlowLinks] = useState([]); // links along the path to grid
+    const [tick, setTick] = useState(0); // for animated dashed lines
+
+    const [dimensions, setDimensions] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+
+    useEffect(() => {
+        const handleResize = () =>
+            setDimensions({ width: window.innerWidth, height: window.innerHeight });
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    const icons = useMemo(() => {
+        const imgHouse = new Image(); imgHouse.src = houseIcon;
+        const imgTransformer = new Image(); imgTransformer.src = transformerIcon;
+        const imgGrid = new Image(); imgGrid.src = gridIcon;
+
+        return { house: imgHouse, transformer: imgTransformer, grid: imgGrid };
+    }, []);
+
+    const getNodeSize = (type) => {
+        switch (type) {
+            case "grid": return 100;
+            case "transformer": return 60;
+            case "house": default: return 14;
+        }
+    };
+
+    const renderNode = (node, ctx) => {
+        const size = getNodeSize(node.type);
+        const icon = icons[node.type];
+
+        // Draw a semi-transparent phase color behind the icon for houses only
+        if (node.type === "house") {
+            const phaseColors = {
+                A: "#FF4C4C", // red
+                B: "#4CFF4C", // green
+                C: "#4C4CFF", // blue
+                default: "#999999", // fallback
+            };
+            ctx.beginPath();
+            ctx.arc(node.x, node.y+0.5, size / 1.5, 0, 2 * Math.PI);
+            ctx.fillStyle = phaseColors[node.predicted_phase] || phaseColors.default;
+            ctx.globalAlpha = 0.4; // semi-transparent
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+
+        // Draw the icon on top (all types)
+        if (icon && icon.complete) {
+            ctx.drawImage(icon, node.x - size / 2, node.y - size / 2, size, size);
+        }
+    };
+
+    const renderLabel = (node, ctx) => {
+        if (hoverNode && hoverNode.id === node.id) {
+            ctx.font = "12px Arial";
+            ctx.fillStyle = "black";
+            ctx.fillText(node.label || node.id, node.x + 10, node.y + 4);
+        }
+    };
+
     useEffect(() => {
         const interval = setInterval(() => setTick((t) => t + 1), 50);
         return () => clearInterval(interval);
     }, []);
 
-    // --- 2️⃣ Initial centering on grid and zoom to fit ---
+
     useEffect(() => {
-        if (fgRef.current && data.nodes.length) {
-            const gridNode = data.nodes.find((n) => n.type === "grid");
-            if (gridNode) {
-                fgRef.current.centerAt(gridNode.x, gridNode.y, 0);
-                fgRef.current.zoomToFit(1000, 40); // 40px padding
-            } else {
-                fgRef.current.zoomToFit(1000);
-            }
+        if (!fgRef.current || !focusNode) {
+            // Stop flow animation when focusNode is cleared
+            setFlowLinks([]);
+            return;
         }
-    }, [data]);
 
-    // --- 3️⃣ Handle focusNode and window resize ---
-    useEffect(() => {
-        const handleResize = () => {
-            if (fgRef.current) fgRef.current.zoomToFit(1000);
-        };
+        const node = data.nodes.find((n) => n.id === focusNode);
+        if (!node) return;
 
-        window.addEventListener("resize", handleResize);
+        if (node.type === "transformer") {
+            // Get all nodes with parent matching this transformer's label
+            const transformerLabel = node.label;
+            fgRef.current.zoomToFit(1000, 150, (n) => n.id === node.id || n.parent === transformerLabel);
+        } else if (node.type === "house") {
+            // Traverse prev_node chain back to grid
+            const pathNodes = [node]; // include the clicked house
+            const pathLinks = [];
+            let currentNode = node;
 
-        if (fgRef.current && focusNode) {
-            const node = data.nodes.find((n) => n.id === focusNode);
-            if (node) {
-                fgRef.current.centerAt(node.x, node.y, 1000);
-                fgRef.current.zoom(4, 1000);
-                setFaded(focusNode);
+            while (currentNode.prev_node) {
+                const prevId = Array.isArray(currentNode.prev_node)
+                    ? currentNode.prev_node[0]
+                    : currentNode.prev_node;
+
+                const prevNode = data.nodes.find((n) => n.id === prevId);
+                if (!prevNode) break;
+
+                pathNodes.push(prevNode);
+
+                const link = data.links.find(
+                    (l) =>
+                        (l.source.id === prevId && l.target.id === currentNode.id) ||
+                        (l.target.id === prevId && l.source.id === currentNode.id)
+                );
+                if (link) pathLinks.push(link);
+
+                currentNode = prevNode;
+                if (currentNode.type === "grid") break;
             }
+
+            setFlowLinks(pathLinks);
+
+            // Zoom to fit all nodes along the path
+            fgRef.current.zoomToFit(
+                1000,
+                150,
+                (n) => pathNodes.some((p) => p.id === n.id)
+            );
         } else {
-            setFaded(null);
-            setFlowHouse(null);
+            fgRef.current.zoomToFit(1000, 100);
         }
-
-        return () => window.removeEventListener("resize", handleResize);
     }, [focusNode, data]);
 
-    // --- Helper functions ---
-    const getConnectedNodeIds = (startId) => {
-        const visited = new Set();
-        const stack = [startId];
-        while (stack.length) {
-            const id = stack.pop();
-            visited.add(id);
-            data.links.forEach((link) => {
-                if (link.source.id === id && !visited.has(link.target.id)) stack.push(link.target.id);
-                if (link.target.id === id && !visited.has(link.source.id)) stack.push(link.source.id);
-            });
-        }
-        return visited;
-    };
-
-    const getFlowLinks = (houseId) => {
-        const house = data.nodes.find((n) => n.id === houseId);
-        if (!house || house.type !== "house") return [];
-        const transformerLink = data.links.find(
-            (l) =>
-                (l.source.id === houseId && l.target.type === "transformer") ||
-                (l.target.id === houseId && l.source.type === "transformer")
-        );
-        if (!transformerLink) return [];
-        const transformerId =
-            transformerLink.source.type === "transformer"
-                ? transformerLink.source.id
-                : transformerLink.target.id;
-        const gridLink = data.links.find(
-            (l) =>
-                (l.source.id === transformerId && l.target.type === "grid") ||
-                (l.target.id === transformerId && l.source.type === "grid")
-        );
-        const flowLinks = [];
-        if (gridLink) flowLinks.push(gridLink);
-        flowLinks.push(transformerLink);
-        return flowLinks;
-    };
-
-    const iconCache = {
-        house: new Image(),
-        transformer: new Image(),
-        grid: new Image(),
-    };
-    iconCache.house.src = houseIcon;
-    iconCache.transformer.src = transformerIcon;
-    iconCache.grid.src = gridIcon;
-
-    const getNodeSize = (node) => {
-        if (node.type === "grid") return 40;
-        if (node.type === "transformer") return 25;
-        return 15;
-    };
-
     return (
-        <ForceGraph2D
-            ref={fgRef}
-            graphData={data}
-            nodeCanvasObject={(node, ctx) => {
-                const size = getNodeSize(node);
-                const connectedNodes = faded ? getConnectedNodeIds(faded) : null;
-                const opacity = !faded
-                    ? 1
-                    : connectedNodes.has(node.id) || node.id === flowHouse
-                        ? 1
-                        : 0.1;
-
-                ctx.globalAlpha = opacity;
-
-                let img;
-                if (node.type === "grid") img = iconCache.grid;
-                else if (node.type === "transformer") img = iconCache.transformer;
-                else img = iconCache.house;
-
-                if (img.complete) {
-                    ctx.drawImage(img, node.x - size / 2, node.y - size / 2, size, size);
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(node.x, node.y, size / 2, 0, 2 * Math.PI);
-                    ctx.fillStyle =
-                        node.type === "house"
-                            ? "blue"
-                            : node.type === "transformer"
-                                ? "orange"
-                                : "red";
-                    ctx.fill();
-                }
-
-                ctx.globalAlpha = 1;
-            }}
-            nodePointerAreaPaint={(node, color, ctx) => {
-                const size = getNodeSize(node);
-                ctx.fillStyle = color;
-                ctx.beginPath();
-                ctx.arc(node.x, node.y, size / 2, 0, 2 * Math.PI);
-                ctx.fill();
-            }}
-            linkCanvasObject={(link, ctx) => {
-                const connectedNodes = faded ? getConnectedNodeIds(faded) : null;
-                const sourceVisible =
-                    !faded || connectedNodes.has(link.source.id) || link.source.id === flowHouse;
-                const targetVisible =
-                    !faded || connectedNodes.has(link.target.id) || link.target.id === flowHouse;
-                if (!sourceVisible && !targetVisible) return;
-
-                ctx.strokeStyle = "#999";
-                ctx.lineWidth = 1;
-                ctx.setLineDash([]);
-
-                if (flowHouse) {
-                    const flowLinks = getFlowLinks(flowHouse);
+        <div style={{ width: "100%", height: "100%" }}>
+            <ForceGraph2D
+                ref={fgRef}
+                graphData={data}
+                width={dimensions.width}
+                height={dimensions.height}
+                enableNodeDrag={false}
+                d3VelocityDecay={1}
+                cooldownTicks={0}
+                warmupTicks={0}
+                nodeRelSize={6}
+                linkDirectionalArrowLength={10}
+                linkDirectionalArrowRelPos={30}
+                nodeLabel={() => ""}
+                onNodeHover={setHoverNode}
+                nodeCanvasObject={(node, ctx) => {
+                    renderNode(node, ctx);
+                    renderLabel(node, ctx);
+                }}
+                linkCanvasObject={(link, ctx) => {
+                    // Highlight path links
                     if (flowLinks.includes(link)) {
                         ctx.strokeStyle = "orange";
                         ctx.lineWidth = 2;
                         ctx.setLineDash([5, 5]);
                         ctx.lineDashOffset = -tick;
+                    } else {
+                        ctx.strokeStyle = "#999";
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([]);
                     }
-                }
 
-                ctx.beginPath();
-                ctx.moveTo(link.source.x, link.source.y);
-                ctx.lineTo(link.target.x, link.target.y);
-                ctx.stroke();
-            }}
-            enableNodeDrag={false}
-            cooldownTicks={100}
-            onNodeClick={(node) => {
-                onNodeClick(node);
-                setFaded(node.id);
-                if (node.type === "house") setFlowHouse(node.id);
-                else setFlowHouse(null);
-            }}
-        />
+                    ctx.beginPath();
+                    ctx.moveTo(link.source.x, link.source.y);
+                    ctx.lineTo(link.target.x, link.target.y);
+                    ctx.stroke();
+                }}
+                onNodeClick={(node) => {
+                    onNodeClick(node);
+                }}
+            />
+        </div>
     );
 }

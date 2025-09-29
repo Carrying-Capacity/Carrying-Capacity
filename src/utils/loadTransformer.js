@@ -13,7 +13,7 @@ export function loadTransformerData() {
     const nodeMap = new Map();
 
     // Add grid node
-    const gridNode = { id: "grid", type: "grid", x: 0, y: 0, name: "Main Grid" };
+    const gridNode = { id: "grid", type: "grid", x: 0, y: 0, label: "Main Grid" };
     nodes.push(gridNode);
     nodeMap.set(gridNode.id, gridNode);
 
@@ -40,7 +40,10 @@ export function loadTransformerData() {
             type: normalizeType(transformer.type),
             x: tx,
             y: ty,
-            name: transformer.name || transformer.id,
+            label: `Transformer ${idx + 1}`,
+            parent: "grid",
+            prev_node: "grid",
+            current_node: transformer.id,
         };
         nodes.push(transformerNode);
         nodeMap.set(transformerNode.id, transformerNode);
@@ -57,8 +60,13 @@ export function loadTransformerData() {
 
                 const houseNode = {
                     ...house,
+                    type: house.type.toLowerCase(),
                     x: tx + dx*40,
                     y: ty + dy*40,
+                    label: `House ${house.HouseID}`,
+                    parent: transformerNode.label,
+                    prev_node: house.prev_nodes ? house.prev_nodes[0] : null,
+                    current_node: house.id,
                 };
                 nodes.push(houseNode);
                 nodeMap.set(houseNode.id, houseNode);

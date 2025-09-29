@@ -15,10 +15,10 @@ export default function InfoModal({ node, onClose }) {
                 padding: "1rem",
                 zIndex: 10,
                 boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                width: "250px",
+                width: "15vw",
             }}
         >
-            <h3>{node.name || node.id}</h3>
+            <h3>{node.label}</h3>
 
             <p>Type: {node.type}</p>
             {node.type === "house" && (
@@ -26,8 +26,16 @@ export default function InfoModal({ node, onClose }) {
                     <p>House ID: {node.HouseID}</p>
                     <p>Predicted Phase: {node.predicted_phase}</p>
                     <p>Solar: {node.solar ? "Yes" : "No"}</p>
+                    <p>Parent Transformer: {node.parent}</p>
                 </>
                 )}
+            {node.type === "transformer" && (
+                <>
+                    <p>Transformer Phase Distribution: </p>
+                    <p>Transformer Power Draw:</p>
+                    <p>Transformer Phase Power Distribution: </p>
+                </>
+            )}
             <button
                 onClick={onClose}
                 style={{

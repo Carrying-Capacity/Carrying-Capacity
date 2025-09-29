@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import TransformerGraph from "./TransformerGraphBasic";
+import TransformerGraph from "./TransformerGraph";
 import { loadTransformerData } from "./utils/loadTransformer.js";
 import InfoModal from "./InfoModal"; // import new modal component
 
@@ -25,15 +25,17 @@ export default function App() {
     };
 
     return (
-        <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+        <div style={{ height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
             <nav
                 style={{
+                    flex: "0 0 5vh",     // exactly 5vh tall
                     backgroundColor: "#333",
                     color: "white",
                     padding: "0.5rem 1rem",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    boxSizing: "border-box",
                 }}
             >
                 <h1 style={{ margin: 0 }}>Phase Identification Map</h1>
@@ -49,7 +51,7 @@ export default function App() {
                 </select>
             </nav>
 
-            <div style={{ flex: 1, minHeight: "100vh", position: "relative" }}>
+            <div style={{ flex: 1, position: "relative", heihgt: "100%"}}>
                 <TransformerGraph
                     data={data}
                     focusNode={focusNode}
