@@ -93,6 +93,7 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
         if (!node) return;
 
         if (node.type === "transformer") {
+            setFlowLinks([]);
             // Get all nodes with parent matching this transformer's label
             const transformerLabel = node.label;
             fgRef.current.zoomToFit(1000, 150, (n) => n.id === node.id || n.parent === transformerLabel);
@@ -132,6 +133,7 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
                 (n) => pathNodes.some((p) => p.id === n.id)
             );
         } else {
+            setFlowLinks([]);
             fgRef.current.zoomToFit(1000, 100);
         }
     }, [focusNode, data]);
