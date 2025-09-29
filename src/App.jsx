@@ -1,30 +1,31 @@
-import React, { useState } from "react";
-import TransformerGraph from "./TransformerGraph";
-import sampleData from "./data/sampleData"; // your static graph data
+import React, { useMemo, useState } from "react";
+import TransformerGraph from "./TransformerGraphBasic";
+import { loadTransformerData } from "./utils/loadTransformer.js";
+import InfoModal from "./InfoModal"; // import new modal component
 
 export default function App() {
-    const [focusNode, setFocusNode] = useState(null); // node id to zoom/focus
-    const [selectedNode, setSelectedNode] = useState(null); // node clicked for info
+    const data = useMemo(() =>loadTransformerData(), []);
+    const [focusNode, setFocusNode] = useState(null);
+    const [selectedNode, setSelectedNode] = useState(null);
 
     const handleNodeClick = (node) => {
-        setFocusNode(node.id);       // zoom/focus on clicked node
-        setSelectedNode(node);       // show info modal
+        setFocusNode(node.id);
+        setSelectedNode(node);
     };
 
     const handleDropdownChange = (e) => {
         const transformerId = e.target.value;
         setFocusNode(transformerId);
-        setSelectedNode(null);       // clear info modal
+        setSelectedNode(null);
     };
 
     const closeModal = () => {
         setFocusNode(null);
         setSelectedNode(null);
-    }
+    };
 
     return (
         <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-            {/* Navbar */}
             <nav
                 style={{
                     backgroundColor: "#333",
@@ -38,7 +39,7 @@ export default function App() {
                 <h1 style={{ margin: 0 }}>Phase Identification Map</h1>
                 <select onChange={handleDropdownChange} value={focusNode || ""}>
                     <option value="">Select Transformer</option>
-                    {sampleData.nodes
+                    {data.nodes
                         .filter((n) => n.type === "transformer")
                         .map((t) => (
                             <option key={t.id} value={t.id}>
@@ -48,46 +49,14 @@ export default function App() {
                 </select>
             </nav>
 
-            {/* Graph */}
             <div style={{ flex: 1, minHeight: "100vh", position: "relative" }}>
                 <TransformerGraph
-                    data={sampleData}
+                    data={data}
                     focusNode={focusNode}
                     onNodeClick={handleNodeClick}
                 />
+                <InfoModal node={selectedNode} onClose={closeModal} />
             </div>
-
-            {/* Info Modal */}
-            {selectedNode && (
-                <div
-                    style={{
-                        position: "absolute",
-                        top: "100px",
-                        right: "50px",
-                        background: "white",
-                        border: "1px solid #ccc",
-                        borderRadius: "8px",
-                        padding: "1rem",
-                        zIndex: 10,
-                        boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                        width: "250px",
-                    }}
-                >
-                    <h3>{selectedNode.name || selectedNode.id}</h3>
-                    <p>Type: {selectedNode.type}</p>
-                    <p>Additional info can go here...</p>
-                    <button
-                        onClick={closeModal}
-                        style={{
-                            marginTop: "1rem",
-                            padding: "0.25rem 0.5rem",
-                            cursor: "pointer",
-                        }}
-                    >
-                        Close
-                    </button>
-                </div>
-            )}
         </div>
     );
 }
