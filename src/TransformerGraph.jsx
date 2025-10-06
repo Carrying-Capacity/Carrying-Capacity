@@ -1,10 +1,8 @@
 // src/TransformerGraph.jsx
-import React, { useRef, useMemo, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import ForceGraph2D from "react-force-graph-2d";
-
-import houseIcon from "./assets/house.png";
-import transformerIcon from "./assets/transformer.png";
-import gridIcon from "./assets/grid.png";
+import { iconCache, phaseColors, getNodeSize } from "./utils/iconCache.js";
+import { useWindowDimensions } from "./hooks/useWindowDimensions.js";
 
 export default function TransformerGraph({ data, focusNode, onNodeClick }) {
     const fgRef = useRef();
@@ -12,50 +10,19 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
 
     const [flowLinks, setFlowLinks] = useState([]); // links along the path to grid
     const [tick, setTick] = useState(0); // for animated dashed lines
+    
+    const dimensions = useWindowDimensions();
 
-    const [dimensions, setDimensions] = useState({
-        width: window.innerWidth,
-        height: window.innerHeight,
-    });
+    // Icons and node sizes are now imported from utils
 
-    useEffect(() => {
-        const handleResize = () =>
-            setDimensions({ width: window.innerWidth, height: window.innerHeight });
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    const icons = useMemo(() => {
-        const imgHouse = new Image(); imgHouse.src = houseIcon;
-        const imgTransformer = new Image(); imgTransformer.src = transformerIcon;
-        const imgGrid = new Image(); imgGrid.src = gridIcon;
-
-        return { house: imgHouse, transformer: imgTransformer, grid: imgGrid };
-    }, []);
-
-    const getNodeSize = (type) => {
-        switch (type) {
-            case "grid": return 100;
-            case "transformer": return 60;
-            case "house": default: return 14;
-        }
-    };
-
-    const renderNode = (node, ctx) => {
+    const renderNode = useCallback((node, ctx) => {
         const size = getNodeSize(node.type);
-        const icon = icons[node.type];
+        const icon = iconCache[node.type];
 
         // Draw a semi-transparent phase color behind the icon for houses only
         if (node.type === "house") {
-            const phaseColors = {
-                A: "#FF4C4C", // red
-                B: "#4CFF4C", // green
-                C: "#4C4CFF", // blue
-                default: "#999999", // fallback
-            };
             ctx.beginPath();
-            ctx.arc(node.x, node.y+0.5, size / 1.5, 0, 2 * Math.PI);
+            ctx.arc(node.x, node.y + 0.5, size / 1.5, 0, 2 * Math.PI);
             ctx.fillStyle = phaseColors[node.predicted_phase] || phaseColors.default;
             ctx.globalAlpha = 0.4; // semi-transparent
             ctx.fill();
@@ -66,20 +33,26 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
         if (icon && icon.complete) {
             ctx.drawImage(icon, node.x - size / 2, node.y - size / 2, size, size);
         }
-    };
+    }, []);
 
-    const renderLabel = (node, ctx) => {
+    const renderLabel = useCallback((node, ctx) => {
         if (hoverNode && hoverNode.id === node.id) {
             ctx.font = "12px Arial";
             ctx.fillStyle = "black";
             ctx.fillText(node.label || node.id, node.x + 10, node.y + 4);
         }
-    };
+    }, [hoverNode]);
 
+    // Only run animation when there are flow links to animate
     useEffect(() => {
+        if (flowLinks.length === 0) {
+            setTick(0);
+            return;
+        }
+        
         const interval = setInterval(() => setTick((t) => t + 1), 50);
         return () => clearInterval(interval);
-    }, []);
+    }, [flowLinks.length > 0]);
 
 
     useEffect(() => {

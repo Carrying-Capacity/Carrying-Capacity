@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from "react";
+import React, { useState, Suspense } from "react";
 import TransformerGraph from "./TransformerGraph";
-import { loadTransformerData } from "./utils/loadTransformer.js";
-import InfoModal from "./InfoModal"; // import new modal component
+import { useTransformerData } from "./hooks/useTransformerData.js";
+
+// Lazy load InfoModal to reduce initial bundle size
+const InfoModal = React.lazy(() => import("./InfoModal"));
 
 export default function App() {
-    const data = useMemo(() =>loadTransformerData(), []);
+    const data = useTransformerData();
     const [focusNode, setFocusNode] = useState(null);
     const [selectedNode, setSelectedNode] = useState(null);
 
@@ -51,13 +53,15 @@ export default function App() {
                 </select>
             </nav>
 
-            <div style={{ flex: 1, position: "relative", heihgt: "100%"}}>
+            <div style={{ flex: 1, position: "relative", height: "100%"}}>
                 <TransformerGraph
                     data={data}
                     focusNode={focusNode}
                     onNodeClick={handleNodeClick}
                 />
-                <InfoModal node={selectedNode} onClose={closeModal} />
+                <Suspense fallback={null}>
+                    <InfoModal node={selectedNode} onClose={closeModal} />
+                </Suspense>
             </div>
         </div>
     );
