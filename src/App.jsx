@@ -1,6 +1,7 @@
 import React, { useState, Suspense } from "react";
 import TransformerGraph from "./TransformerGraph";
 import { useTransformerData } from "./hooks/useTransformerData.js";
+import logo from "./assets/logo.svg";
 
 // Lazy load InfoModal to reduce initial bundle size
 const InfoModal = React.lazy(() => import("./InfoModal"));
@@ -40,7 +41,14 @@ export default function App() {
                     boxSizing: "border-box",
                 }}
             >
-                <h1 style={{ margin: 0 }}>Phase Identification Map</h1>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                    <img 
+                        src={logo} 
+                        alt="Phase Identification Map Logo" 
+                        style={{ width: "32px", height: "32px" }}
+                    />
+                    <h1 style={{ margin: 0, fontSize: "1.25rem" }}>Phase Identification Map</h1>
+                </div>
                 <select onChange={handleDropdownChange} value={focusNode || ""}>
                     <option value="">Select Transformer</option>
                     {data.nodes
