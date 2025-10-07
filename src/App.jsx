@@ -1,14 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import logo from "./assets/logo.svg";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
+import Home from "./pages/home";
+import About from "./pages/about";
+import Contact from "./pages/contact";
 import Transformer from "./TransformerGraphWrapper";
 
 export default function App() {
     return (
-        <Router>
+        <Router basename="/Carrying-Capacity">
             <div style={{ height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                 <nav
                     style={{
