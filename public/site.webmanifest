@@ -1,0 +1,14 @@
+{
+    "name": "Phase Identification Map",
+    "short_name": "Phase Map",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ],
+    "theme_color": "#1a1a1a",
+    "background_color": "#1a1a1a",
+    "display": "standalone"
+}
