@@ -1,8 +1,11 @@
-import t1 from "../data/tx1.json";
-import t2 from "../data/tx2.json";
+// import t1 from "../data/tx1.json";
+// import t2 from "../data/tx2.json";
 import t3 from "../data/tx3.json";
+import tx15 from "../data/tx15.json";
+import tx5 from "../data/tx5.json";
+import example from "../data/example.json";
 
-const datasets = [t1, t2, t3];
+const datasets = [t3,tx5, tx15, example];
 const normalizeType = (t) => (t ? t.toLowerCase() : t);
 
 // Use WeakMap for better memory management
@@ -83,8 +86,11 @@ export function loadTransformerData() {
             const houseNode = {
                 ...house,
                 type: house.type.toLowerCase(),
-                x: tx + dx * 40,
-                y: ty + dy * 40,
+                x: tx + dx * 4,
+                y: ty + dy * 4,
+                // x: tx + dx * 40,
+                // y: ty + dy * 40,
+
                 label: `House ${house.HouseID}`,
                 parent: transformerLabel,
                 prev_node: house.prev_nodes ? house.prev_nodes[0] : null,
