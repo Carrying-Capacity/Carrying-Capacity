@@ -13,7 +13,7 @@ import {
   ReferenceLine
 } from 'recharts'
 import { PieChart as RePieChart, Pie, Cell } from 'recharts'
-import { phaseColors } from '../utils/iconCache.js'
+import { PHASE_COLORS, CHART_CONFIGS, UNITS, CHART_DIMENSIONS } from '../constants/index.js'
 
 // Custom tooltip for better data presentation
 const CustomTooltip = ({ active, payload, label, unit = '' }) => {
@@ -41,36 +41,12 @@ const CustomTooltip = ({ active, payload, label, unit = '' }) => {
 
 // Monthly Bar Chart Component
 export const MonthlyBarChart = ({ data, selectedMetrics }) => {
-  const getBarConfig = () => {
-    switch (selectedMetrics) {
-      case 'voltage':
-        return [
-          { key: 'voltage', name: 'Voltage (V)', color: '#8884d8' }
-        ]
-      case 'power':
-        return [
-          { key: 'import_power', name: 'Import Power (kWh)', color: '#82ca9d' },
-          { key: 'export_power', name: 'Export Power (kWh)', color: '#ff7300' }
-        ]
-      case 'reactive':
-        return [
-          { key: 'inductive_power', name: 'Inductive Power (kVArh)', color: '#ffc658' },
-          { key: 'capacitive_power', name: 'Capacitive Power (kVArh)', color: '#ff7c7c' }
-        ]
-      default:
-        return []
-    }
-  }
-
-  // No inversion needed; use data as-is
-  const transformedData = data
-
-  const barConfig = getBarConfig()
-  const unit = selectedMetrics === 'voltage' ? 'V' : selectedMetrics === 'power' ? 'kWh' : 'kVArh'
+  const barConfig = CHART_CONFIGS[selectedMetrics] || []
+  const unit = UNITS[selectedMetrics] || ''
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <BarChart data={transformedData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+    <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
+      <BarChart data={data} margin={CHART_DIMENSIONS.margin}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" />
         <YAxis />
@@ -92,29 +68,8 @@ export const MonthlyBarChart = ({ data, selectedMetrics }) => {
 
 // Daily Line Chart Component
 export const DailyLineChart = ({ data, selectedMetrics }) => {
-  const getLineConfig = () => {
-    switch (selectedMetrics) {
-      case 'voltage':
-        return [
-          { key: 'voltage', name: 'Voltage (V)', color: '#8884d8', strokeWidth: 2 }
-        ]
-      case 'power':
-        return [
-          { key: 'import_power', name: 'Import Power (kWh)', color: '#82ca9d', strokeWidth: 2 },
-          { key: 'export_power', name: 'Export Power (kWh)', color: '#ff7300', strokeWidth: 2 }
-        ]
-      case 'reactive':
-        return [
-          { key: 'inductive_power', name: 'Inductive Power (kVArh)', color: '#ffc658', strokeWidth: 2 },
-          { key: 'capacitive_power', name: 'Capacitive Power (kVArh)', color: '#ff7c7c', strokeWidth: 2 }
-        ]
-      default:
-        return []
-    }
-  }
-
-  const lineConfig = getLineConfig()
-  const unit = selectedMetrics === 'voltage' ? 'V' : selectedMetrics === 'power' ? 'kWh' : 'kVArh'
+  const lineConfig = (CHART_CONFIGS[selectedMetrics] || []).map(config => ({ ...config, strokeWidth: 2 }))
+  const unit = UNITS[selectedMetrics] || ''
 
   // Custom tick formatter to show only every 4th hour (00:00, 06:00, 12:00, 18:00)
   const formatXAxisTick = (tickItem, index) => {
@@ -122,8 +77,8 @@ export const DailyLineChart = ({ data, selectedMetrics }) => {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+    <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
+      <LineChart data={data} margin={CHART_DIMENSIONS.margin}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis 
           dataKey="time" 
@@ -223,16 +178,9 @@ export const ChartControls = ({
 
 // Phase Pie Chart Component
 export const PhasePieChart = ({ data, title = 'Phase Distribution' }) => {
-  const COLORS = {
-    A: phaseColors.A,
-    B: phaseColors.B,
-    C: phaseColors.C,
-    default: phaseColors.default
-  }
-
   return (
     <div className="w-full h-full">
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
         <RePieChart>
           <Tooltip />
           <Legend />
@@ -246,11 +194,29 @@ export const PhasePieChart = ({ data, title = 'Phase Distribution' }) => {
             label
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[entry.phase] || COLORS.default} />
+              <Cell key={`cell-${index}`} fill={PHASE_COLORS[entry.phase] || PHASE_COLORS.default} />
             ))}
           </Pie>
         </RePieChart>
       </ResponsiveContainer>
     </div>
+  )
+}
+
+// Stacked Bar Chart for Monthly Power by Phase
+export const MonthlyPhaseBarChart = ({ data }) => {
+  return (
+    <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
+      <BarChart data={data} margin={CHART_DIMENSIONS.margin}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="month" />
+        <YAxis label={{ value: 'Power (kWh)', angle: -90, position: 'insideLeft' }} />
+        <Tooltip content={<CustomTooltip unit="kWh" />} />
+        <Legend />
+        <Bar dataKey="A" name="Phase A" stackId="power" fill={PHASE_COLORS.A} />
+        <Bar dataKey="B" name="Phase B" stackId="power" fill={PHASE_COLORS.B} />
+        <Bar dataKey="C" name="Phase C" stackId="power" fill={PHASE_COLORS.C} />
+      </BarChart>
+    </ResponsiveContainer>
   )
 }

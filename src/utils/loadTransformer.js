@@ -19,9 +19,6 @@ const getNodeLabel = (node) => {
     }
 };
 
-// Cache is no longer needed with JSON-defined positions, but keeping for compatibility
-const transformerRadiiCache = new Map();
-
 
 export function loadTransformerData() {
     const nodes = [];

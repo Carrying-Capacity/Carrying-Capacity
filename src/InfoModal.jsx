@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData } from "./hooks/useEnergyData";
-import { MonthlyBarChart, DailyLineChart, ChartControls, PhasePieChart } from "./components/EnergyCharts";
+import { MonthlyBarChart, DailyLineChart, ChartControls, PhasePieChart, MonthlyPhaseBarChart } from "./components/EnergyCharts";
 import { Maximize2, Minimize2, X as XIcon } from "lucide-react";
 import { useTransformerData } from "./hooks/useTransformerData.js";
 import { supabase } from "./lib/supabase";
+import { collectDownstreamNodes } from "./utils/graphUtils.js";
+import { METRICS_MAP, MODAL_STYLES, MONTH_OPTIONS } from "./constants/index.js";
 
 export default function InfoModal({ node, onClose }) {
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -15,19 +17,10 @@ export default function InfoModal({ node, onClose }) {
     const { monthlyData, loading: monthlyLoading, error: monthlyError } = useMonthlyData(houseId);
     const { dailyData, loading: dailyLoading, error: dailyError } = useDailyData(houseId);
     
-    // Transform data for charts
-    const getMetricsForType = (type) => {
-        switch (type) {
-            case 'voltage': return ['voltage'];
-            case 'power': return ['import_power', 'export_power'];
-            case 'reactive': return ['inductive_power', 'capacitive_power'];
-            default: return [];
-        }
-    };
-    
+    // Transform data for charts  
     const chartData = chartType === 'monthly' 
-        ? transformMonthlyData(monthlyData, getMetricsForType(selectedMetrics))
-        : transformDailyData(dailyData, getMetricsForType(selectedMetrics));
+        ? transformMonthlyData(monthlyData, METRICS_MAP[selectedMetrics] || [])
+        : transformDailyData(dailyData, METRICS_MAP[selectedMetrics] || []);
     
     const toggleFullscreen = () => {
         setIsFullscreen(!isFullscreen);
@@ -57,37 +50,6 @@ export default function InfoModal({ node, onClose }) {
     }, [isFullscreen, onClose]);
     
     const baseModalClasses = "bg-white border border-gray-300 rounded-lg shadow-2xl transition-all duration-700 ease-in-out opacity-100";
-    const normalModalStyle = {
-        position: "absolute",
-        top: "20px",
-        right: "20px",
-        left: "calc(100vw - 20px - 500px)",
-        maxHeight: "80vh",
-        zIndex: 10,
-        padding: "1.5rem",
-        overflow: "auto",
-        backgroundColor: "#fdfdfd",
-        borderRadius: 10,
-        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.23)",
-        willChange: "top, left, right, max-height, padding, border-radius",
-        opacity: 1
-    };
-    
-    const fullscreenModalStyle = {
-        position: "absolute",
-        top: "20px",
-        left: "20px",
-        right: "20px",
-        zIndex: 50,
-        padding: "2rem",
-        overflow: "auto",
-        backgroundColor: "#fdfdfd",
-        borderRadius: 10,
-        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.23)",
-        maxHeight: "calc(100vh - 40px)",
-        willChange: "top, left, right, max-height, padding, border-radius",
-        opacity: 1
-    };
 
     // Data for transformer aggregations
     const graphData = useTransformerData();
@@ -96,73 +58,12 @@ export default function InfoModal({ node, onClose }) {
 
     // Transformer-specific state
     const [transformerChartMode, setTransformerChartMode] = useState('houses'); // 'houses' | 'power'
-    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // 1-12
     const [downstreamHouses, setDownstreamHouses] = useState([]);
     const [phaseHouseCounts, setPhaseHouseCounts] = useState({ A: 0, B: 0, C: 0 });
-    const [phasePowerData, setPhasePowerData] = useState({ A: 0, B: 0, C: 0 });
+    const [monthlyPhasePowerData, setMonthlyPhasePowerData] = useState([]);
     const [powerLoading, setPowerLoading] = useState(false);
     const [powerError, setPowerError] = useState(null);
 
-    // Helper: collect downstream nodes starting from a transformer, including street bridging
-    const collectDownstreamNodes = useCallback((startNode) => {
-        if (!graphData?.nodes) return [];
-        const getNodeById = (id) => graphData.nodes.find((n) => n.id === id);
-        const visited = new Set();
-        const queue = [];
-        const result = [];
-
-        if (!startNode) return result;
-        queue.push(startNode);
-        visited.add(startNode.id);
-
-        while (queue.length) {
-            const curr = queue.shift();
-            result.push(curr);
-
-            // 1) explicit next_nodes
-            if (Array.isArray(curr.next_nodes)) {
-                curr.next_nodes.forEach((nid) => {
-                    if (!visited.has(nid)) {
-                        const child = getNodeById(nid);
-                        if (child) { visited.add(nid); queue.push(child); }
-                    }
-                });
-            }
-
-            // 2) nodes whose prev includes curr
-            graphData.nodes.forEach((n) => {
-                const prevs = Array.isArray(n.prev_nodes)
-                    ? n.prev_nodes
-                    : (n.prev_node ? [n.prev_node] : []);
-                if (prevs && prevs.includes(curr.id)) {
-                    if (!visited.has(n.id)) { visited.add(n.id); queue.push(n); }
-                }
-            });
-
-            // 3) streets anchored to this net node (transformer or house)
-            if (curr.type !== "street") {
-                graphData.nodes.forEach((n) => {
-                    if (n.type === "street" && n.net_node_id === curr.id) {
-                        if (!visited.has(n.id)) { visited.add(n.id); queue.push(n); }
-                    }
-                });
-            }
-
-            // 4) if this is a street, walk connected streets and bridge to its net node (house/transformer)
-            if (curr.type === "street") {
-                const connected = Array.isArray(curr.connected_nodes) ? curr.connected_nodes : [];
-                connected.forEach((nid) => {
-                    if (!visited.has(nid)) { const nn = getNodeById(nid); if (nn) { visited.add(nid); queue.push(nn); } }
-                });
-                if (curr.net_node_id && !visited.has(curr.net_node_id)) {
-                    const nn = getNodeById(curr.net_node_id);
-                    if (nn) { visited.add(nn.id); queue.push(nn); }
-                }
-            }
-        }
-
-        return result;
-    }, [graphData]);
 
     // Derive downstream houses and phase counts when transformer selected
     useEffect(() => {
@@ -173,7 +74,7 @@ export default function InfoModal({ node, onClose }) {
         }
         const start = graphData.nodes.find((n) => n.id === node.id);
         if (!start) return;
-        const dsNodes = collectDownstreamNodes(start);
+        const dsNodes = collectDownstreamNodes(graphData, start);
         const houses = dsNodes.filter((n) => n.type === 'house');
         setDownstreamHouses(houses);
         const counts = houses.reduce((acc, h) => {
@@ -182,14 +83,20 @@ export default function InfoModal({ node, onClose }) {
             return acc;
         }, { A: 0, B: 0, C: 0 });
         setPhaseHouseCounts(counts);
-    }, [isTransformer, graphData, node, collectDownstreamNodes]);
+    }, [isTransformer, graphData, node]);
 
     // Fetch monthly import power for transformer houses and aggregate per phase
     useEffect(() => {
         const fetchPower = async () => {
-            if (!isTransformer || transformerChartMode !== 'power') return;
+            if (!isTransformer || transformerChartMode !== 'power') {
+                setMonthlyPhasePowerData([]);
+                return;
+            }
             const houseIds = downstreamHouses.map((h) => h.HouseID).filter(Boolean);
-            if (houseIds.length === 0) { setPhasePowerData({ A: 0, B: 0, C: 0 }); return; }
+            if (houseIds.length === 0) { 
+                setMonthlyPhasePowerData([]);
+                return; 
+            }
             try {
                 setPowerLoading(true);
                 setPowerError(null);
@@ -199,18 +106,36 @@ export default function InfoModal({ node, onClose }) {
                     .in('house_id', houseIds)
                     .eq('metric', 'import_power');
                 if (error) throw error;
-                const monthCol = `month_${String(selectedMonth).padStart(2, '0')}`;
+                
                 // Build phase map for quick lookup
-                const phaseByHouse = downstreamHouses.reduce((m, h) => { m[h.HouseID] = h.predicted_phase || 'default'; return m; }, {});
-                const totals = { A: 0, B: 0, C: 0 };
-                data?.forEach((row) => {
-                    const phase = phaseByHouse[row.house_id];
-                    if (phase === 'A' || phase === 'B' || phase === 'C') {
-                        const val = Number(row[monthCol]) || 0;
-                        totals[phase] += val;
-                    }
+                const phaseByHouse = downstreamHouses.reduce((m, h) => { 
+                    m[h.HouseID] = h.predicted_phase || 'default'; 
+                    return m; 
+                }, {});
+                
+                // Create monthly data array for stacked bar chart
+                const monthlyData = MONTH_OPTIONS.map((monthOption, index) => {
+                    const monthIndex = index + 1;
+                    const monthCol = `month_${String(monthIndex).padStart(2, '0')}`;
+                    const totals = { A: 0, B: 0, C: 0 };
+                    
+                    data?.forEach((row) => {
+                        const phase = phaseByHouse[row.house_id];
+                        if (phase === 'A' || phase === 'B' || phase === 'C') {
+                            const val = Number(row[monthCol]) || 0;
+                            totals[phase] += val;
+                        }
+                    });
+                    
+                    return {
+                        month: monthOption.label,
+                        A: totals.A,
+                        B: totals.B,
+                        C: totals.C
+                    };
                 });
-                setPhasePowerData(totals);
+                
+                setMonthlyPhasePowerData(monthlyData);
             } catch (e) {
                 console.error('Error fetching transformer power data:', e);
                 setPowerError(e.message || 'Failed to load power data');
@@ -219,7 +144,7 @@ export default function InfoModal({ node, onClose }) {
             }
         };
         fetchPower();
-    }, [isTransformer, transformerChartMode, selectedMonth, downstreamHouses]);
+    }, [isTransformer, transformerChartMode, downstreamHouses]);
 
     const housesPieData = useMemo(() => (
         [
@@ -229,20 +154,6 @@ export default function InfoModal({ node, onClose }) {
         ]
     ), [phaseHouseCounts]);
 
-    const powerPieData = useMemo(() => (
-        [
-            { name: 'Phase A', phase: 'A', value: Number(phasePowerData.A || 0) },
-            { name: 'Phase B', phase: 'B', value: Number(phasePowerData.B || 0) },
-            { name: 'Phase C', phase: 'C', value: Number(phasePowerData.C || 0) },
-        ]
-    ), [phasePowerData]);
-
-    const monthOptions = useMemo(() => (
-        Array.from({ length: 12 }, (_, i) => ({
-            value: i + 1,
-            label: new Date(2024, i, 1).toLocaleString('default', { month: 'short' })
-        }))
-    ), []);
     
     if (!node) return null;
     
@@ -264,31 +175,31 @@ export default function InfoModal({ node, onClose }) {
             />
             <div
                 className={baseModalClasses}
-                style={isFullscreen ? fullscreenModalStyle : normalModalStyle}
+                style={isFullscreen ? MODAL_STYLES.fullscreen : MODAL_STYLES.normal}
             >
-                <div className="mb-4 px-3 py-2">
-                    <div className="flex items-center justify-between gap-2 w-full" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', width: '100%' }}>
-                        <h3 className="text-2xl font-bold text-gray-800 flex-1 min-w-0 truncate">{node.label}</h3>
-                        <div className="flex items-center gap-2 shrink-0 whitespace-nowrap" style={{ whiteSpace: 'nowrap' }}>
+                <div className="modal-header">
+                    <div className="modal-header-row">
+                        <h3 className="modal-header-title">{node.label}</h3>
+                        <div className="modal-header-buttons">
                             <button
                                 onClick={toggleFullscreen}
-                                className="text-gray-500 hover:text-gray-700 px-2 py-1 hover:bg-gray-100 rounded"
+                                className="modal-header-button"
                                 title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
                                 aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
                             >
                                 {isFullscreen ? (
-                                    <Minimize2 className="w-5 h-5" />
+                                    <Minimize2 className="modal-header-icon" />
                                 ) : (
-                                    <Maximize2 className="w-5 h-5" />
+                                    <Maximize2 className="modal-header-icon" />
                                 )}
                             </button>
                             <button
                                 onClick={onClose}
-                                className="text-gray-500 hover:text-gray-700 px-2 py-1 hover:bg-gray-100 rounded"
+                                className="modal-header-button"
                                 title="Close (ESC)"
                                 aria-label="Close"
                             >
-                                <XIcon className="w-5 h-5" />
+                                <XIcon className="modal-header-icon" />
                             </button>
                         </div>
                     </div>
@@ -321,23 +232,8 @@ export default function InfoModal({ node, onClose }) {
                                     onClick={() => setTransformerChartMode('power')}
                                     className={`px-3 py-1 rounded ${transformerChartMode === 'power' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                                 >
-                                    ⚡ Power Draw per Phase
+                                    📊 Monthly Power by Phase
                                 </button>
-
-                                {transformerChartMode === 'power' && (
-                                    <div className="ml-auto flex items-center gap-2">
-                                        <label className="text-sm text-gray-700">Month:</label>
-                                        <select
-                                            value={selectedMonth}
-                                            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                                            className="border border-gray-300 rounded px-2 py-1 text-sm"
-                                        >
-                                            {monthOptions.map((m) => (
-                                                <option key={m.value} value={m.value}>{m.label}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )}
                             </div>
 
                             {/* Loading / Error */}
@@ -355,8 +251,8 @@ export default function InfoModal({ node, onClose }) {
                                 {transformerChartMode === 'houses' ? (
                                     <PhasePieChart data={housesPieData} title="Houses per Phase" />
                                 ) : (
-                                    !powerLoading && !powerError && (
-                                        <PhasePieChart data={powerPieData} title="Power Draw per Phase" />
+                                    !powerLoading && !powerError && monthlyPhasePowerData.length > 0 && (
+                                        <MonthlyPhaseBarChart data={monthlyPhasePowerData} />
                                     )
                                 )}
                             </div>

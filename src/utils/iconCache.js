@@ -2,6 +2,7 @@ import houseIcon from "../assets/house.png";
 import transformerIcon from "../assets/transformer.png";
 import gridIcon from "../assets/grid.png";
 import streetIcon from "../assets/street.png";
+import { PHASE_COLORS, NODE_SIZES } from '../constants/index.js';
 
 // Pre-load and cache images at module level
 const createIconCache = () => {
@@ -27,22 +28,6 @@ const createIconCache = () => {
 // Single instance shared across all components
 export const iconCache = createIconCache();
 
-// Phase color constants
-export const phaseColors = {
-  A: "#FF4C4C", // red
-  B: "#4CFF4C", // green
-  C: "#4C4CFF", // blue
-  default: "#999999", // fallback
-};
-
-// Node size constants
-export const getNodeSize = (type) => {
-  switch (type) {
-    case "grid": return 100;
-    case "feeder": return 100; // Feeder replaces grid
-    case "transformer": return 60;
-    case "street": return 14;
-    case "house": 
-    default: return 14;
-  }
-};
+// Re-export constants for backward compatibility
+export const phaseColors = PHASE_COLORS;
+export const getNodeSize = (type) => NODE_SIZES[type] || NODE_SIZES.default;

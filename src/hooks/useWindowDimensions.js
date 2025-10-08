@@ -1,17 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-
-// Debounced resize handler to prevent excessive re-renders
-const debounce = (func, wait) => {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-};
+import { debounce } from '../utils/graphUtils.js';
+import { ANIMATION_CONFIG } from '../constants/index.js';
 
 export function useWindowDimensions() {
   const [dimensions, setDimensions] = useState({
@@ -25,7 +14,7 @@ export function useWindowDimensions() {
         width: window.innerWidth,
         height: window.innerHeight,
       });
-    }, 100), // 100ms debounce
+    }, ANIMATION_CONFIG.debounceDelay),
     []
   );
 

@@ -71,22 +71,14 @@ export default function TransformerGraphWrapper() {
 
     return (
         <>
-            <div style={{ 
-                display: "flex", 
-                gap: "1rem", 
-                padding: "0.5rem", 
-                backgroundColor: "#f5f5f5",
-                borderBottom: "1px solid #ddd",
-                alignItems: "center",
-                flexWrap: "wrap"
-            }}>
+            <div className="control-panel">
                 {/* Transformer/Feeder Dropdown */}
-                <div>
-                    <label style={{ marginRight: "0.5rem", fontWeight: "bold" }}>Navigate to:</label>
+                <div className="control-group">
+                    <label className="control-label">Navigate to:</label>
                     <select 
                         onChange={handleDropdownChange} 
                         value={focusNode || ""}
-                        style={{ padding: "0.25rem", minWidth: "150px" }}
+                        className="control-select"
                     >
                         <option value="">Select Node</option>
                         <optgroup label="Feeders">
@@ -111,50 +103,27 @@ export default function TransformerGraphWrapper() {
                 </div>
 
                 {/* Search Input */}
-                <div ref={searchContainerRef} style={{ position: "relative" }}>
-                    <label style={{ marginRight: "0.5rem", fontWeight: "bold" }}>Search:</label>
+                <div ref={searchContainerRef} className="control-group" style={{ position: "relative" }}>
+                    <label className="control-label">Search:</label>
                     <input
                         type="text"
                         placeholder="Search houses, transformers..."
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        style={{ 
-                            padding: "0.25rem", 
-                            minWidth: "200px",
-                            border: "1px solid #ccc",
-                            borderRadius: "4px"
-                        }}
+                        className="control-input"
                     />
                     
                     {/* Search Results Dropdown */}
                     {showSearchResults && searchResults.length > 0 && (
-                        <div style={{
-                            position: "absolute",
-                            top: "100%",
-                            left: "60px", // Offset by label width
-                            right: 0,
-                            backgroundColor: "white",
-                            border: "1px solid #ccc",
-                            borderRadius: "4px",
-                            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                            maxHeight: "200px",
-                            overflowY: "auto",
-                            zIndex: 1000
-                        }}>
+                        <div className="search-dropdown">
                             {searchResults.map((node) => (
                                 <div
                                     key={node.id}
                                     onClick={() => handleSearchSelect(node)}
-                                    style={{
-                                        padding: "0.5rem",
-                                        cursor: "pointer",
-                                        borderBottom: "1px solid #eee"
-                                    }}
-                                    onMouseEnter={(e) => e.target.style.backgroundColor = "#f0f0f0"}
-                                    onMouseLeave={(e) => e.target.style.backgroundColor = "white"}
+                                    className="search-item"
                                 >
-                                    <div style={{ fontWeight: "bold" }}>{node.label || node.id}</div>
-                                    <div style={{ fontSize: "0.8em", color: "#666" }}>
+                                    <div className="search-item-title">{node.label || node.id}</div>
+                                    <div className="search-item-subtitle">
                                         {node.type} • ID: {node.id}
                                     </div>
                                 </div>
