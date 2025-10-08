@@ -1,118 +1,94 @@
-// import t1 from "../data/tx1.json";
-// import t2 from "../data/tx2.json";
-import t3 from "../data/tx3.json";
-import tx15 from "../data/tx15.json";
-import tx5 from "../data/tx5.json";
 import example from "../data/example.json";
 
-const datasets = [t3,tx5, tx15, example];
+const datasets = [example];
 const normalizeType = (t) => (t ? t.toLowerCase() : t);
 
-// Use WeakMap for better memory management
-const transformerRadiiCache = new Map();
-
-// Pre-index transformers for faster lookup
-const transformerIndex = new Map();
-datasets.forEach((dataset, idx) => {
-    const transformer = dataset.find((n) => normalizeType(n.type) === "transformer");
-    if (transformer) {
-        transformerIndex.set(idx, transformer);
+// Helper function to generate appropriate labels for nodes
+const getNodeLabel = (node) => {
+    switch (normalizeType(node.type)) {
+        case "feeder":
+            return node.name || "Main Feeder";
+        case "transformer":
+            return node.name || "Transformer";
+        case "house":
+            return `House ${node.HouseID || node.id}`;
+        case "street":
+            return `Street ${node.id}`;
+        default:
+            return node.id;
     }
-});
+};
+
+// Cache is no longer needed with JSON-defined positions, but keeping for compatibility
+const transformerRadiiCache = new Map();
 
 
 export function loadTransformerData() {
     const nodes = [];
     const links = [];
     const nodeMap = new Map();
+    
+    // Scale factor for positioning
+    const scale = 4;
 
-    // Add grid node
-    const gridNode = { id: "grid", type: "grid", x: 0, y: 0, label: "Main Grid" };
-    nodes.push(gridNode);
-    nodeMap.set(gridNode.id, gridNode);
-
-    // Pre-calculate transformer positions
-    const step = (2 * Math.PI) / datasets.length;
-    const transformerPositions = new Map();
-
-    datasets.forEach((dataset, idx) => {
-        const transformer = transformerIndex.get(idx);
-        if (!transformer) return;
-
-        // Use cached radius or generate new one
-        if (!transformerRadiiCache.has(transformer.id)) {
-            transformerRadiiCache.set(transformer.id, 400 + Math.random() * 200);
+    // Process the single network (example.json contains the complete network)
+    const network = datasets[0]; // Only one dataset now - the complete network
+    
+    // Create a set of all valid node IDs for reference cleaning
+    const validNodeIds = new Set(network.map(node => node.id));
+    
+    // Auto-assign numerical house IDs if they don't exist
+    let nextHouseId = 1;
+    const houseIdMap = new Map();
+    
+    // First pass: assign house IDs to houses that don't have them
+    network.forEach((node) => {
+        if (normalizeType(node.type) === "house" && !node.HouseID) {
+            houseIdMap.set(node.id, nextHouseId++);
         }
-        const radius = transformerRadiiCache.get(transformer.id);
+    });
+    
+    // Process all nodes in the network
+    network.forEach((node) => {
+        // Skip removed street nodes
+        if (node.type === "street" && node.removed) {
+            return;
+        }
 
-        const angle = idx * step;
-        const tx = Math.cos(angle) * radius;
-        const ty = Math.sin(angle) * radius;
+        // Clean up broken node references
+        const cleanPrevNodes = node.prev_nodes ? node.prev_nodes.filter(id => validNodeIds.has(id)) : [];
+        const cleanNextNodes = node.next_nodes ? node.next_nodes.filter(id => validNodeIds.has(id)) : [];
         
-        transformerPositions.set(idx, { tx, ty });
-
-        const transformerNode = {
-            ...transformer,
-            type: normalizeType(transformer.type),
-            x: tx,
-            y: ty,
-            label: `Transformer ${idx + 1}`,
-            parent: "grid",
-            prev_node: "grid",
-            current_node: transformer.id,
+        // Create node with JSON-defined position and auto-assigned house ID if needed
+        const assignedHouseId = houseIdMap.get(node.id) || node.HouseID;
+        const processedNode = {
+            ...node,
+            type: normalizeType(node.type),
+            x: (node.x_meters || 0) * scale,
+            y: (node.y_meters || 0) * scale,
+            label: getNodeLabel({ ...node, HouseID: assignedHouseId }),
+            prev_nodes: cleanPrevNodes,
+            next_nodes: cleanNextNodes,
+            prev_node: cleanPrevNodes.length > 0 ? cleanPrevNodes[0] : null,
+            current_node: node.id,
+            name: node.name || (node.type === "transformer" ? "Transformer" : node.type === "feeder" ? "Feeder" : null),
+            HouseID: assignedHouseId // Ensure HouseID is always present for houses
         };
-        nodes.push(transformerNode);
-        nodeMap.set(transformerNode.id, transformerNode);
 
-        // Grid → Transformer link
-        links.push({ source: gridNode.id, target: transformerNode.id });
+        nodes.push(processedNode);
+        nodeMap.set(processedNode.id, processedNode);
     });
 
-    // Process houses in batch for better performance
-    datasets.forEach((dataset, idx) => {
-        const transformer = transformerIndex.get(idx);
-        const position = transformerPositions.get(idx);
-        if (!transformer || !position) return;
-
-        const { tx, ty } = position;
-        const transformerLabel = `Transformer ${idx + 1}`;
-
-        // Filter houses once and process in batch
-        const houses = dataset.filter((n) => n.type === "house");
-        houses.forEach((house) => {
-            const dx = house.x_meters - transformer.x_meters;
-            const dy = house.y_meters - transformer.y_meters;
-
-            const houseNode = {
-                ...house,
-                type: house.type.toLowerCase(),
-                x: tx + dx * 4,
-                y: ty + dy * 4,
-                // x: tx + dx * 40,
-                // y: ty + dy * 40,
-
-                label: `House ${house.HouseID}`,
-                parent: transformerLabel,
-                prev_node: house.prev_nodes ? house.prev_nodes[0] : null,
-                current_node: house.id,
-            };
-            nodes.push(houseNode);
-            nodeMap.set(houseNode.id, houseNode);
-        });
-    });
-
-    // Optimize link creation - avoid flattening and use batch processing
-    for (const dataset of datasets) {
-        for (const node of dataset) {
-            if (node.next_nodes && nodeMap.has(node.id)) {
-                for (const targetId of node.next_nodes) {
-                    if (nodeMap.has(targetId)) {
-                        links.push({ source: node.id, target: targetId });
-                    }
+    // Create links based on JSON-defined connections
+    nodes.forEach((node) => {
+        if (node.next_nodes && Array.isArray(node.next_nodes)) {
+            node.next_nodes.forEach((targetId) => {
+                if (nodeMap.has(targetId)) {
+                    links.push({ source: node.id, target: targetId });
                 }
-            }
+            });
         }
-    }
+    });
 
     return { nodes, links };
 }
