@@ -12,6 +12,8 @@ import {
   ResponsiveContainer,
   ReferenceLine
 } from 'recharts'
+import { PieChart as RePieChart, Pie, Cell } from 'recharts'
+import { phaseColors } from '../utils/iconCache.js'
 
 // Custom tooltip for better data presentation
 const CustomTooltip = ({ active, payload, label, unit = '' }) => {
@@ -24,10 +26,6 @@ const CustomTooltip = ({ active, payload, label, unit = '' }) => {
           let displayValue = entry.value
           let displayName = entry.name
           
-          if (entry.dataKey === 'export_power_negative') {
-            displayValue = Math.abs(entry.value) // Show positive value in tooltip
-            displayName = 'Export Power (kWh)'
-          }
           
           return (
             <p key={index} style={{ color: entry.color }}>
@@ -52,7 +50,7 @@ export const MonthlyBarChart = ({ data, selectedMetrics }) => {
       case 'power':
         return [
           { key: 'import_power', name: 'Import Power (kWh)', color: '#82ca9d' },
-          { key: 'export_power_negative', name: 'Export Power (kWh)', color: '#ff7300' }
+          { key: 'export_power', name: 'Export Power (kWh)', color: '#ff7300' }
         ]
       case 'reactive':
         return [
@@ -64,13 +62,8 @@ export const MonthlyBarChart = ({ data, selectedMetrics }) => {
     }
   }
 
-  // Transform data to make export power negative for visual effect
-  const transformedData = selectedMetrics === 'power' 
-    ? data.map(item => ({
-        ...item,
-        export_power_negative: -Math.abs(item.export_power || 0)
-      }))
-    : data
+  // No inversion needed; use data as-is
+  const transformedData = data
 
   const barConfig = getBarConfig()
   const unit = selectedMetrics === 'voltage' ? 'V' : selectedMetrics === 'power' ? 'kWh' : 'kVArh'
@@ -163,21 +156,10 @@ export const ChartControls = ({
   setChartType, 
   selectedMetrics, 
   setSelectedMetrics,
-  isFullscreen,
-  toggleFullscreen 
 }) => {
   return (
     <div className="flex flex-col gap-4 mb-4">
-      {/* Fullscreen Toggle */}
-      <div className="flex justify-end">
-        <button
-          onClick={toggleFullscreen}
-          className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-        >
-          {isFullscreen ? '📥 Exit Fullscreen' : '📤 Fullscreen'}
-        </button>
-      </div>
-      
+
       {/* Chart Type Selection */}
       <div className="flex gap-2">
         <button
@@ -235,6 +217,40 @@ export const ChartControls = ({
           ⚙️ Reactive Power
         </button>
       </div>
+    </div>
+  )
+}
+
+// Phase Pie Chart Component
+export const PhasePieChart = ({ data, title = 'Phase Distribution' }) => {
+  const COLORS = {
+    A: phaseColors.A,
+    B: phaseColors.B,
+    C: phaseColors.C,
+    default: phaseColors.default
+  }
+
+  return (
+    <div className="w-full h-full">
+      <ResponsiveContainer width="100%" height={400}>
+        <RePieChart>
+          <Tooltip />
+          <Legend />
+          <Pie
+            data={data}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={120}
+            label
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[entry.phase] || COLORS.default} />
+            ))}
+          </Pie>
+        </RePieChart>
+      </ResponsiveContainer>
     </div>
   )
 }
