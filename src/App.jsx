@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "./assets/logo.svg";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
+import Home from "./pages/home";
+import About from "./pages/about";
+import Contact from "./pages/contact";
 import Transformer from "./TransformerGraphWrapper";
 import "./styles/shared.css";
 
@@ -25,34 +25,49 @@ function RedirectHandler() {
     return null;
 }
 
+
+function NavDropdown() {
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const path = e.target.value;
+    if (path) navigate(path);
+  };
+
+  return (
+    <select className="nav-dropdown" onChange={handleChange} defaultValue="">
+      <option value="" disabled>Navigate to...</option>
+      <option value="/">Home</option>
+      <option value="/about">About</option>
+      <option value="/contact">Contact</option>
+      <option value="/transformer">Transformer</option>
+    </select>
+  );
+}
+
 export default function App() {
-    return (
-        <Router basename="/Carrying-Capacity">
-            <RedirectHandler />
-            <div style={{ height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-                <nav className="nav-container">
-                    <div className="nav-logo">
-                        <img src={logo} alt="Logo" />
-                        <h1>Phase Identification Map</h1>
-                    </div>
+  return (
+    <Router basename="/Carrying-Capacity">
+      <RedirectHandler />
+      <div style={{ height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <nav className="nav-container">
+          <div className="nav-logo">
+            <img src={logo} alt="Logo" />
+            <h1>Phase Identification Map</h1>
+          </div>
 
-                    <div className="nav-links">
-                        <Link to="/" className="nav-link">Home</Link>
-                        <Link to="/about" className="nav-link">About</Link>
-                        <Link to="/contact" className="nav-link">Contact</Link>
-                        <Link to="/transformer" className="nav-link">Transformer</Link>
-                    </div>
-                </nav>
+          <NavDropdown />
+        </nav>
 
-                <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/contact" element={<Contact />} />
-                        <Route path="/transformer" element={<Transformer />} />
-                    </Routes>
-                </div>
-            </div>
-        </Router>
-    );
+        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/transformer" element={<Transformer />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
+  );
 }
