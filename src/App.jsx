@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "./assets/logo.svg";
 import Home from "./pages/home";
-import About from "./pages/about";
-import Contact from "./pages/contact";
+import PhaseEstimate from "./pages/PhaseEstimate";
+import NetworkEstimate from "./pages/NetworkEstimate";
+import StreetGeneration from "./pages/StreetGeneration";
+import FrontEnd from "./pages/FrontEnd";
 import Transformer from "./TransformerGraphWrapper";
 import "./styles/shared.css";
 
@@ -25,10 +27,8 @@ function RedirectHandler() {
     return null;
 }
 
-
 function NavDropdown() {
   const navigate = useNavigate();
-
   const handleChange = (e) => {
     const path = e.target.value;
     if (path) navigate(path);
@@ -36,10 +36,12 @@ function NavDropdown() {
 
   return (
     <select className="nav-dropdown" onChange={handleChange} defaultValue="">
-      <option value="" disabled>Navigate to...</option>
+      <option value="" disabled>Navigate to page...</option>
       <option value="/">Home</option>
-      <option value="/about">About</option>
-      <option value="/contact">Contact</option>
+      <option value="/phase_estimate">Phase Estimation</option>
+      <option value="/network_estimate">Network Estimation</option>
+      <option value="/street_gen">Street Generation</option>
+      <option value="/front_end">Front End</option>
       <option value="/transformer">Transformer</option>
     </select>
   );
@@ -62,8 +64,10 @@ export default function App() {
         <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="/PhaseEstimate" element={<PhaseEstimate />} />
+            <Route path="/NetworkEstimate" element={<NetworkEstimate />} />
+            <Route path="/StreetGeneration" element={<StreetGeneration/>} />
+            <Route path="/FrontEnd" element={<FrontEnd/>} />
             <Route path="/transformer" element={<Transformer />} />
           </Routes>
         </div>

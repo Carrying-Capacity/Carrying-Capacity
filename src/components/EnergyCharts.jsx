@@ -177,7 +177,7 @@ export const ChartControls = ({
 }
 
 // Phase Pie Chart Component
-export const PhasePieChart = ({ data, title = 'Phase Distribution' }) => {
+export const PhasePieChart = ({ data }) => {
   return (
     <div className="w-full h-full">
       <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
