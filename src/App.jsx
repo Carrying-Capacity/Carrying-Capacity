@@ -51,23 +51,22 @@ export default function App() {
   return (
     <Router basename="/Carrying-Capacity">
       <RedirectHandler />
-      <div style={{ height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div style={{ height: "100vh", display: "flex", flexDirection: "column"}}>
         <nav className="nav-container">
           <div className="nav-logo">
             <img src={logo} alt="Logo" />
             <h1>Phase Identification Map</h1>
           </div>
-
           <NavDropdown />
         </nav>
 
         <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/PhaseEstimate" element={<PhaseEstimate />} />
-            <Route path="/NetworkEstimate" element={<NetworkEstimate />} />
-            <Route path="/StreetGeneration" element={<StreetGeneration/>} />
-            <Route path="/FrontEnd" element={<FrontEnd/>} />
+            <Route path="/phase_estimate" element={<PhaseEstimate />} />
+            <Route path="/network_estimate" element={<NetworkEstimate />} />
+            <Route path="/street_gen" element={<StreetGeneration/>} />
+            <Route path="/front_end" element={<FrontEnd/>} />
             <Route path="/transformer" element={<Transformer />} />
           </Routes>
         </div>

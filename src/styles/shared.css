@@ -2,15 +2,20 @@
 
 /* Navigation styles */
 .nav-container {
-  flex: 0 0 5vh;
-  background-color: #333;
-  color: white;
-  padding: 0.5rem 1rem;
   display: flex;
+  justify-content: flex-start;   /* align items to the left instead of far apart */
   align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
+  gap: 60rem;                   /* spacing between logo and dropdown */
+  height: 60px;
+  padding: 0 1rem;
+  background-color: #1f2937;
+  color: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
 }
+
 
 .nav-logo {
   display: flex;
@@ -126,7 +131,6 @@
 /* Loading states */
 .loading-container {
   display: flex;
-  items-center: center;
   justify-content: center;
   padding: 2rem;
   color: #666;
