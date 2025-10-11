@@ -5,6 +5,7 @@ import Home from "./pages/home";
 import PhaseEstimate from "./pages/PhaseEstimate";
 import NetworkEstimate from "./pages/NetworkEstimate";
 import StreetGeneration from "./pages/StreetGeneration";
+import DataProcessingInfo from "./pages/DataProcessingInfo";
 import FrontEnd from "./pages/FrontEnd";
 import Transformer from "./TransformerGraphWrapper";
 import "./styles/shared.css";
@@ -38,11 +39,12 @@ function NavDropdown() {
     <select className="nav-dropdown" onChange={handleChange} defaultValue="">
       <option value="" disabled>Navigate to page...</option>
       <option value="/">Home</option>
+      <option value="/transformer">Interactable Map</option>
+      <option value="/data_processing_info">Data Processing</option>
       <option value="/phase_estimate">Phase Estimation</option>
       <option value="/network_estimate">Network Estimation</option>
       <option value="/street_gen">Street Generation</option>
       <option value="/front_end">Front End</option>
-      <option value="/transformer">Transformer</option>
     </select>
   );
 }
@@ -55,7 +57,7 @@ export default function App() {
         <nav className="nav-container">
           <div className="nav-logo">
             <img src={logo} alt="Logo" />
-            <h1>Phase Identification Map</h1>
+            <h1>Carrying Capacity Website</h1>
           </div>
           <NavDropdown />
         </nav>
@@ -67,6 +69,7 @@ export default function App() {
             <Route path="/network_estimate" element={<NetworkEstimate />} />
             <Route path="/street_gen" element={<StreetGeneration/>} />
             <Route path="/front_end" element={<FrontEnd/>} />
+            <Route path="/data_processing_info" element={<DataProcessingInfo />} />
             <Route path="/transformer" element={<Transformer />} />
           </Routes>
         </div>

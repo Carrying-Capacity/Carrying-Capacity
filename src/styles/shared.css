@@ -3,11 +3,10 @@
 /* Navigation styles */
 .nav-container {
   display: flex;
-  justify-content: flex-start;   /* align items to the left instead of far apart */
+  justify-content: space-between;   /* align items to the left instead of far apart */
   align-items: center;
-  gap: 60rem;                   /* spacing between logo and dropdown */
   height: 60px;
-  padding: 0 1rem;
+  padding: 0 1rem; /* controls distance from screen edges */
   background-color: #1f2937;
   color: white;
   position: fixed;
@@ -16,6 +15,16 @@
   z-index: 1000;
 }
 
+.nav-dropdown {
+  margin-left: auto;   /* pushes dropdown to the far right */
+  margin-right: 2rem;  /* 2rem space from right edge */
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: none;
+  background-color: white;
+  color: #1f2937;
+  font-size: 1rem;
+}
 
 .nav-logo {
   display: flex;
