@@ -1,27 +1,33 @@
+import React from "react";
+import VoltageChart from "../components/VoltageChart";
 import "./PagesFormat.css";
 
 export default function PhaseEstimate() {
   return (
     <div className="home-container">
       <div className="content-stripe">
-        <h1>Phase Estimation</h1>
-        <p>
-          This is the main landing area of your React + Vite application. You can
-          customize this section to introduce your project, display key
-          information, or guide users to other sections of your site.
-        </p>
+        <h1 className="text-xl font-semibold mb-4">Phase Estimation</h1>
 
         <p>
-          Built with modern tools like <strong>React</strong> and <strong>Vite</strong>,
-          this setup ensures fast development, hot reloading, and efficient
-          production builds. Styling is handled via a separate CSS file to keep
-          your code organized and maintainable.
-        </p>
+          After cleaning and ordering the given data from the meters, for a single house, in this case House 635 of Transformer Tx15
+          The resulting data for a single house, with a solar panel, for the first month, will look like this:
 
-        <p>
-          Feel free to experiment with layout, colors, and typography. This
-          central stripe layout helps keep your content focused and readable on
-          any screen size.
+
+        </p>
+      <div className="voltage-box">
+        <div style={{ width: "100%", height: "100%" }}>
+          <VoltageChart
+            startDate="2025-01-01"
+            endDate="2025-10-10"
+            rowLimit={10000}
+          />
+        </div>
+      </div>
+
+
+        <p className="mt-6">
+          Ok, so we have the data. The first requirement is to estimate the
+          Phases with the given data. 
         </p>
       </div>
     </div>

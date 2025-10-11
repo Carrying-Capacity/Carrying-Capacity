@@ -98,3 +98,17 @@ export const MONTH_OPTIONS = Array.from({ length: 12 }, (_, i) => ({
   value: i + 1,
   label: new Date(2024, i, 1).toLocaleString('default', { month: 'short' })
 }));
+
+export const HOUSE635_CONFIGS = {
+  voltage: [
+    { key: 'voltage', name: 'Voltage (V)', color: CHART_COLORS.primary }
+  ],
+  power: [
+    { key: 'import_power', name: 'Import Power (kWh)', color: CHART_COLORS.secondary },
+    { key: 'export_power', name: 'Export Power (kWh)', color: CHART_COLORS.accent }
+  ],
+  reactive: [
+    { key: 'inductive_power', name: 'Inductive Power (kVArh)', color: CHART_COLORS.warning },
+    { key: 'capacitive_power', name: 'Capacitive Power (kVArh)', color: CHART_COLORS.danger }
+  ]
+};
