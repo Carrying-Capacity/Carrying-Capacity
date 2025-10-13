@@ -37,3 +37,32 @@ select {
     padding: 10px;
     z-index: 10;
 }
+
+/* Modal styles to prevent body scroll */
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    pointer-events: none;
+}
+
+.modal-container > * {
+    pointer-events: auto;
+}
+
+/* Ensure modal content doesn't extend beyond viewport */
+.modal-content {
+    max-height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}

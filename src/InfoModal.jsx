@@ -26,7 +26,7 @@ export default function InfoModal({ node, onClose }) {
         setIsFullscreen(!isFullscreen);
     };
     
-    // Handle escape key to close fullscreen
+    // Handle escape key and body scroll prevention
     useEffect(() => {
         const handleEscape = (event) => {
             if (event.key === 'Escape') {
@@ -45,8 +45,16 @@ export default function InfoModal({ node, onClose }) {
             }
         };
         
+        // Prevent body scroll when modal is open
+        document.body.classList.add('modal-open');
+        
         document.addEventListener('keydown', handleEscape);
-        return () => document.removeEventListener('keydown', handleEscape);
+        
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            // Restore original body state when modal closes
+            document.body.classList.remove('modal-open');
+        };
     }, [isFullscreen, onClose]);
     
     const baseModalClasses = "bg-white border border-gray-300 rounded-lg shadow-2xl transition-all duration-700 ease-in-out opacity-100";
@@ -158,23 +166,25 @@ export default function InfoModal({ node, onClose }) {
     if (!node) return null;
     
     return (
-        <>
+        <div className="modal-container">
+            {isFullscreen && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: "black",
+                        opacity: 0.5,
+                        transition: "opacity 700ms ease-in-out",
+                        zIndex: 999
+                    }}
+                    onClick={() => setIsFullscreen(false)}
+                />
+            )}
             <div
-                style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: "black",
-                    opacity: isFullscreen ? 0.5 : 0,
-                    transition: "opacity 700ms ease-in-out",
-                    pointerEvents: isFullscreen ? "auto" : "none",
-                    zIndex: 40
-                }}
-            />
-            <div
-                className={baseModalClasses}
+                className={`${baseModalClasses} modal-content`}
                 style={isFullscreen ? MODAL_STYLES.fullscreen : MODAL_STYLES.normal}
             >
                 <div className="modal-header">
@@ -311,6 +321,6 @@ export default function InfoModal({ node, onClose }) {
                 {/* Transformer message */}
 
             </div>
-        </>
+        </div>
     );
 }

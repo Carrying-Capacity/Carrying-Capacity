@@ -67,30 +67,31 @@ export const CHART_DIMENSIONS = {
 
 export const MODAL_STYLES = {
   normal: {
-    position: "absolute",
+    position: "fixed",
     top: "20px",
     right: "20px", 
-    left: "calc(100vw - 20px - 500px)",
-    maxHeight: "80vh",
-    zIndex: 10,
+    width: "480px",
+    maxWidth: "calc(100vw - 40px)",
+    maxHeight: "calc(100vh - 40px)",
+    zIndex: 1000,
     padding: "1.5rem",
     overflow: "auto",
     backgroundColor: "#fdfdfd",
     borderRadius: 10,
-    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.23)"
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)"
   },
   fullscreen: {
-    position: "absolute",
+    position: "fixed",
     top: "20px",
     left: "20px",
     right: "20px", 
-    zIndex: 50,
+    bottom: "20px",
+    zIndex: 1001,
     padding: "2rem",
     overflow: "auto",
     backgroundColor: "#fdfdfd",
     borderRadius: 10,
-    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.23)",
-    maxHeight: "calc(100vh - 40px)"
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1)"
   }
 };
 
