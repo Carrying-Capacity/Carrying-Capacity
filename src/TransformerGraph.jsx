@@ -113,8 +113,6 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
                 cooldownTicks={0}
                 warmupTicks={0}
                 nodeRelSize={6}
-                linkDirectionalArrowLength={10}
-                linkDirectionalArrowRelPos={30}
                 nodeLabel={() => ""}
                 onNodeHover={setHoverNode}
                 nodeCanvasObject={(node, ctx) => {
@@ -134,10 +132,40 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
                         ctx.setLineDash([]);
                     }
 
+                    // Draw the line
                     ctx.beginPath();
                     ctx.moveTo(link.source.x, link.source.y);
                     ctx.lineTo(link.target.x, link.target.y);
                     ctx.stroke();
+
+                    // Draw arrow at halfway point
+                    const dx = link.target.x - link.source.x;
+                    const dy = link.target.y - link.source.y;
+                    const angle = Math.atan2(dy, dx);
+                    
+                    // Arrow position at 50% of the link
+                    const arrowX = link.source.x + dx * 0.5;
+                    const arrowY = link.source.y + dy * 0.5;
+                    
+                    // Arrow properties
+                    const arrowLength = 10;
+                    const arrowWidth = 6;
+                    
+                    ctx.save();
+                    ctx.translate(arrowX, arrowY);
+                    ctx.rotate(angle);
+                    
+                    // Draw arrow
+                    ctx.beginPath();
+                    ctx.moveTo(arrowLength / 2, 0);
+                    ctx.lineTo(-arrowLength / 2, -arrowWidth / 2);
+                    ctx.lineTo(-arrowLength / 2, arrowWidth / 2);
+                    ctx.closePath();
+                    
+                    ctx.fillStyle = flowLinks.includes(link) ? "orange" : "#999";
+                    ctx.fill();
+                    
+                    ctx.restore();
                 }}
                 onNodeClick={(node) => {
                     onNodeClick(node);
