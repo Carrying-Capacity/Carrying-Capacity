@@ -20,8 +20,14 @@ export default function TransformerGraphWrapper() {
 
     const handleDropdownChange = (e) => {
         const nodeId = e.target.value;
-        setFocusNode(nodeId);
-        setSelectedNode(null);
+        if (nodeId) {
+            const node = data.nodes.find(n => n.id === nodeId);
+            setFocusNode(nodeId);
+            setSelectedNode(node || null);
+        } else {
+            setFocusNode(null);
+            setSelectedNode(null);
+        }
     };
 
     const handleSearchChange = (e) => {

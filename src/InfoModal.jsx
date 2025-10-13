@@ -3,9 +3,12 @@ import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData 
 import { MonthlyBarChart, DailyLineChart, ChartControls, PhasePieChart, MonthlyPhaseBarChart } from "./components/EnergyCharts";
 import { Maximize2, Minimize2, X as XIcon } from "lucide-react";
 import { useTransformerData } from "./hooks/useTransformerData.js";
-import { supabase } from "./lib/supabase";
 import { collectDownstreamNodes } from "./utils/graphUtils.js";
 import { METRICS_MAP, MODAL_STYLES, MONTH_OPTIONS } from "./constants/index.js";
+import { fetchMultipleHousesData } from "./utils/dataFetching.js";
+import { isHouse, isTransformer, hasEnergyData } from "./utils/nodeUtils.js";
+import { Button } from "./components/shared/Button.jsx";
+import { DataStateWrapper } from "./components/shared/StateComponents.jsx";
 
 export default function InfoModal({ node, onClose }) {
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -13,7 +16,7 @@ export default function InfoModal({ node, onClose }) {
     const [selectedMetrics, setSelectedMetrics] = useState('voltage'); // 'voltage', 'power', 'reactive'
     
     // Data fetching for house nodes
-    const houseId = node?.type === "house" ? node.HouseID : null;
+    const houseId = hasEnergyData(node) ? node.HouseID : null;
     const { monthlyData, loading: monthlyLoading, error: monthlyError } = useMonthlyData(houseId);
     const { dailyData, loading: dailyLoading, error: dailyError } = useDailyData(houseId);
     
@@ -33,6 +36,7 @@ export default function InfoModal({ node, onClose }) {
                 if (isFullscreen) {
                     setIsFullscreen(false);
                 } else {
+                    setIsFullscreen(false);
                     onClose();
                 }
             }
@@ -61,8 +65,8 @@ export default function InfoModal({ node, onClose }) {
 
     // Data for transformer aggregations
     const graphData = useTransformerData();
-    const isHouse = node?.type === "house";
-    const isTransformer = node?.type === "transformer";
+    const nodeIsHouse = isHouse(node);
+    const nodeIsTransformer = isTransformer(node);
 
     // Transformer-specific state
     const [transformerChartMode, setTransformerChartMode] = useState('houses'); // 'houses' | 'power'
@@ -75,7 +79,7 @@ export default function InfoModal({ node, onClose }) {
 
     // Derive downstream houses and phase counts when transformer selected
     useEffect(() => {
-        if (!isTransformer || !graphData?.nodes || !node) {
+        if (!nodeIsTransformer || !graphData?.nodes || !node) {
             setDownstreamHouses([]);
             setPhaseHouseCounts({ A: 0, B: 0, C: 0 });
             return;
@@ -91,12 +95,12 @@ export default function InfoModal({ node, onClose }) {
             return acc;
         }, { A: 0, B: 0, C: 0 });
         setPhaseHouseCounts(counts);
-    }, [isTransformer, graphData, node]);
+    }, [nodeIsTransformer, graphData, node]);
 
     // Fetch monthly import power for transformer houses and aggregate per phase
     useEffect(() => {
         const fetchPower = async () => {
-            if (!isTransformer || transformerChartMode !== 'power') {
+            if (!nodeIsTransformer || transformerChartMode !== 'power') {
                 setMonthlyPhasePowerData([]);
                 return;
             }
@@ -108,12 +112,12 @@ export default function InfoModal({ node, onClose }) {
             try {
                 setPowerLoading(true);
                 setPowerError(null);
-                const { data, error } = await supabase
-                    .from('house_monthly_metric_avg_compact')
-                    .select('*')
-                    .in('house_id', houseIds)
-                    .eq('metric', 'import_power');
-                if (error) throw error;
+                const { data, error } = await fetchMultipleHousesData(
+                    'house_monthly_metric_avg_compact', 
+                    houseIds, 
+                    'import_power'
+                );
+                if (error) throw new Error(error);
                 
                 // Build phase map for quick lookup
                 const phaseByHouse = downstreamHouses.reduce((m, h) => { 
@@ -152,7 +156,7 @@ export default function InfoModal({ node, onClose }) {
             }
         };
         fetchPower();
-    }, [isTransformer, transformerChartMode, downstreamHouses]);
+    }, [nodeIsTransformer, transformerChartMode, downstreamHouses]);
 
     const housesPieData = useMemo(() => (
         [
@@ -204,7 +208,10 @@ export default function InfoModal({ node, onClose }) {
                                 )}
                             </button>
                             <button
-                                onClick={onClose}
+                                onClick={() => {
+                                    setIsFullscreen(false);
+                                    onClose();
+                                }}
                                 className="modal-header-button"
                                 title="Close (ESC)"
                                 aria-label="Close"
@@ -216,9 +223,9 @@ export default function InfoModal({ node, onClose }) {
                 </div>
                 
                 {/* Basic Node Information */}
-                <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
                     <p className="text-lg mb-2"><strong>Type:</strong> {node.type}</p>
-                    {isHouse && (
+                    {nodeIsHouse && (
                         <>
                             <p className="mb-1"><strong>House ID:</strong> {node.HouseID}</p>
                             <p className="mb-1"><strong>Predicted Phase:</strong> {node.predicted_phase}</p>
@@ -226,100 +233,97 @@ export default function InfoModal({ node, onClose }) {
                             <p className="mb-1"><strong>Parent Transformer:</strong> {node.parent}</p>
                         </>
                     )}
-                    {isTransformer && (
+                    {nodeIsTransformer && (
                         <div className="mb-4">
                             <h4 className="text-xl font-semibold mb-4 text-gray-800">Transformer Analytics</h4>
 
                             {/* Mode Controls */}
                             <div className="flex flex-wrap gap-2 mb-3">
-                                <button
+                                <Button
                                     onClick={() => setTransformerChartMode('houses')}
-                                    className={`px-3 py-1 rounded ${transformerChartMode === 'houses' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                                    size="sm"
+                                    active={transformerChartMode === 'houses'}
                                 >
                                     Houses per Phase
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                     onClick={() => setTransformerChartMode('power')}
-                                    className={`px-3 py-1 rounded ${transformerChartMode === 'power' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                                    size="sm"
+                                    active={transformerChartMode === 'power'}
                                 >
                                     Monthly Power by Phase
-                                </button>
+                                </Button>
                             </div>
 
-                            {/* Loading / Error */}
-                            {transformerChartMode === 'power' && powerLoading && (
-                                <div className="flex items-center justify-center h-48 text-gray-600">Loading monthly power data…</div>
-                            )}
-                            {transformerChartMode === 'power' && powerError && (
-                                <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-red-700">{powerError}</div>
-                            )}
+                            {/* Charts with state handling */}
 
-                            {/* Charts */}
-                            <div className={`border border-gray-200 rounded-lg p-4 bg-gray-50 ${
+                            <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
                                 isFullscreen ? 'h-[calc(100vh-400px)]' : 'h-96'
                             }`}>
                                 {transformerChartMode === 'houses' ? (
                                     <PhasePieChart data={housesPieData} title="Houses per Phase" />
                                 ) : (
-                                    !powerLoading && !powerError && monthlyPhasePowerData.length > 0 && (
+                                    <DataStateWrapper
+                                        loading={powerLoading}
+                                        error={powerError}
+                                        data={monthlyPhasePowerData}
+                                        loadingMessage="Loading monthly power data..."
+                                        errorMessage="Failed to load power data"
+                                    >
                                         <MonthlyPhaseBarChart data={monthlyPhasePowerData} />
-                                    )
+                                    </DataStateWrapper>
                                 )}
                             </div>
                         </div>
                     )}
-                </div>
-                
-                {/* Energy Data Visualization - Only for houses */}
-                {isHouse && (
-                    <div className="mb-4">
-                        <h4 className="text-xl font-semibold mb-4 text-gray-800">Energy Data Visualization</h4>
-                        
-                        {/* Chart Controls */}
-                        <ChartControls
-                            chartType={chartType}
-                            setChartType={setChartType}
-                            selectedMetrics={selectedMetrics}
-                            setSelectedMetrics={setSelectedMetrics}
-                        />
-                        
-                        {/* Loading State */}
-                        {((chartType === 'monthly' && monthlyLoading) || (chartType === 'daily' && dailyLoading)) && (
-                            <div className="flex items-center justify-center h-64">
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-                                <span className="ml-3 text-gray-600">Loading energy data...</span>
-                            </div>
-                        )}
-                        
-                        {/* Error State */}
-                        {((chartType === 'monthly' && monthlyError) || (chartType === 'daily' && dailyError)) && (
-                            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                                <p className="text-red-600">
-                                    Error loading data: {chartType === 'monthly' ? monthlyError : dailyError}
-                                </p>
-                                <p className="text-sm text-red-500 mt-2">
-                                    Please check your internet connection and try again.
-                                </p>
-                            </div>
-                        )}
-                        
-                        {/* Charts */}
-                        {!monthlyLoading && !dailyLoading && !monthlyError && !dailyError && (
-                            <div className={`border border-gray-200 rounded-lg p-4 bg-gray-50 ${
-                                isFullscreen ? 'h-[calc(100vh-400px)]' : 'h-96'
-                            }`}>
-                                {chartType === 'monthly' ? (
-                                    <MonthlyBarChart data={chartData} selectedMetrics={selectedMetrics} />
-                                ) : (
-                                    <DailyLineChart data={chartData} selectedMetrics={selectedMetrics} />
-                                )}
-                            </div>
-                        )}
-                    </div>
-                )}
-                
-                {/* Transformer message */}
+                    {/* Energy Data Visualisation - Only for houses */}
+                    {nodeIsHouse && (
+                        <div className="mb-4">
+                            <h4 className="text-xl font-semibold mb-4 text-gray-800">Energy Data Visualisation</h4>
 
+                            {/* Chart Controls */}
+                            <ChartControls
+                                chartType={chartType}
+                                setChartType={setChartType}
+                                selectedMetrics={selectedMetrics}
+                                setSelectedMetrics={setSelectedMetrics}
+                            />
+
+                            {/* Loading State */}
+                            {((chartType === 'monthly' && monthlyLoading) || (chartType === 'daily' && dailyLoading)) && (
+                                <div className="flex items-center justify-center h-64">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                                    <span className="ml-3 text-gray-600">Loading energy data...</span>
+                                </div>
+                            )}
+
+                            {/* Error State */}
+                            {((chartType === 'monthly' && monthlyError) || (chartType === 'daily' && dailyError)) && (
+                                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                    <p className="text-red-600">
+                                        Error loading data: {chartType === 'monthly' ? monthlyError : dailyError}
+                                    </p>
+                                    <p className="text-sm text-red-500 mt-2">
+                                        Please check your internet connection and try again.
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Charts */}
+                            {!monthlyLoading && !dailyLoading && !monthlyError && !dailyError && (
+                                <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
+                                    isFullscreen ? 'h-[calc(100vh-400px)]' : 'h-96'
+                                }`}>
+                                    {chartType === 'monthly' ? (
+                                        <MonthlyBarChart data={chartData} selectedMetrics={selectedMetrics} />
+                                    ) : (
+                                        <DailyLineChart data={chartData} selectedMetrics={selectedMetrics} />
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

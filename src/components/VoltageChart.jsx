@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { supabase } from "../lib/supabase";
 import {
   LineChart,
   Line,
@@ -10,6 +9,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { fetchFirstTimestamp, fetchTimeSeriesData } from "../utils/dataFetching.js";
+import { TimeSeriesTooltip } from "./shared/ChartTooltip.jsx";
+import { DataStateWrapper } from "./shared/StateComponents.jsx";
 
 const VALUE_TYPES = [
   { key: "Voltage.PhA", label: "Voltage Phase A" },
@@ -39,14 +41,9 @@ export default function VoltageChart({ rowLimit = 500 }) {
 
       setLoading(true);
 
-      // Determine first week range
-      const { data: firstRow, error: firstError } = await supabase
-        .from("house_635")
-        .select("timestamp")
-        .order("timestamp", { ascending: true })
-        .limit(1)
-        .single();
-
+      // Get first timestamp to determine date range
+      const { data: firstRow, error: firstError } = await fetchFirstTimestamp("house_635");
+      
       if (firstError || !firstRow) {
         console.error(firstError);
         if (isMounted) {
@@ -59,13 +56,12 @@ export default function VoltageChart({ rowLimit = 500 }) {
       const firstTimestamp = new Date(firstRow.timestamp);
       const oneWeekLater = new Date(firstTimestamp.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-      // Fetch only first week and limit rows
-      const { data: fetchedData, error } = await supabase
-        .from("house_635")
-        .select(`timestamp, "${selectedType}"`)
-        .order("timestamp", { ascending: true })
-        .lte("timestamp", oneWeekLater.toISOString())
-        .limit(rowLimit);
+      // Fetch time series data for the first week
+      const { data: fetchedData, error } = await fetchTimeSeriesData("house_635", {
+        columns: `timestamp, "${selectedType}"`,
+        endDate: oneWeekLater.toISOString(),
+        limit: rowLimit
+      });
 
       if (error) {
         console.error(error);
@@ -104,9 +100,6 @@ export default function VoltageChart({ rowLimit = 500 }) {
     };
   }, [selectedType, rowLimit]);
 
-  if (loading) return <p>Loading...</p>;
-  if (data.length === 0) return <p>No data found.</p>;
-
   return (
     <div className="p-6 bg-white rounded shadow-md">
       <div className="mb-4">
@@ -124,45 +117,42 @@ export default function VoltageChart({ rowLimit = 500 }) {
         </select>
       </div>
 
-    <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="time"
-            type="number"
-            domain={["dataMin", "dataMax"]}
-            tickFormatter={time => new Date(time).toLocaleDateString("en-GB")}
-          />
-          <YAxis
-            label={{ value: selectedType, angle: -90, position: "insideLeft" }}
-            domain={[
-              dataMin => Math.floor(dataMin),
-              dataMax => Math.ceil(dataMax),
-            ]}
-          />
-          <Tooltip
-            labelFormatter={value =>
-              `Date: ${new Date(value).toLocaleString("en-GB", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}`
-            }
-            formatter={value => [parseFloat(value).toFixed(2), selectedType]}
-          />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke="#3b82f6"
-            name={selectedType}
-            strokeWidth={2}
-            dot={false}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      <DataStateWrapper 
+        loading={loading} 
+        error={null}
+        data={data}
+        loadingMessage="Loading chart data..."
+        emptyMessage="No data found for the selected time period."
+      >
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="time"
+              type="number"
+              domain={["dataMin", "dataMax"]}
+              tickFormatter={time => new Date(time).toLocaleDateString("en-GB")}
+            />
+            <YAxis
+              label={{ value: selectedType, angle: -90, position: "insideLeft" }}
+              domain={[
+                dataMin => Math.floor(dataMin),
+                dataMax => Math.ceil(dataMax),
+              ]}
+            />
+            <Tooltip content={<TimeSeriesTooltip />} />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke="#3b82f6"
+              name={selectedType}
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </DataStateWrapper>
     </div>
   );
 }

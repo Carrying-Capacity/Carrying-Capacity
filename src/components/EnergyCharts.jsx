@@ -14,30 +14,8 @@ import {
 } from 'recharts'
 import { PieChart as RePieChart, Pie, Cell } from 'recharts'
 import { PHASE_COLORS, CHART_CONFIGS, UNITS, CHART_DIMENSIONS } from '../constants/index.js'
-
-// Custom tooltip for better data presentation
-const CustomTooltip = ({ active, payload, label, unit = '' }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white p-3 border border-gray-300 rounded shadow-lg">
-        <p className="font-medium text-gray-800">{`${label}`}</p>
-        {payload.map((entry, index) => {
-          // Handle negative export power display
-          let displayValue = entry.value
-          let displayName = entry.name
-          
-          
-          return (
-            <p key={index} style={{ color: entry.color }}>
-              {`${displayName}: ${displayValue?.toFixed(3)}${unit}`}
-            </p>
-          )
-        })}
-      </div>
-    )
-  }
-  return null
-}
+import { ChartTooltip } from './shared/ChartTooltip.jsx'
+import { Button, ButtonGroup } from './shared/Button.jsx'
 
 // Monthly Bar Chart Component
 export const MonthlyBarChart = ({ data, selectedMetrics }) => {
@@ -51,7 +29,7 @@ export const MonthlyBarChart = ({ data, selectedMetrics }) => {
         <XAxis dataKey="month" />
         <YAxis />
         {selectedMetrics === 'power' && <ReferenceLine y={0} stroke="#000" strokeWidth={2} />}
-        <Tooltip content={<CustomTooltip unit={unit} />} />
+        <Tooltip content={<ChartTooltip unit={unit} />} />
         <Legend />
         {barConfig.map(config => (
           <Bar
@@ -86,7 +64,7 @@ export const DailyLineChart = ({ data, selectedMetrics }) => {
           interval={0}
         />
         <YAxis />
-        <Tooltip content={<CustomTooltip unit={unit} />} />
+        <Tooltip content={<ChartTooltip unit={unit} />} />
         <Legend />
         {lineConfig.map(config => (
           <Line
@@ -114,64 +92,46 @@ export const ChartControls = ({
 }) => {
   return (
     <div className="flex flex-col gap-4 mb-4">
-
       {/* Chart Type Selection */}
-      <div className="flex gap-2">
-        <button
+      <ButtonGroup>
+        <Button
           onClick={() => setChartType('monthly')}
-          className={`px-4 py-2 rounded transition-colors ${
-            chartType === 'monthly'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
+          active={chartType === 'monthly'}
         >
           Monthly Bar Chart
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => setChartType('daily')}
-          className={`px-4 py-2 rounded transition-colors ${
-            chartType === 'daily'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
+          active={chartType === 'daily'}
         >
           Daily Line Chart
-        </button>
-      </div>
+        </Button>
+      </ButtonGroup>
 
       {/* Metrics Selection */}
-      <div className="flex gap-2">
-        <button
+      <ButtonGroup>
+        <Button
           onClick={() => setSelectedMetrics('voltage')}
-          className={`px-4 py-2 rounded transition-colors ${
-            selectedMetrics === 'voltage'
-              ? 'bg-green-500 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
+          variant="success"
+          active={selectedMetrics === 'voltage'}
         >
           Voltage
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => setSelectedMetrics('power')}
-          className={`px-4 py-2 rounded transition-colors ${
-            selectedMetrics === 'power'
-              ? 'bg-green-500 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
+          variant="success"
+          active={selectedMetrics === 'power'}
         >
           Import/Export Power
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => setSelectedMetrics('reactive')}
-          className={`px-4 py-2 rounded transition-colors ${
-            selectedMetrics === 'reactive'
-              ? 'bg-green-500 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
+          variant="success"
+          active={selectedMetrics === 'reactive'}
         >
           Reactive Power
-        </button>
-      </div>
+        </Button>
+      </ButtonGroup>
     </div>
   )
 }
@@ -211,7 +171,7 @@ export const MonthlyPhaseBarChart = ({ data }) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" />
         <YAxis label={{ value: 'Power (kWh)', angle: -90, position: 'insideLeft' }} />
-        <Tooltip content={<CustomTooltip unit="kWh" />} />
+        <Tooltip content={<ChartTooltip unit="kWh" />} />
         <Legend />
         <Bar dataKey="A" name="Phase A" stackId="power" fill={PHASE_COLORS.A} />
         <Bar dataKey="B" name="Phase B" stackId="power" fill={PHASE_COLORS.B} />

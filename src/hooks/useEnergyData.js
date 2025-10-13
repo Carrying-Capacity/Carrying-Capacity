@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
+import { fetchMonthlyData, fetchDailyData } from '../utils/dataFetching.js'
 
 // Hook to fetch monthly data for a specific house
 export const useMonthlyData = (houseId) => {
@@ -8,27 +8,18 @@ export const useMonthlyData = (houseId) => {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    const fetchMonthlyData = async () => {
+    const loadMonthlyData = async () => {
       if (!houseId) return
       
-      try {
-        setLoading(true)
-        const { data, error } = await supabase
-          .from('house_monthly_metric_avg_compact')
-          .select('*')
-          .eq('house_id', houseId)
-
-        if (error) throw error
-        setMonthlyData(data)
-      } catch (err) {
-        setError(err.message)
-        console.error('Error fetching monthly data:', err)
-      } finally {
-        setLoading(false)
-      }
+      setLoading(true)
+      const { data, error } = await fetchMonthlyData(houseId)
+      
+      setMonthlyData(data)
+      setError(error)
+      setLoading(false)
     }
 
-    fetchMonthlyData()
+    loadMonthlyData()
   }, [houseId])
 
   return { monthlyData, loading, error }
@@ -41,27 +32,18 @@ export const useDailyData = (houseId) => {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    const fetchDailyData = async () => {
+    const loadDailyData = async () => {
       if (!houseId) return
       
-      try {
-        setLoading(true)
-        const { data, error } = await supabase
-          .from('house_30min_metric_avg_compact')
-          .select('*')
-          .eq('house_id', houseId)
-
-        if (error) throw error
-        setDailyData(data)
-      } catch (err) {
-        setError(err.message)
-        console.error('Error fetching daily data:', err)
-      } finally {
-        setLoading(false)
-      }
+      setLoading(true)
+      const { data, error } = await fetchDailyData(houseId)
+      
+      setDailyData(data)
+      setError(error)
+      setLoading(false)
     }
 
-    fetchDailyData()
+    loadDailyData()
   }, [houseId])
 
   return { dailyData, loading, error }
