@@ -70,7 +70,7 @@ export default function TransformerGraphWrapper() {
     }, []);
 
     return (
-        <>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <div className="control-panel">
                 {/* Transformer/Feeder Dropdown */}
                 <div className="control-group">
@@ -133,7 +133,14 @@ export default function TransformerGraphWrapper() {
                 </div>
             </div>
 
-            <div style={{ flex: 1, position: "relative", height: "100%" }}>
+            <div style={{ 
+                position: 'fixed',
+                top: '110px', // nav (60px) + control panel (~50px)
+                left: 0,
+                right: 0,
+                bottom: 0,
+                overflow: 'hidden'
+            }}>
                 <TransformerGraph
                     data={data}
                     focusNode={focusNode}
@@ -143,6 +150,6 @@ export default function TransformerGraphWrapper() {
                     <InfoModal node={selectedNode} onClose={closeModal} />
                 </Suspense>
             </div>
-        </>
+        </div>
     );
 }
