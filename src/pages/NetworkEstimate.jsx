@@ -1,9 +1,8 @@
-import "./PagesFormat.css";
+import PageLayout from '../components/PageLayout';
 
 export default function NetworkEstimate() {
   return (
-    <div className="home-container">
-      <div className="content-stripe">
+    <PageLayout>
       <h2>Network Structure Estimation</h2>
       <p>
         The purpose of this section is to explain how the network structure was constructed. This section foollows after Phase estimation, and uses the same cleaned dataset.
@@ -39,7 +38,6 @@ export default function NetworkEstimate() {
           The Chow-Liu Algorithm was used in order to get the network structure.
           
       </p>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

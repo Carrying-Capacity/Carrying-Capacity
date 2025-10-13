@@ -28,6 +28,6 @@ const createIconCache = () => {
 // Single instance shared across all components
 export const iconCache = createIconCache();
 
-// Re-export constants for backward compatibility
-export const phaseColors = PHASE_COLORS;
+// Direct access to constants - import from ../constants/index.js instead
+export { PHASE_COLORS as phaseColors, NODE_SIZES };
 export const getNodeSize = (type) => NODE_SIZES[type] || NODE_SIZES.default;

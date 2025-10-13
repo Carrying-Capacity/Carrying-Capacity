@@ -236,13 +236,13 @@ export default function InfoModal({ node, onClose }) {
                                     onClick={() => setTransformerChartMode('houses')}
                                     className={`px-3 py-1 rounded ${transformerChartMode === 'houses' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                                 >
-                                    🏠 Houses per Phase
+                                    Houses per Phase
                                 </button>
                                 <button
                                     onClick={() => setTransformerChartMode('power')}
                                     className={`px-3 py-1 rounded ${transformerChartMode === 'power' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                                 >
-                                    📊 Monthly Power by Phase
+                                    Monthly Power by Phase
                                 </button>
                             </div>
 
@@ -295,7 +295,7 @@ export default function InfoModal({ node, onClose }) {
                         {((chartType === 'monthly' && monthlyError) || (chartType === 'daily' && dailyError)) && (
                             <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                                 <p className="text-red-600">
-                                    ❌ Error loading data: {chartType === 'monthly' ? monthlyError : dailyError}
+                                    Error loading data: {chartType === 'monthly' ? monthlyError : dailyError}
                                 </p>
                                 <p className="text-sm text-red-500 mt-2">
                                     Please check your internet connection and try again.

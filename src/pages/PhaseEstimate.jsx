@@ -1,6 +1,6 @@
 import React from "react";
 import VoltageChart from "../components/VoltageChart";
-import "./PagesFormat.css";
+import PageLayout from '../components/PageLayout';
 
 export default function PhaseEstimate() {
     const transformers = [
@@ -24,8 +24,7 @@ export default function PhaseEstimate() {
     ];
 
   return (
-    <div className="home-container">
-      <div className="content-stripe">
+    <PageLayout>
         <h1 className="text-xl font-semibold mb-4">Phase Estimation</h1>
 
         <p>
@@ -74,7 +73,6 @@ export default function PhaseEstimate() {
             </tr>
           </tfoot>
         </table>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

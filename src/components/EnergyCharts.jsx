@@ -125,7 +125,7 @@ export const ChartControls = ({
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          📊 Monthly Bar Chart
+          Monthly Bar Chart
         </button>
         <button
           onClick={() => setChartType('daily')}
@@ -135,7 +135,7 @@ export const ChartControls = ({
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          📈 Daily Line Chart
+          Daily Line Chart
         </button>
       </div>
 
@@ -149,7 +149,7 @@ export const ChartControls = ({
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          ⚡ Voltage
+          Voltage
         </button>
         <button
           onClick={() => setSelectedMetrics('power')}
@@ -159,7 +159,7 @@ export const ChartControls = ({
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          🔋 Import/Export Power
+          Import/Export Power
         </button>
         <button
           onClick={() => setSelectedMetrics('reactive')}
@@ -169,7 +169,7 @@ export const ChartControls = ({
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          ⚙️ Reactive Power
+          Reactive Power
         </button>
       </div>
     </div>
