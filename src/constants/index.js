@@ -100,3 +100,50 @@ export const MONTH_OPTIONS = Array.from({ length: 12 }, (_, i) => ({
   label: new Date(2024, i, 1).toLocaleString('default', { month: 'short' })
 }));
 
+// Time series properties for comparison charts from towndatamarch_1_2 table
+export const TIME_SERIES_PROPERTIES = {
+  'Voltage.PhA': {
+    label: 'Voltage Phase A (V)',
+    color: PHASE_COLORS.A,
+    unit: 'V'
+  },
+  'Voltage.PhB': {
+    label: 'Voltage Phase B (V)', 
+    color: PHASE_COLORS.B,
+    unit: 'V'
+  },
+  'Voltage.PhC': {
+    label: 'Voltage Phase C (V)',
+    color: PHASE_COLORS.C,
+    unit: 'V'
+  },
+  ImportPower: {
+    label: 'Import Power (kW)',
+    color: CHART_COLORS.secondary,
+    unit: 'kW'
+  },
+  ExportPower: {
+    label: 'Export Power (kW)',
+    color: CHART_COLORS.accent,
+    unit: 'kW'
+  },
+  InductivePower: {
+    label: 'Inductive Power (kVAr)',
+    color: CHART_COLORS.warning,
+    unit: 'kVAr'
+  },
+  CapacitivePower: {
+    label: 'Capacitive Power (kVAr)',
+    color: CHART_COLORS.danger,
+    unit: 'kVAr'
+  }
+};
+
+// Colors for different houses in comparison charts
+export const HOUSE_COLORS = [
+  '#8884d8', '#82ca9d', '#ff7300', '#ffc658', '#ff7c7c', 
+  '#4CFF4C', '#4C4CFF', '#999999', '#e91e63', '#9c27b0',
+  '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4',
+  '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b'
+];
+

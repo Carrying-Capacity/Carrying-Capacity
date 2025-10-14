@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData } from "./hooks/useEnergyData";
+import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData, useTimeSeriesData, transformTimeSeriesData } from "./hooks/useEnergyData";
 import { MonthlyBarChart, DailyLineChart, ChartControls, PhasePieChart, MonthlyPhaseBarChart } from "./components/EnergyCharts";
 import { Maximize2, Minimize2, X as XIcon, CirclePlus, CircleMinus } from "lucide-react";
 import { useTransformerData } from "./hooks/useTransformerData.js";
@@ -9,6 +9,8 @@ import { fetchMultipleHousesData } from "./utils/dataFetching.js";
 import { isHouse, isTransformer, hasEnergyData } from "./utils/nodeUtils.js";
 import { Button } from "./components/shared/Button.jsx";
 import { DataStateWrapper } from "./components/shared/StateComponents.jsx";
+import PropertySelector from "./components/PropertySelector.jsx";
+import TimeSeriesLineChart from "./components/TimeSeriesLineChart.jsx";
 
 export default function InfoModal({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison }) {
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -73,6 +75,24 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
     const [monthlyPhasePowerData, setMonthlyPhasePowerData] = useState([]);
     const [powerLoading, setPowerLoading] = useState(false);
     const [powerError, setPowerError] = useState(null);
+
+    // Comparison time series state
+    const [selectedProperty, setSelectedProperty] = useState('voltage'); // Default to voltage category
+    
+    // Get house IDs for time series data fetching
+    const comparisonHouseIds = useMemo(() => 
+        comparisonList.map(house => house.HouseID).filter(Boolean), 
+        [comparisonList]
+    );
+    
+    // Fetch time series data for comparison houses
+    const { timeSeriesData, loading: timeSeriesLoading, error: timeSeriesError } = useTimeSeriesData(comparisonHouseIds);
+    
+    // Transform data for charts
+    const chartTimeSeriesData = useMemo(() => 
+        transformTimeSeriesData(timeSeriesData, selectedProperty),
+        [timeSeriesData, selectedProperty]
+    );
 
 
     // Derive downstream houses and phase counts when transformer selected
@@ -244,7 +264,7 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                 {isComparison ? (
                     /* Comparison Content */
                     <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
-                        <div className="mb-4">
+                        <div className="mb-6">
                             <h4 className="text-xl font-semibold mb-3 text-gray-800">House Comparison</h4>
                             {comparisonList.length === 0 ? (
                                 <p className="text-gray-600">No houses selected for comparison. Right-click on houses in the graph to add them.</p>
@@ -255,6 +275,7 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                                             <div className="flex justify-between items-start">
                                                 <div>
                                                     <h5 className="font-semibold text-lg">{house.label || house.id}</h5>
+                                                    <p className="text-sm text-gray-600"><strong>House ID:</strong> {house.HouseID}</p>
                                                     <p className="text-sm text-gray-600"><strong>Phase:</strong> {house.predicted_phase}</p>
                                                     <p className="text-sm text-gray-600"><strong>Transformer:</strong> {house.parent}</p>
                                                 </div>
@@ -274,6 +295,71 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                                 </div>
                             )}
                         </div>
+                        
+                        {/* Time Series Comparison Chart */}
+                        {comparisonList.length > 0 && (
+                            <div className="mb-6">
+                                <h4 className="text-xl font-semibold mb-4 text-gray-800">Time Series Data Visualization</h4>
+                                
+                                {/* Date Information */}
+                                {chartTimeSeriesData?.targetDate && (
+                                    <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+                                        <p className="text-sm text-blue-700">
+                                            <strong>Data for:</strong> {new Date(chartTimeSeriesData.targetDate).toLocaleDateString('en-AU', { 
+                                                weekday: 'long', 
+                                                year: 'numeric', 
+                                                month: 'long', 
+                                                day: 'numeric',
+                                                timeZone: 'Australia/Sydney'
+                                            })} (AEST)
+                                        </p>
+                                    </div>
+                                )}
+                                
+                                {/* Property Selection */}
+                                <div className="mb-4">
+                                    <PropertySelector 
+                                        selectedProperty={selectedProperty}
+                                        onPropertyChange={setSelectedProperty}
+                                        className="bg-gray-50 p-4 rounded-lg border border-gray-200"
+                                    />
+                                </div>
+                                
+                                {/* Loading State */}
+                                {timeSeriesLoading && (
+                                    <div className="flex items-center justify-center h-64">
+                                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                                        <span className="ml-3 text-gray-600">Loading time series data...</span>
+                                    </div>
+                                )}
+                                
+                                {/* Error State */}
+                                {timeSeriesError && (
+                                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                                        <p className="text-red-600">
+                                            Error loading time series data: {timeSeriesError}
+                                        </p>
+                                        <p className="text-sm text-red-500 mt-2">
+                                            Please check your internet connection and try again.
+                                        </p>
+                                    </div>
+                                )}
+                                
+                                {/* Time Series Chart */}
+                                {!timeSeriesLoading && !timeSeriesError && (
+                                    <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
+                                        isFullscreen ? 'h-[600px]' : 'h-[400px]'
+                                    }`}>
+                                        <TimeSeriesLineChart 
+                                            data={chartTimeSeriesData}
+                                            selectedProperty={selectedProperty}
+                                            houses={comparisonList}
+                                            height={isFullscreen ? 550 : 350}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 ) : (
                 /* Single Node Information */
@@ -282,36 +368,53 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                 
                 {/* Basic Node Information (Single Node Mode) */}
                 {!isComparison && node && (
-                <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
-                    <p className="text-lg mb-2"><strong>Type:</strong> {node.type}</p>
-                    {nodeIsHouse && (
-                        <>
-                            <p className="mb-1"><strong>House ID:</strong> {node.HouseID}</p>
-                            <p className="mb-1"><strong>Predicted Phase:</strong> {node.predicted_phase}</p>
-                            <p className="mb-1"><strong>Solar:</strong> {node.solar ? "Yes" : "No"}</p>
-                            <p className="mb-1"><strong>Parent Transformer:</strong> {node.parent}</p>
-                        </>
-                    )}
+                <div>
+                    <div className="border-2 border-gray-200 rounded-lg p-4 mb-4">
+                        <p className="text-lg mb-2"><strong>Type:</strong> {node.type}</p>
+                        {nodeIsHouse && (
+                            <>
+                                <p className="mb-1"><strong>House ID:</strong> {node.HouseID}</p>
+                                <p className="mb-1"><strong>Predicted Phase:</strong> {node.predicted_phase}</p>
+                                <p className="mb-1"><strong>Solar:</strong> {node.solar ? "Yes" : "No"}</p>
+                                <p className="mb-1"><strong>Parent Transformer:</strong> {node.parent}</p>
+                            </>
+                        )}
+                    </div>
                     {nodeIsTransformer && (
-                        <div className="mb-4">
-                            <h4 className="text-xl font-semibold mb-4 text-gray-800">Transformer Analytics</h4>
+                        <div className="mb-4 border-2 border-gray-200 rounded-lg p-4">
+                            <h4 className="text-xl font-semibold mb-4 text-gray-800">Transformer Visualisation</h4>
 
                             {/* Mode Controls */}
-                            <div className="flex flex-wrap gap-2 mb-3">
-                                <Button
-                                    onClick={() => setTransformerChartMode('houses')}
-                                    size="sm"
-                                    active={transformerChartMode === 'houses'}
-                                >
-                                    Houses per Phase
-                                </Button>
-                                <Button
-                                    onClick={() => setTransformerChartMode('power')}
-                                    size="sm"
-                                    active={transformerChartMode === 'power'}
-                                >
-                                    Monthly Power by Phase
-                                </Button>
+                            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
+                                <h5 className="text-md font-medium text-gray-700 mb-2">Select Analysis Type</h5>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                        <input
+                                            type="radio"
+                                            name="transformer-mode-selection"
+                                            checked={transformerChartMode === 'houses'}
+                                            onChange={() => setTransformerChartMode('houses')}
+                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                        />
+                                        <div>
+                                            <span className="text-sm font-medium text-gray-700">Houses per Phase</span>
+                                            <p className="text-xs text-gray-500">Distribution of houses across phases</p>
+                                        </div>
+                                    </label>
+                                    <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                        <input
+                                            type="radio"
+                                            name="transformer-mode-selection"
+                                            checked={transformerChartMode === 'power'}
+                                            onChange={() => setTransformerChartMode('power')}
+                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                        />
+                                        <div>
+                                            <span className="text-sm font-medium text-gray-700">Monthly Power by Phase</span>
+                                            <p className="text-xs text-gray-500">Power consumption per phase by month</p>
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
 
                             {/* Charts with state handling */}
