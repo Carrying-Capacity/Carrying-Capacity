@@ -15,6 +15,7 @@
   background-color: #ffffff;
   color: #333;
   padding: 3rem;
+  padding-top: 80px;         /* 🧩 Added top padding to separate from navbar */
   max-width: 60%;
   width: 90%;
   border-radius: 0;
@@ -22,10 +23,10 @@
   text-align: center;
   box-sizing: border-box;
   min-height: 100vh;
-    white-space: normal;      /* allow wrapping */
-  word-wrap: break-word;    /* break long words if needed */
-  word-break: break-word;   /* ensure text wraps inside container */
-  overflow-wrap: break-word;/* modern standard */
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Typography */
@@ -33,6 +34,11 @@
   font-size: 2.2rem;
   margin-bottom: 1.5rem;
   color: #1e40af;
+}
+
+.content-stripe h2 {
+  font-size: 1.2rem;
+  color: #07174a;
 }
 
 .content-stripe p {
