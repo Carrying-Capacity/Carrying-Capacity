@@ -116,26 +116,7 @@ export const tracePathToFeeder = (graphData, startNode) => {
     }
 
     let prevNode = getNodeById(graphData.nodes, prevId);
-    
-    // Try to find alternative path if previous node not found
-    if (!prevNode) {
-      console.warn(`Could not find prev node with ID: ${prevId} - trying alternative path`);
-      prevNode = graphData.nodes.find(n => 
-        n.next_nodes && n.next_nodes.includes(currentNode.id)
-      );
-      
-      if (!prevNode) {
-        console.warn('No alternative path found - stopping traversal');
-        break;
-      }
-      console.log(`Found alternative parent node: ${prevNode.type} ${prevNode.id}`);
-    }
 
-    // Check for cycles
-    if (visitedNodes.has(prevNode.id)) {
-      console.warn(`Cycle detected at node: ${prevNode.id}`);
-      break;
-    }
 
     // Add the previous node to the path
     pathNodes.push(prevNode);

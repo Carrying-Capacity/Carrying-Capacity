@@ -32,19 +32,17 @@ export default function InfoModal({ node, onClose }) {
     // Handle escape key and body scroll prevention
     useEffect(() => {
         const handleEscape = (event) => {
-            if (event.key === 'Escape') {
-                if (isFullscreen) {
-                    setIsFullscreen(false);
-                } else {
-                    setIsFullscreen(false);
-                    onClose();
-                }
+            if (event.key === 'Escape' || event.key === 'x') {
+                setIsFullscreen(false);
+                onClose();
             }
             if (event.key === 'f' || event.key === 'F') {
-                if (isFullscreen) {
-                    setIsFullscreen(false);
-                } else {
-                    setIsFullscreen(true);
+                if (node) {
+                    if (isFullscreen) {
+                        setIsFullscreen(false);
+                    } else {
+                        setIsFullscreen(true);
+                    }
                 }
             }
         };
