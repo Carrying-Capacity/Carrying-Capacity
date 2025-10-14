@@ -1,5 +1,6 @@
 // src/TransformerGraphWrapper.jsx
 import React, { useState, Suspense, useEffect, useRef } from "react";
+import { CirclePlus, CircleMinus } from "lucide-react";
 import TransformerGraph from "./TransformerGraph";
 import { useTransformerData } from "./hooks/useTransformerData.js";
 const InfoModal = React.lazy(() => import("./InfoModal"));
@@ -167,18 +168,54 @@ export default function TransformerGraphWrapper() {
                         {/* Search Results Dropdown */}
                         {showSearchResults && searchResults.length > 0 && (
                             <div className="search-dropdown">
-                                {searchResults.map((node) => (
-                                    <div
-                                        key={node.id}
-                                        onClick={() => handleSearchSelect(node)}
-                                        className="search-item"
-                                    >
-                                        <div className="search-item-title">{node.label || node.id}</div>
-                                        <div className="search-item-subtitle">
-                                            {node.type} • ID: {node.id}
+                                {searchResults.map((node) => {
+                                    const isInComparison = comparisonList.find(house => house.id === node.id);
+                                    const isHouse = node.type === "house";
+                                    
+                                    return (
+                                        <div
+                                            key={node.id}
+                                            className="search-item"
+                                            onContextMenu={(e) => {
+                                                e.preventDefault();
+                                                if (isHouse) {
+                                                    toggleHouseInComparison(node);
+                                                }
+                                            }}
+                                        >
+                                            <div 
+                                                className="search-item-content"
+                                                onClick={() => handleSearchSelect(node)}
+                                            >
+                                                <div className="search-item-title">{node.label || node.id}</div>
+                                                <div className="search-item-subtitle">
+                                                    {node.type} • ID: {node.id}
+                                                    {isHouse && (
+                                                        <span className="right-click-hint"> • Right-click to compare</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Comparison Button - Only show for houses */}
+                                            {isHouse && (
+                                                <button
+                                                    className="search-item-compare-btn"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        toggleHouseInComparison(node);
+                                                    }}
+                                                    title={isInComparison ? "Remove from comparison" : "Add to comparison"}
+                                                >
+                                                    {isInComparison ? (
+                                                        <CircleMinus className="search-item-compare-icon" />
+                                                    ) : (
+                                                        <CirclePlus className="search-item-compare-icon" />
+                                                    )}
+                                                </button>
+                                            )}
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         )}
                     </div>

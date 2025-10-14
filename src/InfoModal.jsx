@@ -281,7 +281,7 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                                                 {onRemoveFromComparison && (
                                                     <button
                                                         onClick={() => onRemoveFromComparison(house.id)}
-                                                        className="modal-header-button text-red-600 hover:text-red-800"
+                                                        className="modal-header-button"
                                                         title="Remove from comparison"
                                                         aria-label="Remove from comparison"
                                                     >
