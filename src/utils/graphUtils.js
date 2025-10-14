@@ -111,7 +111,6 @@ export const tracePathToFeeder = (graphData, startNode) => {
 
     const prevId = prevIds[0];
     if (!prevId) {
-      console.log(`Reached root node: ${currentNode.type} (${currentNode.id})`);
       break;
     }
 
@@ -132,7 +131,6 @@ export const tracePathToFeeder = (graphData, startNode) => {
 
     // Stop if we've reached the feeder (root of the network)
     if (currentNode.type === "feeder") {
-      console.log(`Path complete: reached feeder (${pathNodes.length} nodes)`);
       break;
     }
   }

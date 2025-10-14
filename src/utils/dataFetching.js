@@ -7,7 +7,6 @@ export const fetchData = async (query, errorContext = 'data') => {
     if (error) throw error;
     return { data, error: null };
   } catch (err) {
-    console.error(`Error fetching ${errorContext}:`, err);
     return { 
       data: null, 
       error: err.message || `Failed to fetch ${errorContext}` 
@@ -45,21 +44,37 @@ export const fetchDailyData = async (houseId) => {
 export const fetchTimeSeriesData = async (tableName, options = {}) => {
   const {
     houseId,
+    houseIds,
     columns = '*',
     startDate,
     endDate,
     limit = 500,
     orderBy = 'timestamp',
-    ascending = true
+    ascending = true,
+    filters = {}
   } = options;
 
+  // Use House_id for towndatamarch_1_2 table, house_id for others
+  const houseIdColumn = tableName === 'towndatamarch_1_2' ? 'House_id' : 'house_id';
+  
   let query = supabase
     .from(tableName)
     .select(columns)
     .order(orderBy, { ascending });
 
+  // Handle single house ID
   if (houseId) {
-    query = query.eq('house_id', houseId);
+    query = query.eq(houseIdColumn, houseId);
+  }
+  
+  // Handle multiple house IDs
+  if (houseIds && houseIds.length > 0) {
+    query = query.in(houseIdColumn, houseIds);
+  }
+  
+  // Handle additional filters
+  if (filters.house_id?.in) {
+    query = query.in(houseIdColumn, filters.house_id.in);
   }
 
   if (startDate) {
@@ -94,10 +109,13 @@ export const fetchFirstTimestamp = async (tableName) => {
 export const fetchMultipleHousesData = async (tableName, houseIds, metric = null) => {
   if (!houseIds?.length) return { data: [], error: null };
 
+  // Use House_id for towndatamarch_1_2 table, house_id for others
+  const houseIdColumn = tableName === 'towndatamarch_1_2' ? 'House_id' : 'house_id';
+
   let query = supabase
     .from(tableName)
     .select('*')
-    .in('house_id', houseIds);
+    .in(houseIdColumn, houseIds);
 
   if (metric) {
     query = query.eq('metric', metric);

@@ -12,10 +12,15 @@ export default function TransformerGraphWrapper() {
     const [searchResults, setSearchResults] = useState([]);
     const [showSearchResults, setShowSearchResults] = useState(false);
     const searchContainerRef = useRef(null);
+    
+    // Comparison feature state
+    const [comparisonList, setComparisonList] = useState([]);
+    const [showComparison, setShowComparison] = useState(false);
 
     const handleNodeClick = (node) => {
         setFocusNode(node.id);
         setSelectedNode(node);
+        setShowComparison(false); // Close comparison modal when selecting a new node
     };
 
     const handleDropdownChange = (e) => {
@@ -24,9 +29,11 @@ export default function TransformerGraphWrapper() {
             const node = data.nodes.find(n => n.id === nodeId);
             setFocusNode(nodeId);
             setSelectedNode(node || null);
+            setShowComparison(false); // Close comparison modal when selecting a new node
         } else {
             setFocusNode(null);
             setSelectedNode(null);
+            setShowComparison(false); // Close comparison modal when clearing selection
         }
     };
 
@@ -54,11 +61,47 @@ export default function TransformerGraphWrapper() {
         setSelectedNode(node);
         setSearchTerm("");
         setShowSearchResults(false);
+        setShowComparison(false); // Close comparison modal when selecting a new node via search
     };
 
     const closeModal = () => {
         setFocusNode(null);
         setSelectedNode(null);
+        setShowComparison(false);
+    };
+
+    // Comparison helper functions
+    const toggleHouseInComparison = (node) => {
+        if (node.type === "house") {
+            const isInList = comparisonList.find(house => house.id === node.id);
+            if (isInList) {
+                // Remove from comparison
+                setComparisonList(prev => prev.filter(house => house.id !== node.id));
+            } else {
+                // Add to comparison
+                setComparisonList(prev => [...prev, node]);
+            }
+        }
+    };
+    
+    // Keep the old addToComparison for backward compatibility (now just calls toggleHouseInComparison)
+    const addToComparison = (node) => {
+        toggleHouseInComparison(node);
+    };
+
+    const removeFromComparison = (nodeId) => {
+        setComparisonList(prev => prev.filter(house => house.id !== nodeId));
+    };
+
+    const clearComparison = () => {
+        setComparisonList([]);
+        setShowComparison(false);
+    };
+
+    const toggleComparisonModal = () => {
+        if (comparisonList.length > 0) {
+            setShowComparison(!showComparison);
+        }
     };
 
     // Close search results when clicking outside
@@ -78,64 +121,92 @@ export default function TransformerGraphWrapper() {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <div className="control-panel">
-                {/* Transformer/Feeder Dropdown */}
-                <div className="control-group">
-                    <label className="control-label">Navigate to:</label>
-                    <select 
-                        onChange={handleDropdownChange} 
-                        value={focusNode || ""}
-                        className="control-select"
-                    >
-                        <option value="">Select Node</option>
-                        <optgroup label="Feeders">
-                            {data.nodes
-                                .filter((n) => n.type === "feeder")
-                                .map((t) => (
-                                    <option key={t.id} value={t.id}>
-                                        {t.name || `Feeder ${t.id}`}
-                                    </option>
-                                ))}
-                        </optgroup>
-                        <optgroup label="Transformers">
-                            {data.nodes
-                                .filter((n) => n.type === "transformer")
-                                .map((t) => (
-                                    <option key={t.id} value={t.id}>
-                                        {t.name || `Transformer ${t.id}`}
-                                    </option>
-                                ))}
-                        </optgroup>
-                    </select>
-                </div>
+                {/* Left side - Navigation and Search */}
+                <div className="control-panel-left">
+                    {/* Transformer/Feeder Dropdown */}
+                    <div className="control-group">
+                        <label className="control-label">Navigate to:</label>
+                        <select 
+                            onChange={handleDropdownChange} 
+                            value={focusNode || ""}
+                            className="control-select"
+                        >
+                            <option value="">Select Node</option>
+                            <optgroup label="Feeders">
+                                {data.nodes
+                                    .filter((n) => n.type === "feeder")
+                                    .map((t) => (
+                                        <option key={t.id} value={t.id}>
+                                            {t.name || `Feeder ${t.id}`}
+                                        </option>
+                                    ))}
+                            </optgroup>
+                            <optgroup label="Transformers">
+                                {data.nodes
+                                    .filter((n) => n.type === "transformer")
+                                    .map((t) => (
+                                        <option key={t.id} value={t.id}>
+                                            {t.name || `Transformer ${t.id}`}
+                                        </option>
+                                    ))}
+                            </optgroup>
+                        </select>
+                    </div>
 
-                {/* Search Input */}
-                <div ref={searchContainerRef} className="control-group" style={{ position: "relative" }}>
-                    <label className="control-label">Search:</label>
-                    <input
-                        type="text"
-                        placeholder="Search houses, transformers..."
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        className="control-input"
-                    />
-                    
-                    {/* Search Results Dropdown */}
-                    {showSearchResults && searchResults.length > 0 && (
-                        <div className="search-dropdown">
-                            {searchResults.map((node) => (
-                                <div
-                                    key={node.id}
-                                    onClick={() => handleSearchSelect(node)}
-                                    className="search-item"
-                                >
-                                    <div className="search-item-title">{node.label || node.id}</div>
-                                    <div className="search-item-subtitle">
-                                        {node.type} • ID: {node.id}
+                    {/* Search Input */}
+                    <div ref={searchContainerRef} className="control-group" style={{ position: "relative" }}>
+                        <label className="control-label">Search:</label>
+                        <input
+                            type="text"
+                            placeholder="Search houses, transformers..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            className="control-input"
+                        />
+                        
+                        {/* Search Results Dropdown */}
+                        {showSearchResults && searchResults.length > 0 && (
+                            <div className="search-dropdown">
+                                {searchResults.map((node) => (
+                                    <div
+                                        key={node.id}
+                                        onClick={() => handleSearchSelect(node)}
+                                        className="search-item"
+                                    >
+                                        <div className="search-item-title">{node.label || node.id}</div>
+                                        <div className="search-item-subtitle">
+                                            {node.type} • ID: {node.id}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+                
+                {/* Right side - Comparison Controls */}
+                <div className="control-panel-right">
+                    <div className="control-group">
+                        {comparisonList.length > 0 && (
+                            <button
+                                onClick={clearComparison}
+                                className="control-button control-button-secondary"
+                                title="Clear comparison list"
+                            >
+                                Clear
+                            </button>
+                        )}
+                        <button
+                            onClick={toggleComparisonModal}
+                            disabled={comparisonList.length === 0}
+                            className={`control-button ${
+                                comparisonList.length === 0 ? 'control-button-disabled' : 'control-button-primary'
+                            }`}
+                            title={`Compare ${comparisonList.length} house${comparisonList.length !== 1 ? 's' : ''}`}
+                        >
+                            Compare Houses ({comparisonList.length})
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -151,9 +222,18 @@ export default function TransformerGraphWrapper() {
                     data={data}
                     focusNode={focusNode}
                     onNodeClick={handleNodeClick}
+                    onAddToComparison={addToComparison}
+                    comparisonList={comparisonList}
                 />
                 <Suspense fallback={null}>
-                    <InfoModal node={selectedNode} onClose={closeModal} />
+                    <InfoModal 
+                        node={selectedNode} 
+                        onClose={closeModal}
+                        isComparison={showComparison}
+                        comparisonList={comparisonList}
+                        onRemoveFromComparison={removeFromComparison}
+                        onAddToComparison={addToComparison}
+                    />
                 </Suspense>
             </div>
         </div>

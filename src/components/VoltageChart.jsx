@@ -45,7 +45,6 @@ export default function VoltageChart({ rowLimit = 500 }) {
       const { data: firstRow, error: firstError } = await fetchFirstTimestamp("house_635");
       
       if (firstError || !firstRow) {
-        console.error(firstError);
         if (isMounted) {
           setData([]);
           setLoading(false);
@@ -64,7 +63,6 @@ export default function VoltageChart({ rowLimit = 500 }) {
       });
 
       if (error) {
-        console.error(error);
         if (isMounted) {
           setData([]);
           setLoading(false);
