@@ -1,5 +1,7 @@
 import React from "react";
-import VoltageChart from "../components/VoltageChart";
+// import VoltageChart from "../components/VoltageChart";
+import ReactiveTable from "../components/ReactiveTable";
+import VoltageChart2 from "../components/VoltageChart2";
 import PageLayout from '../components/PageLayout';
 
 export default function PhaseEstimate() {
@@ -25,27 +27,27 @@ export default function PhaseEstimate() {
 
   return (
     <PageLayout>
-        <h1 className="text-xl font-semibold mb-4">Phase Estimation</h1>
+        <h1 className="text-xl font-semibold mb-4">Phase estimation</h1>
+        <h2>Raw Data Viewer</h2>
 
         <p>
-          After cleaning and ordering the given data from the meters, for a single house, in this case House 635 of Transformer Tx15
-          The resulting data for a single house, with a solar panel, for the first month, will look like this:
-
-
+          Due to the large size of the database, the viewer below is only for data between 01/03/2025 and 03/03/2025.
+          Use the selector to change the house number and chart type.
         </p>
       <div className="voltage-box">
         <div style={{ width: "100%", height: "100%" }}>
-          <VoltageChart
-            startDate="2025-01-01"
-            endDate="2025-10-10"
-            rowLimit={10000}
-          />
+          <VoltageChart2/>
         </div>
       </div>
 
       <p className="mt-6">
-      Basically, we just used some magic here, and we could magically envisage the result, which we have proceeded to place here. 
+        First, note that some of the graphs are 1-phase, whereas others are 3-phase. For example, house 665 is 3-phase since Voltage.PhB and Voltage.PhC exist. 
       </p>
+      <p>The transformers and their corresponding houses is displayed as table here.</p>
+        <div style={{ width: "100%", height: "100%" }}>
+          <ReactiveTable/>
+        </div>
+      <p>Basically, we just used some magic here, and we could magically envisage the result, which we have proceeded to place here.</p>
 
         <table style={{ width: "80%", margin: "2rem auto", borderCollapse: "collapse", textAlign: "center" }}>
           <thead style={{ background: "#f3f4f6" }}>
