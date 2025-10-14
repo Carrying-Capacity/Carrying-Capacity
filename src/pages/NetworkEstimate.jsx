@@ -3,7 +3,7 @@ import PageLayout from '../components/PageLayout';
 export default function NetworkEstimate() {
   return (
     <PageLayout>
-      <h2>Network Structure Estimation</h2>
+      <h1>Network Structure Estimation</h1>
       <p>
         The purpose of this section is to explain how the network structure was constructed. This section foollows after Phase estimation, and uses the same cleaned dataset.
       </p>
