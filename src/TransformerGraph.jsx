@@ -6,9 +6,10 @@ import { useWindowDimensions } from "./hooks/useWindowDimensions.js";
 import { collectDownstreamNodes, tracePathToFeeder } from "./utils/graphUtils.js";
 import { ANIMATION_CONFIG } from './constants/index.js';
 
-export default function TransformerGraph({ data, focusNode, onNodeClick }) {
+export default function TransformerGraph({ data, focusNode, onNodeClick, onAddToComparison, comparisonList }) {
     const fgRef = useRef();
     const [hoverNode, setHoverNode] = useState(null);
+    const [showCompareButton, setShowCompareButton] = useState(null);
 
     const [flowLinks, setFlowLinks] = useState([]); // links along the path to grid
     const [tick, setTick] = useState(0); // for animated dashed lines
@@ -29,6 +30,14 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
             ctx.globalAlpha = 0.4; // semi-transparent
             ctx.fill();
             ctx.globalAlpha = 1;
+            
+            // Add border for houses in comparison list
+            const isInComparison = comparisonList && comparisonList.some(h => h.id === node.id);
+            if (isInComparison) {
+                ctx.strokeStyle = "#3b82f6"; // blue border
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            }
         }
 
         // Draw the icon on top (all types)
@@ -39,11 +48,71 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
 
     const renderLabel = useCallback((node, ctx) => {
         if (hoverNode && hoverNode.id === node.id) {
-            ctx.font = "12px Arial";
-            ctx.fillStyle = "black";
-            ctx.fillText(node.label || node.id, node.x + 10, node.y + 4);
+            const label = node.label || node.id;
+            
+            // Set up text style
+            ctx.font = "bold 12px Arial";
+            const labelWidth = ctx.measureText(label).width;
+            
+            // Calculate positions
+            const padding = 6;
+            const boxX = node.x + 15;
+            const boxY = node.y - 12;
+            const boxWidth = labelWidth + padding * 2;
+            let boxHeight = 24;
+            
+            // Add space for comparison hint if applicable
+            let actionText = "";
+            if (node.type === "house" && onAddToComparison) {
+                const isInComparison = comparisonList && comparisonList.some(h => h.id === node.id);
+                actionText = isInComparison ? "Right-click to remove" : "Right-click to compare";
+                ctx.font = "10px Arial";
+                const actionWidth = ctx.measureText(actionText).width;
+                const maxWidth = Math.max(labelWidth, actionWidth);
+                boxHeight = 36;
+                
+                // Draw background with shadow
+                ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+                ctx.fillRect(boxX + 2, boxY + 2, maxWidth + padding * 2, boxHeight);
+                
+                // Draw main background
+                ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+                ctx.fillRect(boxX, boxY, maxWidth + padding * 2, boxHeight);
+                
+                // Draw border
+                ctx.strokeStyle = "#333";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(boxX, boxY, maxWidth + padding * 2, boxHeight);
+            } else {
+                // Draw background with shadow for non-house nodes
+                ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+                ctx.fillRect(boxX + 2, boxY + 2, boxWidth, boxHeight);
+                
+                // Draw main background
+                ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+                ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+                
+                // Draw border
+                ctx.strokeStyle = "#333";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+            }
+            
+            // Draw main text
+            ctx.font = "bold 12px Arial";
+            ctx.fillStyle = "#000";
+            ctx.textAlign = "left";
+            ctx.fillText(label, boxX + padding, boxY + 16);
+            
+            // Draw action text for houses
+            if (actionText) {
+                ctx.font = "10px Arial";
+                const isInComparison = comparisonList && comparisonList.some(h => h.id === node.id);
+                ctx.fillStyle = isInComparison ? "#3b82f6" : "#666";
+                ctx.fillText(actionText, boxX + padding, boxY + 30);
+            }
         }
-    }, [hoverNode]);
+    }, [hoverNode, comparisonList, onAddToComparison]);
 
     // Only run animation when there are flow links to animate
     useEffect(() => {
@@ -76,7 +145,6 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
             } else {
                 // For transformer, find all downstream nodes (recursively)
                 const allDownstreamNodes = collectDownstreamNodes(data, node);
-                console.log(`Transformer ${node.id}: found ${allDownstreamNodes.length} downstream nodes`);
 
                 fgRef.current.zoomToFit(
                     1000,
@@ -115,9 +183,15 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
                 nodeRelSize={6}
                 nodeLabel={() => ""}
                 onNodeHover={setHoverNode}
-                nodeCanvasObject={(node, ctx) => {
-                    renderNode(node, ctx);
-                    renderLabel(node, ctx);
+                nodeCanvasObject={renderNode}
+                onRenderFramePost={(ctx) => {
+                    // Render all hover labels after all nodes are rendered to ensure they appear on top
+                    if (hoverNode) {
+                        const node = data.nodes.find(n => n.id === hoverNode.id);
+                        if (node) {
+                            renderLabel(node, ctx);
+                        }
+                    }
                 }}
                 linkCanvasObject={(link, ctx) => {
                     // Highlight path links
@@ -169,6 +243,11 @@ export default function TransformerGraph({ data, focusNode, onNodeClick }) {
                 }}
                 onNodeClick={(node) => {
                     onNodeClick(node);
+                }}
+                onNodeRightClick={(node) => {
+                    if (node.type === "house" && onAddToComparison) {
+                        onAddToComparison(node);
+                    }
                 }}
             />
         </div>

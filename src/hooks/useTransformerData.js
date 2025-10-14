@@ -8,7 +8,6 @@ let cacheVersion = 0;
 export function useTransformerData() {
   return useMemo(() => {
     if (!cachedData) {
-      console.log('Loading and caching transformer data...');
       cachedData = loadTransformerData();
       cacheVersion++;
     }

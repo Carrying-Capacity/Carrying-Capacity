@@ -7,7 +7,6 @@ export const fetchData = async (query, errorContext = 'data') => {
     if (error) throw error;
     return { data, error: null };
   } catch (err) {
-    console.error(`Error fetching ${errorContext}:`, err);
     return { 
       data: null, 
       error: err.message || `Failed to fetch ${errorContext}` 

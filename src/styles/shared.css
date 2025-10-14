@@ -30,6 +30,13 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.nav-logo:hover {
+  opacity: 0.8;
 }
 
 .nav-logo img {
@@ -56,12 +63,11 @@
 /* Control panels */
 .control-panel {
   display: flex;
-  gap: 1rem;
+  justify-content: space-between;
   padding: 0.5rem;
   background-color: #f5f5f5;
   border-bottom: 1px solid #ddd;
   align-items: center;
-  flex-wrap: wrap;
   position: fixed;
   top: 60px;
   left: 0;
@@ -69,6 +75,19 @@
   z-index: 998;
   width: 100%;
   box-sizing: border-box;
+}
+
+.control-panel-left {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.control-panel-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
 }
 
 .control-group {
@@ -284,4 +303,45 @@
 
 .btn-inactive:hover {
   background-color: #d1d5db;
+}
+
+/* Control button styles for comparison feature */
+.control-button {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.control-button-primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.control-button-primary:hover {
+  background-color: #2563eb;
+}
+
+.control-button-secondary {
+  background-color: #6b7280;
+  color: white;
+  margin-left: 0.5rem;
+}
+
+.control-button-secondary:hover {
+  background-color: #4b5563;
+}
+
+.control-button-disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.control-button-disabled:hover {
+  background-color: #e5e7eb;
+  color: #9ca3af;
 }

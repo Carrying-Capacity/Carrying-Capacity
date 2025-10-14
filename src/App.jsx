@@ -55,10 +55,10 @@ export default function App() {
       <RedirectHandler />
       <div style={{ height: "100vh", display: "flex", flexDirection: "column"}}>
         <nav className="nav-container">
-          <div className="nav-logo">
+          <Link to="/" className="nav-logo">
             <img src={logo} alt="Logo" />
             <h1>Carrying Capacity Website</h1>
-          </div>
+          </Link>
           <NavDropdown />
         </nav>
 

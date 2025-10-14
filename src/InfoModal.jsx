@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData } from "./hooks/useEnergyData";
 import { MonthlyBarChart, DailyLineChart, ChartControls, PhasePieChart, MonthlyPhaseBarChart } from "./components/EnergyCharts";
-import { Maximize2, Minimize2, X as XIcon } from "lucide-react";
+import { Maximize2, Minimize2, X as XIcon, CirclePlus, CircleMinus } from "lucide-react";
 import { useTransformerData } from "./hooks/useTransformerData.js";
 import { collectDownstreamNodes } from "./utils/graphUtils.js";
 import { METRICS_MAP, MODAL_STYLES, MONTH_OPTIONS } from "./constants/index.js";
@@ -10,7 +10,7 @@ import { isHouse, isTransformer, hasEnergyData } from "./utils/nodeUtils.js";
 import { Button } from "./components/shared/Button.jsx";
 import { DataStateWrapper } from "./components/shared/StateComponents.jsx";
 
-export default function InfoModal({ node, onClose }) {
+export default function InfoModal({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison }) {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [chartType, setChartType] = useState('monthly'); // 'monthly' or 'daily'
     const [selectedMetrics, setSelectedMetrics] = useState('voltage'); // 'voltage', 'power', 'reactive'
@@ -37,7 +37,8 @@ export default function InfoModal({ node, onClose }) {
                 onClose();
             }
             if (event.key === 'f' || event.key === 'F') {
-                if (node) {
+                // Allow fullscreen toggle for both single node and comparison modals
+                if (node || isComparison) {
                     if (isFullscreen) {
                         setIsFullscreen(false);
                     } else {
@@ -56,7 +57,7 @@ export default function InfoModal({ node, onClose }) {
             document.removeEventListener('keydown', handleEscape);
             document.body.classList.remove('modal-open');
         };
-    }, [isFullscreen, onClose]);
+    }, [isFullscreen, onClose, node, isComparison]);
     
     const baseModalClasses = "bg-white border border-gray-300 rounded-lg shadow-2xl transition-all duration-700 ease-in-out opacity-100";
 
@@ -146,7 +147,6 @@ export default function InfoModal({ node, onClose }) {
                 
                 setMonthlyPhasePowerData(monthlyData);
             } catch (e) {
-                console.error('Error fetching transformer power data:', e);
                 setPowerError(e.message || 'Failed to load power data');
             } finally {
                 setPowerLoading(false);
@@ -164,7 +164,8 @@ export default function InfoModal({ node, onClose }) {
     ), [phaseHouseCounts]);
 
     
-    if (!node) return null;
+    // Show modal if we have a single node or if we're in comparison mode with houses to compare
+    if (!node && (!isComparison || comparisonList.length === 0)) return null;
     
     return (
         <div className="modal-container">
@@ -190,8 +191,29 @@ export default function InfoModal({ node, onClose }) {
             >
                 <div className="modal-header">
                     <div className="modal-header-row">
-                        <h3 className="modal-header-title">{node.label}</h3>
+                        <h3 className="modal-header-title">
+                            {isComparison ? `House Comparison (${comparisonList.length} houses)` : node?.label}
+                        </h3>
                         <div className="modal-header-buttons">
+                            {/* Comparison button for houses */}
+                            {!isComparison && nodeIsHouse && onAddToComparison && (
+                                <button
+                                    onClick={() => onAddToComparison(node)}
+                                    className="modal-header-button"
+                                    title={comparisonList && comparisonList.some(h => h.id === node.id) 
+                                        ? "Remove from comparison list" 
+                                        : "Add to comparison list"}
+                                    aria-label={comparisonList && comparisonList.some(h => h.id === node.id) 
+                                        ? "Remove from comparison" 
+                                        : "Add to comparison"}
+                                >
+                                    {comparisonList && comparisonList.some(h => h.id === node.id) ? (
+                                        <CircleMinus className="modal-header-icon" />
+                                    ) : (
+                                        <CirclePlus className="modal-header-icon" />
+                                    )}
+                                </button>
+                            )}
                             <button
                                 onClick={toggleFullscreen}
                                 className="modal-header-button"
@@ -219,7 +241,47 @@ export default function InfoModal({ node, onClose }) {
                     </div>
                 </div>
                 
-                {/* Basic Node Information */}
+                {isComparison ? (
+                    /* Comparison Content */
+                    <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
+                        <div className="mb-4">
+                            <h4 className="text-xl font-semibold mb-3 text-gray-800">House Comparison</h4>
+                            {comparisonList.length === 0 ? (
+                                <p className="text-gray-600">No houses selected for comparison. Right-click on houses in the graph to add them.</p>
+                            ) : (
+                                <div className="space-y-4">
+                                    {comparisonList.map((house, index) => (
+                                        <div key={house.id} className="p-3 border border-gray-300 rounded-lg bg-gray-50">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <h5 className="font-semibold text-lg">{house.label || house.id}</h5>
+                                                    <p className="text-sm text-gray-600"><strong>Phase:</strong> {house.predicted_phase}</p>
+                                                    <p className="text-sm text-gray-600"><strong>Transformer:</strong> {house.parent}</p>
+                                                </div>
+                                                {onRemoveFromComparison && (
+                                                    <button
+                                                        onClick={() => onRemoveFromComparison(house.id)}
+                                                        className="modal-header-button text-red-600 hover:text-red-800"
+                                                        title="Remove from comparison"
+                                                        aria-label="Remove from comparison"
+                                                    >
+                                                        <CircleMinus className="modal-header-icon" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                /* Single Node Information */
+                    <div></div>
+                )}
+                
+                {/* Basic Node Information (Single Node Mode) */}
+                {!isComparison && node && (
                 <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
                     <p className="text-lg mb-2"><strong>Type:</strong> {node.type}</p>
                     {nodeIsHouse && (
@@ -321,6 +383,7 @@ export default function InfoModal({ node, onClose }) {
                         </div>
                     )}
                 </div>
+                )}
             </div>
         </div>
     );
