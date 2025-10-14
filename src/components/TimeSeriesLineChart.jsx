@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { TIME_SERIES_PROPERTIES, HOUSE_COLORS } from '../constants/index.js';
+import { TIME_SERIES_PROPERTIES, HOUSE_COLORS, PHASE_COLORS } from '../constants/index.js';
 
 // Property category mappings
 const PROPERTY_MAPPINGS = {
@@ -9,10 +9,11 @@ const PROPERTY_MAPPINGS = {
   reactivePower: ['InductivePower', 'CapacitivePower']
 };
 
-const PHASE_COLORS = {
-  'Voltage.PhA': '#FF4C4C',  // Red
-  'Voltage.PhB': '#4CFF4C',  // Green  
-  'Voltage.PhC': '#4C4CFF',  // Blue
+// Use standardized phase colors from constants
+const VOLTAGE_PHASE_COLORS = {
+  'Voltage.PhA': PHASE_COLORS.A,  // Red
+  'Voltage.PhB': PHASE_COLORS.B,  // Green  
+  'Voltage.PhC': PHASE_COLORS.C,  // Blue
   'ImportPower': '#82ca9d',
   'ExportPower': '#ff7300',
   'InductivePower': '#ffc658',
@@ -26,6 +27,7 @@ export default function TimeSeriesLineChart({
   className = "",
   height = 400 
 }) {
+  
   // Get the actual properties to display based on category
   const propertiesToShow = PROPERTY_MAPPINGS[selectedProperty] || [];
   
@@ -68,17 +70,35 @@ export default function TimeSeriesLineChart({
     
     // Helper function to check if a property has all zero values
     const isPropertyAllZeros = (houseId, property) => {
-      return data.every(dataPoint => {
+      const hasData = data.some(dataPoint => {
         const value = dataPoint[`${houseId}_${property}`];
-        return value === 0 || value == null || isNaN(value);
+        return value !== 0 && value != null && !isNaN(value);
       });
+      return !hasData;
+    };
+    
+    // Helper function to get all actual voltage properties that exist in the data
+    const getActualVoltageProperties = () => {
+      const actualProperties = new Set();
+      data.forEach(dataPoint => {
+        Object.keys(dataPoint).forEach(key => {
+          if (key.includes('_Voltage.Ph')) {
+            const property = key.split('_')[1];
+            actualProperties.add(property);
+          }
+        });
+      });
+      return Array.from(actualProperties);
     };
     
     const configs = [];
     
     if (selectedProperty === 'voltage') {
+      // Get actual voltage properties from the data (including renamed ones)
+      const actualVoltageProperties = getActualVoltageProperties();
+      
       // For voltage, show each phase as separate lines across all houses, but skip all-zero phases
-      propertiesToShow.forEach(property => {
+      actualVoltageProperties.forEach(property => {
         houses.forEach((house, houseIndex) => {
           const key = `${house.HouseID}_${property}`;
           
@@ -89,15 +109,17 @@ export default function TimeSeriesLineChart({
           
           const phaseName = property.replace('Voltage.Ph', 'Phase ');
           
-          configs.push({
+          const config = {
             key,
             name: `${house.label || house.HouseID} - ${phaseName}`,
-            color: PHASE_COLORS[property],
+            color: VOLTAGE_PHASE_COLORS[property] || VOLTAGE_PHASE_COLORS['Voltage.PhA'], // Fallback to PhA color for renamed properties
             strokeWidth: 2,
             strokeDasharray: houseIndex > 0 ? "5 5" : undefined, // Dash for houses after first
             property,
             houseId: house.HouseID
-          });
+          };
+          
+          configs.push(config);
         });
       });
     } else {
@@ -112,7 +134,7 @@ export default function TimeSeriesLineChart({
           configs.push({
             key,
             name: `${house.label || house.HouseID} - ${propertyName}`,
-            color: PHASE_COLORS[property] || baseColor,
+            color: VOLTAGE_PHASE_COLORS[property] || baseColor,
             strokeWidth: 2,
             strokeDasharray: propIndex > 0 ? "5 5" : undefined, // Dash for second property type
             property,

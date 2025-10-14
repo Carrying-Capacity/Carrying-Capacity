@@ -89,8 +89,8 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
     
     // Transform data for charts
     const chartTimeSeriesData = useMemo(() => 
-        transformTimeSeriesData(timeSeriesData, selectedProperty),
-        [timeSeriesData, selectedProperty]
+        transformTimeSeriesData(timeSeriesData, selectedProperty, comparisonList),
+        [timeSeriesData, selectedProperty, comparisonList]
     );
 
 

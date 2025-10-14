@@ -146,12 +146,20 @@ const PROPERTY_MAPPINGS = {
 };
 
 // Transform time series data for comparison charts
-export const transformTimeSeriesData = (rawData, selectedCategory) => {
+export const transformTimeSeriesData = (rawData, selectedCategory, comparisonList = []) => {
   if (!rawData?.length || !selectedCategory) return []
 
   // Get actual properties from category
   const propertiesToInclude = PROPERTY_MAPPINGS[selectedCategory] || []
   if (!propertiesToInclude.length) return []
+
+  // Create a map of house phases for quick lookup
+  const housePhaseMap = comparisonList.reduce((map, house) => {
+    if (house.HouseID && house.predicted_phase) {
+      map[house.HouseID] = house.predicted_phase
+    }
+    return map
+  }, {})
 
   // Group data by timestamp using a +10 hour offset (AEST-like)
   const dataByTimestamp = rawData.reduce((acc, row) => {
@@ -175,7 +183,33 @@ export const transformTimeSeriesData = (rawData, selectedCategory) => {
     // Add data for each property in the category for this house
     propertiesToInclude.forEach(property => {
       const key = `${row.House_id}_${property}`
-      acc[timeKey][key] = row[property] || 0
+      let value = row[property] || 0
+      
+      // For voltage data, handle phase renaming for single-phase customers
+      if (selectedCategory === 'voltage' && property === 'Voltage.PhA') {
+        const housePhase = housePhaseMap[row.House_id]
+        
+        if (housePhase && (housePhase === 'A' || housePhase === 'B' || housePhase === 'C')) {
+          // Check if this is a single-phase customer (only PhA has data, PhB and PhC are zero)
+          const phBValue = row['Voltage.PhB'] || 0
+          const phCValue = row['Voltage.PhC'] || 0
+          
+          if (phBValue === 0 && phCValue === 0) {
+            // Single-phase customer - rename PhA to match assigned phase
+            const renamedKey = `${row.House_id}_Voltage.Ph${housePhase}`
+            acc[timeKey][renamedKey] = value
+            return // Skip adding the original PhA key
+          }
+        }
+      }
+      
+      // For voltage data, skip original PhB and PhC properties for single-phase customers
+      // (they will be zero and would overwrite our renamed values)
+      if (selectedCategory === 'voltage' && (property === 'Voltage.PhB' || property === 'Voltage.PhC')) {
+        return
+      }
+      
+      acc[timeKey][key] = value
     })
 
     return acc
@@ -183,6 +217,7 @@ export const transformTimeSeriesData = (rawData, selectedCategory) => {
 
   // Convert to array and sort by timestamp
   const result = Object.values(dataByTimestamp).sort((a, b) => a.sortOrder - b.sortOrder)
+
 
   return result
 }
