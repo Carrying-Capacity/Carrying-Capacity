@@ -54,7 +54,6 @@ export default function InfoModal({ node, onClose }) {
         
         return () => {
             document.removeEventListener('keydown', handleEscape);
-            // Restore original body state when modal closes
             document.body.classList.remove('modal-open');
         };
     }, [isFullscreen, onClose]);
@@ -256,7 +255,7 @@ export default function InfoModal({ node, onClose }) {
                             {/* Charts with state handling */}
 
                             <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
-                                isFullscreen ? 'h-[calc(100vh-400px)]' : 'h-96'
+                                isFullscreen ? '' : 'h-96'
                             }`}>
                                 {transformerChartMode === 'houses' ? (
                                     <PhasePieChart data={housesPieData} title="Houses per Phase" />
@@ -310,7 +309,7 @@ export default function InfoModal({ node, onClose }) {
                             {/* Charts */}
                             {!monthlyLoading && !dailyLoading && !monthlyError && !dailyError && (
                                 <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
-                                    isFullscreen ? 'h-[calc(100vh-400px)]' : 'h-96'
+                                    isFullscreen ? '' : 'h-96'
                                 }`}>
                                     {chartType === 'monthly' ? (
                                         <MonthlyBarChart data={chartData} selectedMetrics={selectedMetrics} />
