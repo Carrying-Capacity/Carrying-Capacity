@@ -2,7 +2,7 @@ import React from "react";
 
 // Unified tooltip component for all charts
 export const ChartTooltip = ({ active, payload, label, unit = '', labelFormatter, valueFormatter }) => {
-  if (!active || !payload || !payload.length) return null;
+  if (!active || !payload?.length) return null;
 
   const formatLabel = labelFormatter || ((value) => {
     // Check if it's a timestamp
@@ -32,25 +32,5 @@ export const ChartTooltip = ({ active, payload, label, unit = '', labelFormatter
         </p>
       ))}
     </div>
-  );
-};
-
-// Date/time specific tooltip for time series data
-export const TimeSeriesTooltip = ({ active, payload, label }) => {
-  return (
-    <ChartTooltip
-      active={active}
-      payload={payload}
-      label={label}
-      labelFormatter={(value) => 
-        `Date: ${new Date(value).toLocaleString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })}`
-      }
-    />
   );
 };

@@ -7,7 +7,6 @@ import { collectDownstreamNodes } from "./utils/graphUtils.js";
 import { METRICS_MAP, MODAL_STYLES, MONTH_OPTIONS } from "./constants/index.js";
 import { fetchMultipleHousesData } from "./utils/dataFetching.js";
 import { isHouse, isTransformer, hasEnergyData } from "./utils/nodeUtils.js";
-import { Button } from "./components/shared/Button.jsx";
 import { DataStateWrapper } from "./components/shared/StateComponents.jsx";
 import PropertySelector from "./components/PropertySelector.jsx";
 import TimeSeriesLineChart from "./components/TimeSeriesLineChart.jsx";
@@ -118,59 +117,59 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
     // Fetch monthly import power for transformer houses and aggregate per phase
     useEffect(() => {
         const fetchPower = async () => {
-            if (!nodeIsTransformer || transformerChartMode !== 'power') {
+            if (!nodeIsTransformer || transformerChartMode !== 'power' || !downstreamHouses.length) {
                 setMonthlyPhasePowerData([]);
                 return;
             }
+            
             const houseIds = downstreamHouses.map((h) => h.HouseID).filter(Boolean);
-            if (houseIds.length === 0) { 
-                setMonthlyPhasePowerData([]);
-                return; 
+            if (!houseIds.length) return;
+            
+            setPowerLoading(true);
+            setPowerError(null);
+            
+            const { data, error } = await fetchMultipleHousesData(
+                'house_monthly_metric_avg_compact', 
+                houseIds, 
+                'import_power'
+            );
+            
+            if (error) {
+                setPowerError(error);
+                setPowerLoading(false);
+                return;
             }
-            try {
-                setPowerLoading(true);
-                setPowerError(null);
-                const { data, error } = await fetchMultipleHousesData(
-                    'house_monthly_metric_avg_compact', 
-                    houseIds, 
-                    'import_power'
-                );
-                if (error) throw new Error(error);
+            
+            // Build phase map for quick lookup
+            const phaseByHouse = downstreamHouses.reduce((m, h) => { 
+                m[h.HouseID] = h.predicted_phase || 'default'; 
+                return m; 
+            }, {});
+            
+            // Create monthly data array for stacked bar chart
+            const monthlyData = MONTH_OPTIONS.map((monthOption, index) => {
+                const monthIndex = index + 1;
+                const monthCol = `month_${String(monthIndex).padStart(2, '0')}`;
+                const totals = { A: 0, B: 0, C: 0 };
                 
-                // Build phase map for quick lookup
-                const phaseByHouse = downstreamHouses.reduce((m, h) => { 
-                    m[h.HouseID] = h.predicted_phase || 'default'; 
-                    return m; 
-                }, {});
-                
-                // Create monthly data array for stacked bar chart
-                const monthlyData = MONTH_OPTIONS.map((monthOption, index) => {
-                    const monthIndex = index + 1;
-                    const monthCol = `month_${String(monthIndex).padStart(2, '0')}`;
-                    const totals = { A: 0, B: 0, C: 0 };
-                    
-                    data?.forEach((row) => {
-                        const phase = phaseByHouse[row.house_id];
-                        if (phase === 'A' || phase === 'B' || phase === 'C') {
-                            const val = Number(row[monthCol]) || 0;
-                            totals[phase] += val;
-                        }
-                    });
-                    
-                    return {
-                        month: monthOption.label,
-                        A: totals.A,
-                        B: totals.B,
-                        C: totals.C
-                    };
+                data?.forEach((row) => {
+                    const phase = phaseByHouse[row.house_id];
+                    if (phase === 'A' || phase === 'B' || phase === 'C') {
+                        const val = Number(row[monthCol]) || 0;
+                        totals[phase] += val;
+                    }
                 });
                 
-                setMonthlyPhasePowerData(monthlyData);
-            } catch (e) {
-                setPowerError(e.message || 'Failed to load power data');
-            } finally {
-                setPowerLoading(false);
-            }
+                return {
+                    month: monthOption.label,
+                    A: totals.A,
+                    B: totals.B,
+                    C: totals.C
+                };
+            });
+            
+            setMonthlyPhasePowerData(monthlyData);
+            setPowerLoading(false);
         };
         fetchPower();
     }, [nodeIsTransformer, transformerChartMode, downstreamHouses]);
@@ -263,8 +262,8 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                 
                 {isComparison ? (
                     /* Comparison Content */
-                    <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
-                        <div className="mb-6">
+                    <div>
+                        <div className="mb-6 border-2 border-gray-200 rounded-lg p-4">
                             <h4 className="text-xl font-semibold mb-3 text-gray-800">House Comparison</h4>
                             {comparisonList.length === 0 ? (
                                 <p className="text-gray-600">No houses selected for comparison. Right-click on houses in the graph to add them.</p>
@@ -298,8 +297,8 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                         
                         {/* Time Series Comparison Chart */}
                         {comparisonList.length > 0 && (
-                            <div className="mb-6">
-                                <h4 className="text-xl font-semibold mb-4 text-gray-800">Time Series Data Visualization</h4>
+                            <div className="mb-4 border-2 border-gray-200 rounded-lg p-4">
+                                <h4 className="text-xl font-semibold mb-4 text-gray-800">Time Series Data Visualisation</h4>
                                 
                                 
                                 {/* Property Selection */}
@@ -334,7 +333,7 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                                 {/* Time Series Chart */}
                                 {!timeSeriesLoading && !timeSeriesError && (
                                     <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
-                                        isFullscreen ? 'h-[600px]' : 'h-[400px]'
+                                        isFullscreen ? '' : ''
                                     }`}>
                                         <TimeSeriesLineChart 
                                             data={chartTimeSeriesData}
@@ -426,7 +425,7 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                     )}
                     {/* Energy Data Visualisation - Only for houses */}
                     {nodeIsHouse && (
-                        <div className="mb-4">
+                        <div className="mb-4 border-2 border-gray-200 rounded-lg p-4">
                             <h4 className="text-xl font-semibold mb-4 text-gray-800">Energy Data Visualisation</h4>
 
                             {/* Chart Controls */}

@@ -42,7 +42,7 @@ export default function TimeSeriesLineChart({
         const key = `${house.HouseID}_${property}`;
         data.forEach(dataPoint => {
           const value = dataPoint[key];
-          if (value != null && !isNaN(value) && value !== 0) {
+          if (value && !isNaN(value)) {
             min = Math.min(min, value);
             max = Math.max(max, value);
           }

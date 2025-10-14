@@ -121,13 +121,11 @@ export const useTimeSeriesData = (houseIds = []) => {
 
         if (error) {
           setError(error)
-          setTimeSeriesData([])
         } else {
           setTimeSeriesData(data || [])
         }
       } catch (err) {
         setError(err.message || 'Failed to fetch time series data')
-        setTimeSeriesData([])
       } finally {
         setLoading(false)
       }

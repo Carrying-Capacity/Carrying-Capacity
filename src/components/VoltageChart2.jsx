@@ -10,7 +10,7 @@ import {
   Legend,
 } from "recharts";
 import { supabase } from "../lib/supabase";
-import { buildQuery } from "../utils/dataFetching";
+import { fetchTimeSeriesData } from "../utils/dataFetching";
 
 const VALUE_TYPES = [
   { key: "Voltage.PhA", label: "Voltage Phase A" },
@@ -47,16 +47,14 @@ const VoltageChart = () => {
       if (!houseId) return; // avoid empty fetch
       setLoading(true);
 
-      const towndata = buildQuery("towndatamarch_1_2");
-      let query = towndata.select("*");
-      query = towndata.filters.eq("House_id", houseId)(query);
-      query = towndata.order("timestamp", true)(query);
+      const { data, error } = await fetchTimeSeriesData("towndatamarch_1_2", {
+        houseId: houseId,
+        columns: "*",
+        orderBy: "timestamp",
+        ascending: true
+      });
 
-      const { data, error } = await query;
-
-      if (error) {
-        console.error("Supabase error:", error);
-      } else {
+      if (!error) {
         setData(data || []);
       }
 
