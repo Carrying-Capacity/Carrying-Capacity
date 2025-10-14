@@ -301,20 +301,6 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                             <div className="mb-6">
                                 <h4 className="text-xl font-semibold mb-4 text-gray-800">Time Series Data Visualization</h4>
                                 
-                                {/* Date Information */}
-                                {chartTimeSeriesData?.targetDate && (
-                                    <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded-lg">
-                                        <p className="text-sm text-blue-700">
-                                            <strong>Data for:</strong> {new Date(chartTimeSeriesData.targetDate).toLocaleDateString('en-AU', { 
-                                                weekday: 'long', 
-                                                year: 'numeric', 
-                                                month: 'long', 
-                                                day: 'numeric',
-                                                timeZone: 'Australia/Sydney'
-                                            })} (AEST)
-                                        </p>
-                                    </div>
-                                )}
                                 
                                 {/* Property Selection */}
                                 <div className="mb-4">

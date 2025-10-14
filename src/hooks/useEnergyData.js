@@ -106,20 +106,19 @@ export const useTimeSeriesData = (houseIds = []) => {
         setLoading(false)
         return
       }
-      
+
       setLoading(true)
       setError(null)
-      
+
       try {
         // Only fetch data for the specific houses in the comparison list
         const { data, error } = await fetchTimeSeriesData('towndatamarch_1_2', {
           columns: 'timestamp, House_id, "Voltage.PhA", "Voltage.PhB", "Voltage.PhC", ImportPower, ExportPower, InductivePower, CapacitivePower',
           houseIds: houseIds,
           orderBy: 'timestamp',
-          ascending: true,
-          limit: houseIds.length * 288 // 5-min intervals for 24 hours = 288 per house
+          ascending: true
         })
-        
+
         if (error) {
           setError(error)
           setTimeSeriesData([])
@@ -140,88 +139,52 @@ export const useTimeSeriesData = (houseIds = []) => {
   return { timeSeriesData, loading, error }
 }
 
-// Utility to convert UTC to AEST (UTC+10, or UTC+11 during daylight saving)
-export const convertToAEST = (utcTimestamp) => {
-  const utcDate = new Date(utcTimestamp)
-  // AEST is UTC+10, AEDT is UTC+11 during daylight saving (Oct-Apr)
-  const aestOffset = 10 * 60 // 10 hours in minutes
-  const aestTime = new Date(utcDate.getTime() + (aestOffset * 60 * 1000))
-  return aestTime
-}
 
 // Property category mappings
 const PROPERTY_MAPPINGS = {
   voltage: ['Voltage.PhA', 'Voltage.PhB', 'Voltage.PhC'],
-  realPower: ['ImportPower', 'ExportPower'], 
+  realPower: ['ImportPower', 'ExportPower'],
   reactivePower: ['InductivePower', 'CapacitivePower']
 };
 
 // Transform time series data for comparison charts
 export const transformTimeSeriesData = (rawData, selectedCategory) => {
   if (!rawData?.length || !selectedCategory) return []
-  
+
   // Get actual properties from category
   const propertiesToInclude = PROPERTY_MAPPINGS[selectedCategory] || []
   if (!propertiesToInclude.length) return []
-  
-  // Convert all timestamps to AEST and find the target date
-  const aestData = rawData.map(row => {
-    const aestTime = convertToAEST(row.timestamp)
-    return {
-      ...row,
-      aestTime,
-      aestDate: aestTime.toDateString()
-    }
-  })
-  
-  // Find the most common date in AEST (should be our target date)
-  const dateCounts = aestData.reduce((acc, row) => {
-    acc[row.aestDate] = (acc[row.aestDate] || 0) + 1
-    return acc
-  }, {})
-  
-  const targetDate = Object.keys(dateCounts).reduce((a, b) => 
-    dateCounts[a] > dateCounts[b] ? a : b
-  )
-  
-  // Filter to only include data from the target date in AEST
-  const filteredData = aestData.filter(row => row.aestDate === targetDate)
-  
-  // Group data by timestamp for the target date
-  const dataByTimestamp = filteredData.reduce((acc, row) => {
-    const aestTime = row.aestTime
-    
-    // Create a consistent time key using just hours and minutes (HH:MM)
-    const hours = aestTime.getHours().toString().padStart(2, '0')
-    const minutes = aestTime.getMinutes().toString().padStart(2, '0')
-    const timeKey = `${hours}:${minutes}`
-    
+
+  // Group data by timestamp using a +10 hour offset (AEST-like)
+  const dataByTimestamp = rawData.reduce((acc, row) => {
+    const timestamp = new Date(row.timestamp)
+    const offsetTimestamp = new Date(timestamp.getTime() + (10 * 60 * 60 * 1000))
+    const timeKey = offsetTimestamp.toISOString()
+
     if (!acc[timeKey]) {
-      acc[timeKey] = { 
-        timestamp: aestTime.toISOString(),
-        time: timeKey,
-        fullDateTime: aestTime,
-        sortOrder: aestTime.getHours() * 60 + aestTime.getMinutes(), // For consistent sorting
-        targetDate: targetDate // Store the target date for reference
+      acc[timeKey] = {
+        timestamp: offsetTimestamp.toISOString(),
+        time: offsetTimestamp.toLocaleTimeString('en-AU', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'UTC'
+        }),
+        fullDateTime: offsetTimestamp,
+        sortOrder: offsetTimestamp.getTime() // Use offset timestamp for sorting
       }
     }
-    
+
     // Add data for each property in the category for this house
     propertiesToInclude.forEach(property => {
       const key = `${row.House_id}_${property}`
       acc[timeKey][key] = row[property] || 0
     })
-    
+
     return acc
   }, {})
-  
-  // Convert to array and sort by time (starting from 00:00 AEST)
+
+  // Convert to array and sort by timestamp
   const result = Object.values(dataByTimestamp).sort((a, b) => a.sortOrder - b.sortOrder)
-  
-  // Add the target date to the result for reference
-  if (result.length > 0) {
-    result.targetDate = targetDate
-  }
-  
+
   return result
 }
