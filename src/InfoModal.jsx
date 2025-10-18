@@ -215,7 +215,12 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                     onClose={handleClose}
                     showComparisonButton={!isComparison && nodeIsHouse && !!onAddToComparison}
                     isInComparison={isInComparison}
-                    onToggleComparison={() => onAddToComparison(node)}
+                    onToggleComparison={() =>
+                    isInComparison
+                        ? onRemoveFromComparison?.(node.id)
+                        : onAddToComparison?.(node)
+                    }
+
                 />
                 
                 {isComparison ? (
