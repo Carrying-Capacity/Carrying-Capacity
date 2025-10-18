@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { fetchMonthlyData, fetchDailyData, fetchTimeSeriesData } from '../utils/dataFetching.js'
 
 // Hook to fetch monthly data for a specific house
@@ -99,6 +99,12 @@ export const useTimeSeriesData = (houseIds = []) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  // Create stable reference for houseIds array
+  const houseIdsKey = useMemo(() => 
+    houseIds?.length ? houseIds.slice().sort().join(',') : '',
+    [houseIds]
+  );
+
   useEffect(() => {
     const loadTimeSeriesData = async () => {
       if (!houseIds?.length) {
@@ -111,7 +117,6 @@ export const useTimeSeriesData = (houseIds = []) => {
       setError(null)
 
       try {
-        // Only fetch data for the specific houses in the comparison list
         const { data, error } = await fetchTimeSeriesData('towndatamarch_1_2', {
           columns: 'timestamp, House_id, "Voltage.PhA", "Voltage.PhB", "Voltage.PhC", ImportPower, ExportPower, InductivePower, CapacitivePower',
           houseIds: houseIds,
@@ -132,7 +137,7 @@ export const useTimeSeriesData = (houseIds = []) => {
     }
 
     loadTimeSeriesData()
-  }, [JSON.stringify(houseIds)]) // Use JSON.stringify to properly detect array changes
+  }, [houseIdsKey])
 
   return { timeSeriesData, loading, error }
 }

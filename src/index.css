@@ -1,70 +1,31 @@
 @import "tailwindcss";
 
+/* Global Styles */
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #333;
-    color: white;
-    padding: 10px 20px;
-}
-
-.navbar h1 {
-    margin: 0;
-    font-size: 20px;
-}
-
-select {
-    font-size: 16px;
-    padding: 5px;
-}
-
-.graph-container {
-    width: 100vw;
-    height: calc(100vh - 50px); /* leave space for navbar */
-    background: #f0f0f0;
-}
-
-.info-box {
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    background: white;
-    border: 1px solid #333;
-    padding: 10px;
-    z-index: 10;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 /* Modal styles to prevent body scroll */
 .modal-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 999;
-    pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
 }
 
 .modal-container > * {
-    pointer-events: auto;
+  pointer-events: auto;
 }
 
-/* Ensure modal content doesn't extend beyond viewport */
 .modal-content {
-    max-height: 100vh;
-    overflow-y: auto;
-    box-sizing: border-box;
+  max-height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
-/* Prevent body scroll when modal is open */
 body.modal-open {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
 }

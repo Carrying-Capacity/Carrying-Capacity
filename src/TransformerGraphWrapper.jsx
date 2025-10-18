@@ -1,5 +1,5 @@
 // src/TransformerGraphWrapper.jsx
-import React, { useState, Suspense, useEffect, useRef } from "react";
+import React, { useState, Suspense, useEffect, useRef, useCallback, useMemo } from "react";
 import { CirclePlus, CircleMinus } from "lucide-react";
 import TransformerGraph from "./TransformerGraph";
 import { useTransformerData } from "./hooks/useTransformerData.js";
@@ -18,92 +18,93 @@ export default function TransformerGraphWrapper() {
     const [comparisonList, setComparisonList] = useState([]);
     const [showComparison, setShowComparison] = useState(false);
 
-    const handleNodeClick = (node) => {
+    const handleNodeClick = useCallback((node) => {
         setFocusNode(node.id);
         setSelectedNode(node);
-        setShowComparison(false); // Close comparison modal when selecting a new node
-    };
+        setShowComparison(false);
+    }, []);
 
-    const handleDropdownChange = (e) => {
+    const handleDropdownChange = useCallback((e) => {
         const nodeId = e.target.value;
         if (nodeId) {
             const node = data.nodes.find(n => n.id === nodeId);
             setFocusNode(nodeId);
             setSelectedNode(node || null);
-            setShowComparison(false); // Close comparison modal when selecting a new node
         } else {
             setFocusNode(null);
             setSelectedNode(null);
-            setShowComparison(false); // Close comparison modal when clearing selection
         }
-    };
+        setShowComparison(false);
+    }, [data.nodes]);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         const term = e.target.value;
         setSearchTerm(term);
         
         if (term.length > 0) {
-            const results = data.nodes.filter(node => 
-                (node.type === "house" || node.type === "transformer" || node.type === "feeder") &&
-                (node.id.toLowerCase().includes(term.toLowerCase()) ||
-                 (node.label && node.label.toLowerCase().includes(term.toLowerCase())) ||
-                 (node.name && node.name.toLowerCase().includes(term.toLowerCase())))
-            ).slice(0, 10); // Limit to 10 results
+            const lowerTerm = term.toLowerCase();
+            const results = data.nodes.filter(node => {
+                const validType = node.type === "house" || node.type === "transformer" || node.type === "feeder";
+                if (!validType) return false;
+                
+                return node.id.toLowerCase().includes(lowerTerm) ||
+                       node.label?.toLowerCase().includes(lowerTerm) ||
+                       node.name?.toLowerCase().includes(lowerTerm);
+            }).slice(0, 10);
             setSearchResults(results);
             setShowSearchResults(true);
         } else {
             setSearchResults([]);
             setShowSearchResults(false);
         }
-    };
+    }, [data.nodes]);
 
-    const handleSearchSelect = (node) => {
+    const handleSearchSelect = useCallback((node) => {
         setFocusNode(node.id);
         setSelectedNode(node);
         setSearchTerm("");
         setShowSearchResults(false);
-        setShowComparison(false); // Close comparison modal when selecting a new node via search
-    };
+        setShowComparison(false);
+    }, []);
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         setFocusNode(null);
         setSelectedNode(null);
         setShowComparison(false);
-    };
+    }, []);
 
     // Comparison helper functions
-    const toggleHouseInComparison = (node) => {
+    const toggleHouseInComparison = useCallback((node) => {
         if (node.type === "house") {
-            const isInList = comparisonList.find(house => house.id === node.id);
-            if (isInList) {
-                // Remove from comparison
-                setComparisonList(prev => prev.filter(house => house.id !== node.id));
-            } else {
-                // Add to comparison
-                setComparisonList(prev => [...prev, node]);
-            }
+            setComparisonList(prev => {
+                const isInList = prev.find(house => house.id === node.id);
+                if (isInList) {
+                    return prev.filter(house => house.id !== node.id);
+                } else {
+                    return [...prev, node];
+                }
+            });
         }
-    };
+    }, []);
     
-    // Keep the old addToComparison for backward compatibility (now just calls toggleHouseInComparison)
-    const addToComparison = (node) => {
+    const addToComparison = useCallback((node) => {
         toggleHouseInComparison(node);
-    };
+    }, [toggleHouseInComparison]);
 
-    const removeFromComparison = (nodeId) => {
+    const removeFromComparison = useCallback((nodeId) => {
         setComparisonList(prev => prev.filter(house => house.id !== nodeId));
-    };
+    }, []);
 
-    const clearComparison = () => {
+    const clearComparison = useCallback(() => {
         setComparisonList([]);
         setShowComparison(false);
-    };
+    }, []);
 
-    const toggleComparisonModal = () => {
+    const toggleComparisonModal = useCallback(() => {
         if (comparisonList.length > 0) {
-            setShowComparison(!showComparison);
+            setShowComparison(prev => !prev);
         }
-    };
+    }, [comparisonList.length]);
 
     // Close search results when clicking outside
     useEffect(() => {
@@ -120,7 +121,7 @@ export default function TransformerGraphWrapper() {
     }, []);
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <div className="transformer-wrapper">
             <div className="control-panel">
                 {/* Left side - Navigation and Search */}
                 <div className="control-panel-left">
