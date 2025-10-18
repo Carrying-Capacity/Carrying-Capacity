@@ -116,9 +116,10 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
 
     // Fetch monthly import power for transformer houses and aggregate per phase
     useEffect(() => {
+        let cancelled = false;
         const fetchPower = async () => {
             if (!nodeIsTransformer || transformerChartMode !== 'power' || !downstreamHouses.length) {
-                setMonthlyPhasePowerData([]);
+                if (!cancelled) setMonthlyPhasePowerData([]);
                 return;
             }
             
@@ -168,11 +169,14 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                 };
             });
             
-            setMonthlyPhasePowerData(monthlyData);
-            setPowerLoading(false);
+            if (!cancelled) {
+              setMonthlyPhasePowerData(monthlyData);
+              setPowerLoading(false);
+            }
         };
         fetchPower();
-    }, [nodeIsTransformer, transformerChartMode, downstreamHouses]);
+        return () => { cancelled = true; };
+     }, [nodeIsTransformer, transformerChartMode, downstreamHouses]);
 
     const housesPieData = useMemo(() => (
         [
@@ -258,7 +262,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                                 {timeSeriesError && (
                                     <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                                         <p className="text-red-600">
-                                            Error loading time series data: {timeSeriesError}
+                                            Error loading time series data: {timeSeriesError?.message ?? String(timeSeriesError)}
                                         </p>
                                         <p className="text-sm text-red-500 mt-2">
                                             Please check your internet connection and try again.
@@ -268,9 +272,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                                 
                                 {/* Time Series Chart */}
                                 {!timeSeriesLoading && !timeSeriesError && (
-                                    <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
-                                        isFullscreen ? '' : ''
-                                    }`}>
+                                    <div className="border border-gray-200 rounded-lg p-4 bg-white">
                                         <TimeSeriesLineChart 
                                             data={chartTimeSeriesData}
                                             selectedProperty={selectedProperty}
@@ -282,10 +284,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                             </div>
                         )}
                     </div>
-                ) : (
-                /* Single Node Information */
-                    <div></div>
-                )}
+                ) : null}
                 
                 {/* Basic Node Information (Single Node Mode) */}
                 {!isComparison && node && (
@@ -374,7 +373,11 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                             {((chartType === 'monthly' && monthlyError) || (chartType === 'daily' && dailyError)) && (
                                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                                     <p className="text-red-600">
-                                        Error loading data: {chartType === 'monthly' ? monthlyError : dailyError}
+                                        Error loading data: {
+                                          chartType === 'monthly'
+                                            ? (monthlyError?.message ?? String(monthlyError))
+                                            : (dailyError?.message ?? String(dailyError))
+                                        }
                                     </p>
                                     <p className="text-sm text-red-500 mt-2">
                                         Please check your internet connection and try again.

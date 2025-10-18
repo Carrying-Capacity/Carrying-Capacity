@@ -24,21 +24,20 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
         const size = getNodeSize(node.type);
         const icon = iconCache[node.type];
 
-        // Draw a semi-transparent phase color behind the icon for houses only
         if (node.type === "house") {
+            ctx.save();
             ctx.beginPath();
             ctx.arc(node.x, node.y + 0.5, size / 1.5, 0, 2 * Math.PI);
             ctx.fillStyle = phaseColors[node.predicted_phase] || phaseColors.default;
             ctx.globalAlpha = 0.4;
             ctx.fill();
-            ctx.globalAlpha = 1;
-            
             // Add border for houses in comparison list
             if (comparisonSet.has(node.id)) {
                 ctx.strokeStyle = "#3b82f6";
                 ctx.lineWidth = 3;
                 ctx.stroke();
             }
+            ctx.restore();
         }
 
         // Draw the icon on top (all types)
@@ -112,6 +111,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
 
     // Only run animation when there are flow links to animate
     const hasFlowLinks = flowLinks.length > 0;
+    const flowLinkSet = useMemo(() => new Set(flowLinks), [flowLinks]);
     useEffect(() => {
         if (!hasFlowLinks) {
             setTick(0);
@@ -192,7 +192,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
                 }}
                 linkCanvasObject={(link, ctx) => {
                     // Highlight path links
-                    if (flowLinks.includes(link)) {
+                    if (flowLinkSet.has(link)) {
                         ctx.strokeStyle = "orange";
                         ctx.lineWidth = 2;
                         ctx.setLineDash([5, 5]);
@@ -233,13 +233,14 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
                     ctx.lineTo(-arrowLength / 2, arrowWidth / 2);
                     ctx.closePath();
                     
-                    ctx.fillStyle = flowLinks.includes(link) ? "orange" : "#999";
+                    ctx.fillStyle = flowLinkSet.has(link) ? "orange" : "#999";
                     ctx.fill();
                     
                     ctx.restore();
                 }}
                 onNodeClick={onNodeClick}
-                onNodeRightClick={useCallback((node) => {
+                onNodeRightClick={useCallback((node, event) => {
+                    event?.preventDefault();
                     if (node.type === "house" && onAddToComparison) {
                         onAddToComparison(node);
                     }

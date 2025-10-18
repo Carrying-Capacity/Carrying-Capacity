@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { CircleMinus } from "lucide-react";
 
-export const ComparisonSection = memo(({ comparisonList, onRemoveFromComparison }) => {
+export const ComparisonSection = memo(({ comparisonList = [], onRemoveFromComparison }) => {
   if (comparisonList.length === 0) {
     return (
       <div className="mb-6 border-2 border-gray-200 rounded-lg p-4">
@@ -34,6 +34,7 @@ export const ComparisonSection = memo(({ comparisonList, onRemoveFromComparison 
               </div>
               {onRemoveFromComparison && (
                 <button
+                  type="button"
                   onClick={() => onRemoveFromComparison(house.id)}
                   className="modal-header-button"
                   title="Remove from comparison"
