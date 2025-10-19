@@ -11,7 +11,7 @@ import FrontEnd from "./pages/FrontEnd";
 import Transformer from "./components/TransformerGraphWrapper";
 import "./styles/shared.css";
 
-const RedirectHandler = memo(() => {
+const RedirectHandler =() => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -25,7 +25,7 @@ const RedirectHandler = memo(() => {
     }, [navigate, location.search]);
 
     return null;
-});
+};
 
 RedirectHandler.displayName = "RedirectHandler";
 

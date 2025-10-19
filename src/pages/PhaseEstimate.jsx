@@ -1,7 +1,7 @@
 import React from "react";
-// import VoltageChart from "../components/VoltageChart";
+// import VoltageChartLegacy from "../components/VoltageChartLegacy";
 import ReactiveTable from "../components/ReactiveTable";
-import VoltageChart2 from "../components/VoltageChart2";
+import VoltageChart from "../components/VoltageChart";
 import PageLayout from '../components/PageLayout';
 
 export default function PhaseEstimate() {
@@ -36,7 +36,7 @@ export default function PhaseEstimate() {
         </p>
       <div className="voltage-box">
         <div style={{ width: "100%", height: "100%" }}>
-          <VoltageChart2/>
+          <VoltageChart/>
         </div>
       </div>
 

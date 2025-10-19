@@ -1,5 +1,9 @@
 /* Shared component styles */
 
+:root {
+  --header-height: 72px;
+}
+
 /* App Layout */
 .transformer-wrapper {
   display: flex;
@@ -38,7 +42,7 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
-  height: 72px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;

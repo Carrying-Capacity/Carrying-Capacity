@@ -7,8 +7,6 @@ const TECHNOLOGIES = [
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
     name: "React",
     version: "18.3.1",
-    color: "#61dafb",
-    gradient: "from-cyan-400 to-blue-500",
     description: "Modern JavaScript library for building user interfaces",
     features: [
       "Component-based architecture for reusable UI elements",
@@ -28,8 +26,6 @@ const TECHNOLOGIES = [
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
     name: "Tailwind CSS",
     version: "4.0.0",
-    color: "#06b6d4",
-    gradient: "from-cyan-500 to-teal-500",
     description: "Utility-first CSS framework for rapid UI development",
     features: [
       "Utility classes for rapid prototyping",
@@ -49,8 +45,6 @@ const TECHNOLOGIES = [
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg",
     name: "Supabase",
     version: "2.x",
-    color: "#3ecf8e",
-    gradient: "from-emerald-400 to-green-500",
     description: "Open-source Firebase alternative with PostgreSQL",
     features: [
       "Real-time database subscriptions",
@@ -70,8 +64,6 @@ const TECHNOLOGIES = [
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
     name: "React Force Graph",
     version: "1.44.4",
-    color: "#ff6b6b",
-    gradient: "from-red-400 to-pink-500",
     description: "Force-directed graph visualization using Canvas/WebGL",
     features: [
       "WebGL rendering for thousands of nodes",
@@ -91,8 +83,6 @@ const TECHNOLOGIES = [
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
     name: "Recharts",
     version: "2.x",
-    color: "#8b5cf6",
-    gradient: "from-purple-400 to-indigo-500",
     description: "Composable charting library built on React components",
     features: [
       "Declarative chart composition",

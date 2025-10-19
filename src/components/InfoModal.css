@@ -94,12 +94,6 @@ body.modal-open {
   overflow-y: auto;
 }
 
-/* Remove Tailwind class overrides - these cause conflicts and performance issues */
-
-/* Keep only unique styles that Tailwind can't handle easily */
-
-/* Tailwind handles all of these - removed for performance */
-
 /* Scrollbar Styling */
 .modal-content-modern > div::-webkit-scrollbar {
   width: 10px;
@@ -118,8 +112,6 @@ body.modal-open {
 .modal-content-modern > div::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.7);
 }
-
-/* Removed - Tailwind handles these */
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -167,7 +159,7 @@ body.modal-open {
 }
 
 /* Enhanced focus states */
-input[type="radio"]:focus {
+input[type="radio"]:focus-visible {
   outline: 2px solid rgba(59, 130, 246, 0.5);
   outline-offset: 2px;
 }
