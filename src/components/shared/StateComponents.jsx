@@ -1,4 +1,3 @@
-import React from "react";
 
 // Loading spinner component
 export const LoadingSpinner = ({ size = "md", message = "Loading..." }) => {
@@ -70,7 +69,7 @@ export const DataStateWrapper = ({
     );
   }
 
-  if (!data || (Array.isArray(data) && data.length === 0)) {
+  if (!data?.length) {
     return <EmptyState message={emptyMessage} />;
   }
 

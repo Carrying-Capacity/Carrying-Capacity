@@ -68,11 +68,11 @@ export const CHART_DIMENSIONS = {
 export const MODAL_STYLES = {
   normal: {
     position: "fixed",
-    top: "140px",
+    top: "152px",
     right: "20px", 
     width: "480px",
     maxWidth: "calc(100vw - 40px)",
-    maxHeight: "calc(100vh - 160px)",
+    maxHeight: "calc(100vh - 172px)",
     zIndex: 1005,
     padding: "1.5rem",
     overflow: "auto",
@@ -82,7 +82,7 @@ export const MODAL_STYLES = {
   },
   fullscreen: {
     position: "fixed",
-    top: "140px",
+    top: "152px",
     left: "20px",
     right: "20px", 
     bottom: "20px",
@@ -146,4 +146,9 @@ export const HOUSE_COLORS = [
   '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4',
   '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b'
 ];
+
+// Utility function to get phase color
+export const getPhaseColor = (phase) => {
+  return PHASE_COLORS[phase] || PHASE_COLORS.default;
+};
 

@@ -92,18 +92,6 @@ export const fetchTimeSeriesData = async (tableName, options = {}) => {
   return fetchData(query, `${tableName} time series data`);
 };
 
-// Fetch first timestamp from a table (for date range calculations)
-export const fetchFirstTimestamp = async (tableName) => {
-  return fetchData(
-    supabase
-      .from(tableName)
-      .select('timestamp')
-      .order('timestamp', { ascending: true })
-      .limit(1)
-      .single(),
-    'first timestamp'
-  );
-};
 
 // Fetch multiple house data in batch
 export const fetchMultipleHousesData = async (tableName, houseIds, metric = null) => {
@@ -124,18 +112,3 @@ export const fetchMultipleHousesData = async (tableName, houseIds, metric = null
   return fetchData(query, `multiple houses data from ${tableName}`);
 };
 
-// Generic query builder for complex queries
-export const buildQuery = (tableName) => {
-  return {
-    select: (columns = '*') => supabase.from(tableName).select(columns),
-    filters: {
-      eq: (column, value) => (query) => query.eq(column, value),
-      in: (column, values) => (query) => query.in(column, values),
-      gte: (column, value) => (query) => query.gte(column, value),
-      lte: (column, value) => (query) => query.lte(column, value),
-      range: (column, start, end) => (query) => query.gte(column, start).lte(column, end)
-    },
-    order: (column, ascending = true) => (query) => query.order(column, { ascending }),
-    limit: (count) => (query) => query.limit(count)
-  };
-};
