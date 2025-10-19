@@ -64,180 +64,17 @@
   height: 20px;
 }
 
-/* Modal Content Sections */
+/* Modal Content Sections - Let Tailwind handle most spacing */
 .modal-content-modern > div {
-  padding: 1.5rem 2rem;
   max-height: calc(100vh - 200px);
   overflow-y: auto;
 }
 
-/* Section Cards */
-.mb-4 {
-  margin-bottom: 1.5rem;
-}
+/* Remove Tailwind class overrides - these cause conflicts and performance issues */
 
-.border-2 {
-  border: 1px solid rgba(226, 232, 240, 0.8) !important;
-}
+/* Keep only unique styles that Tailwind can't handle easily */
 
-.border-gray-200 {
-  border-color: rgba(226, 232, 240, 0.8) !important;
-}
-
-.rounded-lg {
-  border-radius: 16px !important;
-}
-
-.p-4 {
-  padding: 1.5rem !important;
-}
-
-/* Modern Section Styling */
-.mb-4.border-2.border-gray-200.rounded-lg.p-4 {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
-}
-
-.mb-4.border-2.border-gray-200.rounded-lg.p-4:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-/* Section Titles */
-.text-xl.font-semibold.mb-4.text-gray-800 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.text-xl.font-semibold.mb-4.text-gray-800::before {
-  content: '';
-  width: 4px;
-  height: 24px;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-  border-radius: 2px;
-}
-
-/* Control Sections */
-.bg-gray-50 {
-  background: rgba(248, 250, 252, 0.8) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.border.border-gray-200 {
-  border: 1px solid rgba(226, 232, 240, 0.8) !important;
-}
-
-/* Radio Button Groups */
-.grid.grid-cols-2.gap-2 label {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 12px;
-  padding: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.grid.grid-cols-2.gap-2 label:hover {
-  background: rgba(59, 130, 246, 0.05);
-  border-color: rgba(59, 130, 246, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
-}
-
-.grid.grid-cols-2.gap-2 label input:checked + div {
-  color: #3b82f6;
-}
-
-.grid.grid-cols-2.gap-2 label:has(input:checked) {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: #3b82f6;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-}
-
-/* Text Styles */
-.text-md.font-medium.text-gray-700 {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: #334155;
-}
-
-.text-sm.font-medium.text-gray-700 {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #475569;
-}
-
-.text-xs.text-gray-500 {
-  font-size: 0.75rem;
-  color: #64748b;
-}
-
-/* Chart Containers */
-.border.border-gray-200.rounded-lg.p-4.bg-white {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8) !important;
-  border-radius: 16px !important;
-  padding: 1.5rem !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-/* Loading States */
-.flex.items-center.justify-center.h-64 {
-  background: rgba(248, 250, 252, 0.5);
-  border-radius: 12px;
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.rounded-full.h-12.w-12.border-b-2.border-blue-500 {
-  border-color: #3b82f6 !important;
-}
-
-.text-gray-600 {
-  color: #475569 !important;
-}
-
-/* Error States */
-.bg-red-50 {
-  background: rgba(254, 226, 226, 0.8) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.border-red-200 {
-  border-color: rgba(254, 202, 202, 0.8) !important;
-}
-
-.text-red-600 {
-  color: #dc2626 !important;
-}
-
-.text-red-500 {
-  color: #ef4444 !important;
-}
+/* Tailwind handles all of these - removed for performance */
 
 /* Scrollbar Styling */
 .modal-content-modern > div::-webkit-scrollbar {
@@ -258,36 +95,7 @@
   background: rgba(100, 116, 139, 0.7);
 }
 
-/* Comparison Section Enhancements */
-.comparison-list {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.comparison-item {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 12px;
-  padding: 1rem;
-  transition: all 0.2s ease;
-}
-
-.comparison-item:hover {
-  background: rgba(248, 250, 252, 0.95);
-  border-color: rgba(59, 130, 246, 0.3);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
-  transform: translateX(4px);
-}
-
-/* Property Selector Enhancement */
-.bg-gray-50.p-4.rounded-lg.border.border-gray-200 {
-  background: rgba(248, 250, 252, 0.8) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(226, 232, 240, 0.8) !important;
-  border-radius: 12px !important;
-  padding: 1.25rem !important;
-}
+/* Removed - Tailwind handles these */
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -306,10 +114,6 @@
 
   .modal-content-modern > div {
     padding: 1rem 1.5rem;
-  }
-
-  .grid.grid-cols-2.gap-2 {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -350,143 +154,4 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* Smooth transitions for all interactive elements */
-* {
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Node Info Card */
-.node-info-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
-}
-
-.node-info-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.node-info-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
-}
-
-.node-info-icon {
-  font-size: 2rem;
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  border-radius: 14px;
-  flex-shrink: 0;
-}
-
-.node-info-title {
-  flex: 1;
-}
-
-.node-info-title h4 {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 0.25rem 0;
-}
-
-.node-type-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background: rgba(100, 116, 139, 0.1);
-  border: 1px solid rgba(100, 116, 139, 0.2);
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #64748b;
-  text-transform: capitalize;
-}
-
-.node-info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.node-info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.node-info-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.node-info-label svg {
-  flex-shrink: 0;
-}
-
-.node-info-value {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: #0f172a;
-  padding-left: 1.5rem;
-}
-
-.phase-badge {
-  display: inline-block;
-  padding: 0.375rem 0.875rem;
-  border: 1px solid;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 0.375rem 0.875rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border: 1px solid;
-}
-
-.status-yes {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  border-color: rgba(16, 185, 129, 0.3);
-}
-
-.status-no {
-  background: rgba(148, 163, 184, 0.1);
-  color: #64748b;
-  border-color: rgba(148, 163, 184, 0.3);
-}
-
-.transformer-id {
-  font-family: 'Courier New', monospace;
-  background: rgba(100, 116, 139, 0.05);
-  padding: 0.375rem 0.75rem;
-  border-radius: 6px;
-  border: 1px solid rgba(100, 116, 139, 0.15);
-  width: fit-content;
-}
+/* Node Info Card styles - REMOVED (converted to Tailwind in NodeInfoSection.jsx) */

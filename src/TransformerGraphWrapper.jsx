@@ -1,6 +1,6 @@
 // src/TransformerGraphWrapper.jsx
-import React, { useState, Suspense, useEffect, useRef, useCallback, useMemo } from "react";
-import { Search, Navigation, Layers, X, Plus, Minus, GitCompare, Trash2 } from "lucide-react";
+import React, { useState, Suspense, useEffect, useRef, useCallback, useMemo, memo } from "react";
+import { Search, Navigation, Layers, X, Plus, Minus, GitCompare, Trash2, Home, Zap as ZapIcon, Network } from "lucide-react";
 import TransformerGraph from "./TransformerGraph";
 import { useTransformerData } from "./hooks/useTransformerData.js";
 import "./TransformerGraphWrapper.css";
@@ -13,11 +13,19 @@ export default function TransformerGraphWrapper() {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [showSearchResults, setShowSearchResults] = useState(false);
+    const [isModalFullscreen, setIsModalFullscreen] = useState(false);
     const searchContainerRef = useRef(null);
     
     // Comparison feature state
     const [comparisonList, setComparisonList] = useState([]);
     const [showComparison, setShowComparison] = useState(false);
+
+    // Memoize expensive calculations
+    const metrics = useMemo(() => ({
+        houses: data?.nodes?.filter(n => n.type === "house").length || 0,
+        transformers: data?.nodes?.filter(n => n.type === "transformer").length || 0,
+        connections: data?.links?.length || 0
+    }), [data?.nodes, data?.links]);
 
     const handleNodeClick = useCallback((node) => {
         setFocusNode(node.id);
@@ -38,27 +46,28 @@ export default function TransformerGraphWrapper() {
         setShowComparison(false);
     }, [data.nodes]);
 
+    // Memoize filtered search results
+    const filteredNodes = useMemo(() => {
+        if (!searchTerm.trim()) return [];
+        
+        const lowerTerm = searchTerm.toLowerCase();
+        return data.nodes.filter((n) => {
+            const label = (n.label || n.id || "").toLowerCase();
+            const type = (n.type || "").toLowerCase();
+            return label.includes(lowerTerm) || type.includes(lowerTerm);
+        }).slice(0, 10); // Limit to 10 results
+    }, [searchTerm, data.nodes]);
+
     const handleSearchChange = useCallback((e) => {
         const term = e.target.value;
         setSearchTerm(term);
-        
-        if (term.length > 0) {
-            const lowerTerm = term.toLowerCase();
-            const results = data.nodes.filter(node => {
-                const validType = node.type === "house" || node.type === "transformer" || node.type === "feeder";
-                if (!validType) return false;
-                
-                return node.id.toLowerCase().includes(lowerTerm) ||
-                       node.label?.toLowerCase().includes(lowerTerm) ||
-                       node.name?.toLowerCase().includes(lowerTerm);
-            }).slice(0, 10);
-            setSearchResults(results);
-            setShowSearchResults(true);
-        } else {
-            setSearchResults([]);
-            setShowSearchResults(false);
-        }
-    }, [data.nodes]);
+        setShowSearchResults(term.trim().length > 0);
+    }, []);
+
+    // Update search results when filteredNodes change
+    useEffect(() => {
+        setSearchResults(filteredNodes);
+    }, [filteredNodes]);
 
     const handleSearchSelect = useCallback((node) => {
         setFocusNode(node.id);
@@ -138,7 +147,7 @@ export default function TransformerGraphWrapper() {
                                 className="modern-select"
                             >
                                 <option value="">Navigate to node...</option>
-                                <optgroup label="🔌 Feeders">
+                                <optgroup label="Feeders">
                                     {data.nodes
                                         .filter((n) => n.type === "feeder")
                                         .map((t) => (
@@ -147,7 +156,7 @@ export default function TransformerGraphWrapper() {
                                             </option>
                                         ))}
                                 </optgroup>
-                                <optgroup label="⚡ Transformers">
+                                <optgroup label="Transformers">
                                     {data.nodes
                                         .filter((n) => n.type === "transformer")
                                         .map((t) => (
@@ -189,7 +198,7 @@ export default function TransformerGraphWrapper() {
                                     {searchResults.map((node) => {
                                         const isInComparison = comparisonList.find(house => house.id === node.id);
                                         const isHouse = node.type === "house";
-                                        const nodeIcon = node.type === "feeder" ? "🔌" : node.type === "transformer" ? "⚡" : "🏠";
+                                        const NodeIcon = node.type === "feeder" ? Network : node.type === "transformer" ? ZapIcon : Home;
                                         
                                         return (
                                             <div
@@ -197,7 +206,9 @@ export default function TransformerGraphWrapper() {
                                                 className="modern-search-item"
                                                 onClick={() => handleSearchSelect(node)}
                                             >
-                                                <div className="search-item-icon">{nodeIcon}</div>
+                                                <div className="search-item-icon-wrapper">
+                                                    <NodeIcon size={18} />
+                                                </div>
                                                 <div className="search-item-info">
                                                     <div className="search-item-name">{node.label || node.id}</div>
                                                     <div className="search-item-meta">
@@ -261,9 +272,44 @@ export default function TransformerGraphWrapper() {
                 </div>
             </div>
 
+            {/* Network Metrics - Hidden when modal is fullscreen */}
+            {!isModalFullscreen && (
+                <div className="network-metrics">
+                <div className="metric-card">
+                    <div className="metric-icon-wrapper metric-icon-houses">
+                        <Home size={20} />
+                    </div>
+                    <div className="metric-content">
+                        <div className="metric-value">{metrics.houses}</div>
+                        <div className="metric-label">Houses</div>
+                    </div>
+                </div>
+                
+                <div className="metric-card">
+                    <div className="metric-icon-wrapper metric-icon-transformers">
+                        <ZapIcon size={20} />
+                    </div>
+                    <div className="metric-content">
+                        <div className="metric-value">{metrics.transformers}</div>
+                        <div className="metric-label">Transformers</div>
+                    </div>
+                </div>
+                
+                <div className="metric-card">
+                    <div className="metric-icon-wrapper metric-icon-connections">
+                        <Network size={20} />
+                    </div>
+                    <div className="metric-content">
+                        <div className="metric-value">{metrics.connections}</div>
+                        <div className="metric-label">Connections</div>
+                    </div>
+                </div>
+                </div>
+            )}
+
             <div style={{ 
                 position: 'fixed',
-                top: '122px', // nav (72px) + control panel (~50px)
+                top: '132px', // nav (72px) + control panel (~60px)
                 left: 0,
                 right: 0,
                 bottom: 0,
@@ -285,6 +331,7 @@ export default function TransformerGraphWrapper() {
                         comparisonList={comparisonList}
                         onRemoveFromComparison={removeFromComparison}
                         onAddToComparison={addToComparison}
+                        onFullscreenChange={setIsModalFullscreen}
                     />
                 </Suspense>
             </div>

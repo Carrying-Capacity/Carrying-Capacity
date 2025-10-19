@@ -1,4 +1,4 @@
-import React, { memo, useRef, useEffect, useState } from "react";
+import React, { memo, useRef, useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Maximize2, Zap, Activity } from "lucide-react";
 import { useTransformerData } from "../hooks/useTransformerData";
@@ -8,6 +8,13 @@ const MiniMapPreview = memo(() => {
   const canvasRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const data = useTransformerData();
+
+  // Memoize expensive metric calculations
+  const metrics = useMemo(() => ({
+    houses: data?.nodes?.filter(n => n.type === "house").length || 0,
+    transformers: data?.nodes?.filter(n => n.type === "transformer").length || 0,
+    connections: data?.links?.length || 0
+  }), [data?.nodes, data?.links]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -142,15 +149,15 @@ const MiniMapPreview = memo(() => {
 
       <div className="mini-map-stats">
         <div className="mini-map-stat">
-          <span className="mini-map-stat-value">{data?.nodes?.filter(n => n.type === "house").length || 0}</span>
+          <span className="mini-map-stat-value">{metrics.houses}</span>
           <span className="mini-map-stat-label">Houses</span>
         </div>
         <div className="mini-map-stat">
-          <span className="mini-map-stat-value">{data?.nodes?.filter(n => n.type === "transformer").length || 0}</span>
+          <span className="mini-map-stat-value">{metrics.transformers}</span>
           <span className="mini-map-stat-label">Transformers</span>
         </div>
         <div className="mini-map-stat">
-          <span className="mini-map-stat-value">{data?.links?.length || 0}</span>
+          <span className="mini-map-stat-value">{metrics.connections}</span>
           <span className="mini-map-stat-label">Connections</span>
         </div>
       </div>

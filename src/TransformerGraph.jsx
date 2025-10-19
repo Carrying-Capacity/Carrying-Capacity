@@ -11,6 +11,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
     const [hoverNode, setHoverNode] = useState(null);
     const [flowLinks, setFlowLinks] = useState([]);
     const [tick, setTick] = useState(0);
+    const [lastFocusNode, setLastFocusNode] = useState(null);
     
     const dimensions = useWindowDimensions();
 
@@ -49,62 +50,74 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
     const renderLabel = useCallback((node, ctx) => {
         if (hoverNode && hoverNode.id === node.id) {
             const label = node.label || node.id;
-            const padding = 6;
+            const padding = 12;
             const boxX = node.x + 15;
             const boxY = node.y - 12;
             
-            ctx.font = "bold 12px Arial";
+            ctx.font = "600 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
             const labelWidth = ctx.measureText(label).width;
-            const boxWidth = labelWidth + padding * 2;
-            let boxHeight = 24;
+            let boxHeight = 32;
             
             let actionText = "";
+            let maxWidth = labelWidth;
+            
             if (node.type === "house" && onAddToComparison) {
                 const isInComparison = comparisonSet.has(node.id);
                 actionText = isInComparison ? "Right-click to remove" : "Right-click to compare";
-                ctx.font = "10px Arial";
+                ctx.font = "500 11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
                 const actionWidth = ctx.measureText(actionText).width;
-                const maxWidth = Math.max(labelWidth, actionWidth);
-                boxHeight = 36;
-                
-                // Draw shadow
-                ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-                ctx.fillRect(boxX + 2, boxY + 2, maxWidth + padding * 2, boxHeight);
-                
-                // Draw background
-                ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
-                ctx.fillRect(boxX, boxY, maxWidth + padding * 2, boxHeight);
-                
-                // Draw border
-                ctx.strokeStyle = "#333";
-                ctx.lineWidth = 1;
-                ctx.strokeRect(boxX, boxY, maxWidth + padding * 2, boxHeight);
-            } else {
-                // Draw shadow
-                ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-                ctx.fillRect(boxX + 2, boxY + 2, boxWidth, boxHeight);
-                
-                // Draw background
-                ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
-                ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
-                
-                // Draw border
-                ctx.strokeStyle = "#333";
-                ctx.lineWidth = 1;
-                ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+                maxWidth = Math.max(labelWidth, actionWidth);
+                boxHeight = 48;
             }
             
-            // Draw main text
-            ctx.font = "bold 12px Arial";
-            ctx.fillStyle = "#000";
-            ctx.textAlign = "left";
-            ctx.fillText(label, boxX + padding, boxY + 16);
+            const boxWidth = maxWidth + padding * 2;
+            const borderRadius = 12;
             
-            // Draw action text for houses
+            // Draw outer glow
+            ctx.shadowColor = "rgba(59, 130, 246, 0.3)";
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 4;
+            
+            // Draw glassmorphism background with gradient
+            const gradient = ctx.createLinearGradient(boxX, boxY, boxX, boxY + boxHeight);
+            gradient.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+            gradient.addColorStop(1, "rgba(248, 250, 252, 0.95)");
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.roundRect(boxX, boxY, boxWidth, boxHeight, borderRadius);
+            ctx.fill();
+            
+            // Reset shadow for border
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            
+            // Draw border with subtle gradient
+            const borderGradient = ctx.createLinearGradient(boxX, boxY, boxX, boxY + boxHeight);
+            borderGradient.addColorStop(0, "rgba(226, 232, 240, 0.8)");
+            borderGradient.addColorStop(1, "rgba(203, 213, 225, 0.8)");
+            
+            ctx.strokeStyle = borderGradient;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(boxX, boxY, boxWidth, boxHeight, borderRadius);
+            ctx.stroke();
+            
+            // Draw main text with better typography
+            ctx.font = "600 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+            ctx.fillStyle = "#0f172a";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "middle";
+            ctx.fillText(label, boxX + padding, boxY + (actionText ? 16 : boxHeight / 2));
+            
+            // Draw action text for houses with modern styling
             if (actionText) {
-                ctx.font = "10px Arial";
-                ctx.fillStyle = comparisonSet.has(node.id) ? "#3b82f6" : "#666";
-                ctx.fillText(actionText, boxX + padding, boxY + 30);
+                ctx.font = "500 11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+                ctx.fillStyle = comparisonSet.has(node.id) ? "#3b82f6" : "#64748b";
+                ctx.fillText(actionText, boxX + padding, boxY + 34);
             }
         }
     }, [hoverNode, comparisonSet, onAddToComparison]);
@@ -123,48 +136,94 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
     }, [hasFlowLinks]);
 
 
+    // Focus effect - runs when focusNode changes or dimensions change significantly
     useEffect(() => {
         if (!fgRef.current || !focusNode) {
             // Stop flow animation when focusNode is cleared
             setFlowLinks([]);
+            setLastFocusNode(null);
             return;
         }
 
         const node = data.nodes.find((n) => n.id === focusNode);
         if (!node) return;
 
-        if (node.type === "feeder" || node.type === "transformer") {
-            setFlowLinks([]);
-            
-            if (node.type === "feeder") {
-                // Zoom to show entire network for feeder
-                fgRef.current.zoomToFit(1000, 150);
-            } else {
-                // For transformer, find all downstream nodes (recursively)
-                const allDownstreamNodes = collectDownstreamNodes(data, node);
+        setLastFocusNode(focusNode);
 
+        // Add a delay to ensure the graph is fully rendered (especially after fullscreen toggle)
+        const timeoutId = setTimeout(() => {
+            if (!fgRef.current) return;
+
+            if (node.type === "feeder" || node.type === "transformer") {
+                setFlowLinks([]);
+                
+                if (node.type === "feeder") {
+                    // Zoom to show entire network for feeder
+                    fgRef.current.zoomToFit(1000, 150);
+                } else {
+                    // For transformer, find all downstream nodes (recursively)
+                    const allDownstreamNodes = collectDownstreamNodes(data, node);
+
+                    fgRef.current.zoomToFit(
+                        1000,
+                        150,
+                        (n) => allDownstreamNodes.some((dn) => dn.id === n.id)
+                    );
+                }
+            } else if (node.type === "house" || node.type === "street") {
+                // Trace path back to feeder
+                const { pathNodes, pathLinks } = tracePathToFeeder(data, node);
+                setFlowLinks(pathLinks);
+
+                // Zoom to fit all nodes along the path
                 fgRef.current.zoomToFit(
                     1000,
                     150,
-                    (n) => allDownstreamNodes.some((dn) => dn.id === n.id)
+                    (n) => pathNodes.some((p) => p.id === n.id)
+                );
+            } else {
+                setFlowLinks([]);
+                fgRef.current.zoomToFit(1000, 100);
+            }
+        }, 150); // Increased delay for fullscreen transitions
+
+        return () => clearTimeout(timeoutId);
+    }, [focusNode, data]);
+
+    // Re-trigger focus when dimensions change significantly (e.g., fullscreen toggle)
+    useEffect(() => {
+        if (!lastFocusNode || !fgRef.current) return;
+
+        const node = data.nodes.find((n) => n.id === lastFocusNode);
+        if (!node) return;
+
+        // Delay to let the graph resize
+        const timeoutId = setTimeout(() => {
+            if (!fgRef.current) return;
+
+            if (node.type === "feeder" || node.type === "transformer") {
+                if (node.type === "feeder") {
+                    fgRef.current.zoomToFit(1000, 150);
+                } else {
+                    const allDownstreamNodes = collectDownstreamNodes(data, node);
+                    fgRef.current.zoomToFit(
+                        1000,
+                        150,
+                        (n) => allDownstreamNodes.some((dn) => dn.id === n.id)
+                    );
+                }
+            } else if (node.type === "house" || node.type === "street") {
+                const { pathNodes } = tracePathToFeeder(data, node);
+                fgRef.current.zoomToFit(
+                    1000,
+                    150,
+                    (n) => pathNodes.some((p) => p.id === n.id)
                 );
             }
-        } else if (node.type === "house" || node.type === "street") {
-            // Trace path back to feeder
-            const { pathNodes, pathLinks } = tracePathToFeeder(data, node);
-            setFlowLinks(pathLinks);
+        }, 200);
 
-            // Zoom to fit all nodes along the path
-            fgRef.current.zoomToFit(
-                1000,
-                150,
-                (n) => pathNodes.some((p) => p.id === n.id)
-            );
-        } else {
-            setFlowLinks([]);
-            fgRef.current.zoomToFit(1000, 100);
-        }
-    }, [focusNode, data]);
+        return () => clearTimeout(timeoutId);
+    }, [dimensions.width, dimensions.height, lastFocusNode, data]);
 
     return (
         <div style={{ width: "100%", height: "100%" }}>

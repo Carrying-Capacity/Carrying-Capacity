@@ -14,7 +14,7 @@ import { NodeInfoSection } from "./components/modal/NodeInfoSection.jsx";
 import { ComparisonSection } from "./components/modal/ComparisonSection.jsx";
 import "./InfoModal.css";
 
-const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison }) => {
+const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison, onFullscreenChange }) => {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [chartType, setChartType] = useState('monthly'); // 'monthly' or 'daily'
     const [selectedMetrics, setSelectedMetrics] = useState('voltage'); // 'voltage', 'power', 'reactive'
@@ -30,13 +30,18 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
         : transformDailyData(dailyData, METRICS_MAP[selectedMetrics] || []);
     
     const toggleFullscreen = useCallback(() => {
-        setIsFullscreen(prev => !prev);
-    }, []);
+        setIsFullscreen(prev => {
+            const newValue = !prev;
+            onFullscreenChange?.(newValue);
+            return newValue;
+        });
+    }, [onFullscreenChange]);
     
     const handleClose = useCallback(() => {
         setIsFullscreen(false);
+        onFullscreenChange?.(false);
         onClose();
-    }, [onClose]);
+    }, [onClose, onFullscreenChange]);
     
     // Handle escape key and body scroll prevention
     useEffect(() => {
