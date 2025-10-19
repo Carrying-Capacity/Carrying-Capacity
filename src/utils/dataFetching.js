@@ -112,3 +112,18 @@ export const fetchMultipleHousesData = async (tableName, houseIds, metric = null
   return fetchData(query, `multiple houses data from ${tableName}`);
 };
 
+// Generic query builder for complex queries
+export const buildQuery = (tableName) => {
+  return {
+    select: (columns = '*') => supabase.from(tableName).select(columns),
+    filters: {
+      eq: (column, value) => (query) => query.eq(column, value),
+      in: (column, values) => (query) => query.in(column, values),
+      gte: (column, value) => (query) => query.gte(column, value),
+      lte: (column, value) => (query) => query.lte(column, value),
+      range: (column, start, end) => (query) => query.gte(column, start).lte(column, end)
+    },
+    order: (column, ascending = true) => (query) => query.order(column, { ascending }),
+    limit: (count) => (query) => query.limit(count)
+  };
+};

@@ -10,7 +10,8 @@ const NAVIGATION_ROUTES = [
   { path: "/phase_estimate", label: "Phase Estimation" },
   { path: "/network_estimate", label: "Network Estimation" },
   { path: "/street_gen", label: "Street Generation" },
-  { path: "/front_end", label: "Front End" }
+  { path: "/front_end", label: "Front End" },
+  { path: "/references_citations", label: "References" }
 ];
 
 const NavLink = memo(({ to, label, isActive }) => (
