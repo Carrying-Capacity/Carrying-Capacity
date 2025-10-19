@@ -100,28 +100,6 @@ const TECHNOLOGIES = [
   }
 ];
 
-const DESIGN_PRINCIPLES = [
-  {
-    title: "Glassmorphism",
-    description: "Frosted glass effects with backdrop blur create depth and modern aesthetics",
-    icon: "✨"
-  },
-  {
-    title: "Performance First",
-    description: "Optimized rendering with Canvas/WebGL for smooth 60fps interactions",
-    icon: "⚡"
-  },
-  {
-    title: "Responsive Design",
-    description: "Mobile-first approach ensures usability across all device sizes",
-    icon: "📱"
-  },
-  {
-    title: "Accessibility",
-    description: "High contrast text, keyboard navigation, and semantic HTML",
-    icon: "♿"
-  }
-];
 
 export default function FrontEnd() {
   return (
@@ -201,27 +179,6 @@ export default function FrontEnd() {
           </div>
         </div>
 
-        {/* Design Principles */}
-        <div className="frontend-section">
-          <div className="frontend-section-header">
-            <h2 className="frontend-section-title">Design Principles</h2>
-            <p className="frontend-section-subtitle">
-              Core principles guiding our UI/UX decisions
-            </p>
-          </div>
-
-          <div className="principles-grid">
-            {DESIGN_PRINCIPLES.map((principle, index) => (
-              <div key={principle.title} className="principle-card" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className="principle-icon">
-                  <span className="principle-emoji">{principle.icon}</span>
-                </div>
-                <h3 className="principle-title">{principle.title}</h3>
-                <p className="principle-description">{principle.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Architecture Overview */}
         <div className="frontend-section">
@@ -258,31 +215,6 @@ export default function FrontEnd() {
                 <p className="layer-description">
                   Supabase client handles all database operations with real-time subscriptions.
                 </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Performance Metrics */}
-        <div className="frontend-section">
-          <div className="metrics-card">
-            <h2 className="metrics-title">Performance Highlights</h2>
-            <div className="metrics-grid">
-              <div className="metric-item">
-                <div className="metric-value">60fps</div>
-                <div className="metric-label">Smooth Rendering</div>
-              </div>
-              <div className="metric-item">
-                <div className="metric-value">1000+</div>
-                <div className="metric-label">Nodes Supported</div>
-              </div>
-              <div className="metric-item">
-                <div className="metric-value">&lt;100ms</div>
-                <div className="metric-label">API Response Time</div>
-              </div>
-              <div className="metric-item">
-                <div className="metric-value">100%</div>
-                <div className="metric-label">Mobile Responsive</div>
               </div>
             </div>
           </div>
