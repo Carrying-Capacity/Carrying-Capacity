@@ -1,18 +1,10 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { Home, Zap, Sun, Network as NetworkIcon } from "lucide-react";
 import { isHouse as isHouseNode } from "../../utils/nodeUtils.js";
+import { getPhaseColor } from "../../constants/index.js";
 
 export const NodeInfoSection = memo(({ node }) => {
   const isHouse = isHouseNode(node);
-  
-  const getPhaseColor = (phase) => {
-    switch(phase) {
-      case 'A': return '#ef4444';
-      case 'B': return '#22c55e';
-      case 'C': return '#3b82f6';
-      default: return '#94a3b8';
-    }
-  };
 
   const NodeTypeIcon = node?.type === 'house' ? Home : node?.type === 'transformer' ? Zap : NetworkIcon;
 

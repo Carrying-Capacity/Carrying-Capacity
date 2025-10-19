@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TIME_SERIES_PROPERTIES, HOUSE_COLORS, PHASE_COLORS } from '../constants/index.js';
 

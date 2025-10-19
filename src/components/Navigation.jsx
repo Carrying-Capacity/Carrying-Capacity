@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import favicon from "../assets/favicon.svg";
@@ -24,7 +24,7 @@ const NavLink = memo(({ to, label, isActive }) => (
 
 NavLink.displayName = "NavLink";
 
-const MobileMenu = memo(({ isOpen, onClose, currentPath, navigate }) => {
+const MobileMenu = memo(({ isOpen, onClose, currentPath }) => {
   if (!isOpen) return null;
 
   return (
@@ -56,7 +56,6 @@ const MobileMenu = memo(({ isOpen, onClose, currentPath, navigate }) => {
 MobileMenu.displayName = "MobileMenu";
 
 export const Navigation = memo(() => {
-  const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -110,7 +109,6 @@ export const Navigation = memo(() => {
         isOpen={mobileMenuOpen}
         onClose={closeMobileMenu}
         currentPath={location.pathname}
-        navigate={navigate}
       />
     </>
   );

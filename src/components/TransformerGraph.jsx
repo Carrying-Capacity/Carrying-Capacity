@@ -1,10 +1,9 @@
-// src/TransformerGraph.jsx
-import React, { useRef, useState, useEffect, useCallback, useMemo, memo } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo, memo } from "react";
 import ForceGraph2D from "react-force-graph-2d";
-import { iconCache, phaseColors, getNodeSize } from "./utils/iconCache.js";
-import { useWindowDimensions } from "./hooks/useWindowDimensions.js";
-import { collectDownstreamNodes, tracePathToFeeder } from "./utils/graphUtils.js";
-import { ANIMATION_CONFIG } from './constants/index.js';
+import { iconCache, phaseColors, getNodeSize } from "../utils/iconCache.js";
+import { useWindowDimensions } from "../hooks/useWindowDimensions.js";
+import { collectDownstreamNodes, tracePathToFeeder } from "../utils/graphUtils.js";
+import { ANIMATION_CONFIG } from '../constants/index.js';
 
 const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison, comparisonList }) => {
     const fgRef = useRef();

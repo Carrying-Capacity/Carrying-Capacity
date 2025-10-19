@@ -1,4 +1,4 @@
-import React, { useEffect, memo } from "react";
+import { useEffect, memo } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Navigation } from "./components/Navigation";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -8,7 +8,7 @@ import NetworkEstimate from "./pages/NetworkEstimate";
 import StreetGeneration from "./pages/StreetGeneration";
 import DataProcessingInfo from "./pages/DataProcessingInfo";
 import FrontEnd from "./pages/FrontEnd";
-import Transformer from "./TransformerGraphWrapper";
+import Transformer from "./components/TransformerGraphWrapper";
 import "./styles/shared.css";
 
 const RedirectHandler = memo(() => {

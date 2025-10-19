@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BarChart,
   Bar,
@@ -15,7 +14,6 @@ import {
 import { PieChart as RePieChart, Pie, Cell } from 'recharts'
 import { PHASE_COLORS, CHART_CONFIGS, UNITS, CHART_DIMENSIONS } from '../constants/index.js'
 import { ChartTooltip } from './shared/ChartTooltip.jsx'
-import { Button, ButtonGroup } from './shared/Button.jsx'
 
 // Monthly Bar Chart Component
 export const MonthlyBarChart = ({ data, selectedMetrics }) => {

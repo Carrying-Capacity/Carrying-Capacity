@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
-import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData, useTimeSeriesData, transformTimeSeriesData } from "./hooks/useEnergyData";
-import { MonthlyBarChart, DailyLineChart, ChartControls, PhasePieChart, MonthlyPhaseBarChart } from "./components/EnergyCharts";
-import { useTransformerData } from "./hooks/useTransformerData.js";
-import { collectDownstreamNodes } from "./utils/graphUtils.js";
-import { METRICS_MAP, MODAL_STYLES, MONTH_OPTIONS } from "./constants/index.js";
-import { fetchMultipleHousesData } from "./utils/dataFetching.js";
-import { isHouse, isTransformer, hasEnergyData } from "./utils/nodeUtils.js";
-import { DataStateWrapper } from "./components/shared/StateComponents.jsx";
-import PropertySelector from "./components/PropertySelector.jsx";
-import TimeSeriesLineChart from "./components/TimeSeriesLineChart.jsx";
-import { ModalHeader } from "./components/modal/ModalHeader.jsx";
-import { NodeInfoSection } from "./components/modal/NodeInfoSection.jsx";
-import { ComparisonSection } from "./components/modal/ComparisonSection.jsx";
+import { useState, useEffect, useMemo, useCallback, memo } from "react";
+import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData, useTimeSeriesData, transformTimeSeriesData } from "../hooks/useEnergyData";
+import { MonthlyBarChart, DailyLineChart, ChartControls, PhasePieChart, MonthlyPhaseBarChart } from "./EnergyCharts";
+import { useTransformerData } from "../hooks/useTransformerData.js";
+import { collectDownstreamNodes } from "../utils/graphUtils.js";
+import { METRICS_MAP, MODAL_STYLES, MONTH_OPTIONS } from "../constants/index.js";
+import { fetchMultipleHousesData } from "../utils/dataFetching.js";
+import { isHouse, isTransformer, hasEnergyData } from "../utils/nodeUtils.js";
+import { DataStateWrapper } from "./shared/StateComponents.jsx";
+import PropertySelector from "./PropertySelector.jsx";
+import TimeSeriesLineChart from "./TimeSeriesLineChart.jsx";
+import { ModalHeader } from "./modal/ModalHeader.jsx";
+import { NodeInfoSection } from "./modal/NodeInfoSection.jsx";
+import { ComparisonSection } from "./modal/ComparisonSection.jsx";
 import "./InfoModal.css";
 
 const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison, onFullscreenChange }) => {
@@ -202,7 +202,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
     if (!node && (!isComparison || comparisonList.length === 0)) return null;
     
     return (
-        <div className="modal-container">
+        <>
             {isFullscreen && (
                 <div
                     style={{
@@ -211,9 +211,10 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        backgroundColor: "black",
-                        opacity: 0.5,
-                        transition: "opacity 700ms ease-in-out",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        backdropFilter: "blur(4px)",
+                        WebkitBackdropFilter: "blur(4px)",
+                        transition: "opacity 300ms ease-in-out",
                         zIndex: 999
                     }}
                     onClick={() => setIsFullscreen(false)}
@@ -416,7 +417,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                 </div>
                 )}
             </div>
-        </div>
+        </>
     );
 });
 

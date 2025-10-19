@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { Maximize2, Minimize2, X as XIcon, CirclePlus, CircleMinus } from "lucide-react";
 
 export const ModalHeader = memo(({ 

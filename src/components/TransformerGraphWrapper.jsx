@@ -1,10 +1,9 @@
-// src/TransformerGraphWrapper.jsx
-import React, { useState, Suspense, useEffect, useRef, useCallback, useMemo, memo } from "react";
+import { useState, Suspense, useEffect, useRef, useCallback, useMemo } from "react";
 import { Search, Navigation, Layers, X, Plus, Minus, GitCompare, Trash2, Home, Zap as ZapIcon, Network } from "lucide-react";
 import TransformerGraph from "./TransformerGraph";
-import { useTransformerData } from "./hooks/useTransformerData.js";
+import InfoModal from "./InfoModal";
+import { useTransformerData } from "../hooks/useTransformerData.js";
 import "./TransformerGraphWrapper.css";
-const InfoModal = React.lazy(() => import("./InfoModal"));
 
 export default function TransformerGraphWrapper() {
     const data = useTransformerData();
@@ -47,7 +46,7 @@ export default function TransformerGraphWrapper() {
     );
 
     const handleNodeClick = useCallback((node) => {
-        setFocusNode(node.id);
+        setFocusNode(String(node.id));
         setSelectedNode(node);
         setShowComparison(false);
     }, []);

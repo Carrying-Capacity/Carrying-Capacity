@@ -1,7 +1,8 @@
-import React, { memo, useRef, useEffect, useState, useMemo } from "react";
+import { memo, useRef, useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Maximize2, Zap, Activity } from "lucide-react";
 import { useTransformerData } from "../hooks/useTransformerData";
+import { getPhaseColor } from "../constants/index.js";
 
 const MiniMapPreview = memo(() => {
   const navigate = useNavigate();
@@ -91,13 +92,7 @@ const MiniMapPreview = memo(() => {
         ctx.fill();
       } else if (node.type === "house") {
         ctx.arc(x, y, 1.5, 0, 2 * Math.PI);
-        const phaseColors = {
-          A: "#ef4444",
-          B: "#10b981",
-          C: "#3b82f6",
-          default: "#94a3b8"
-        };
-        ctx.fillStyle = phaseColors[node.predicted_phase] || phaseColors.default;
+        ctx.fillStyle = getPhaseColor(node.predicted_phase);
         ctx.fill();
       }
     });
