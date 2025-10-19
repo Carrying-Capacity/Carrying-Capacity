@@ -206,7 +206,10 @@ export default function TimeSeriesLineChart({
             <span className="text-xs text-gray-400 italic">Scroll to see all items ↕</span>
           </div>
         )}
-        <div 
+        <div
+          role="region"
+          aria-label="Chart legend items"
+          tabIndex="0"
           className="px-2"
           style={{
             maxHeight: '120px',
