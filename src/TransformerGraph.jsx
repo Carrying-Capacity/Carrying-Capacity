@@ -193,13 +193,13 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
                 linkCanvasObject={(link, ctx) => {
                     // Highlight path links
                     if (flowLinkSet.has(link)) {
-                        ctx.strokeStyle = "orange";
-                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = "#f97316";
+                        ctx.lineWidth = 2.5;
                         ctx.setLineDash([5, 5]);
                         ctx.lineDashOffset = -tick;
                     } else {
-                        ctx.strokeStyle = "#999";
-                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = "#cbd5e1";
+                        ctx.lineWidth = 1.5;
                         ctx.setLineDash([]);
                     }
 
@@ -233,7 +233,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
                     ctx.lineTo(-arrowLength / 2, arrowWidth / 2);
                     ctx.closePath();
                     
-                    ctx.fillStyle = flowLinkSet.has(link) ? "orange" : "#999";
+                    ctx.fillStyle = flowLinkSet.has(link) ? "#f97316" : "#94a3b8";
                     ctx.fill();
                     
                     ctx.restore();

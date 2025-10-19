@@ -22,8 +22,8 @@ const MiniMapPreview = memo(() => {
 
     // Create gradient background
     const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, "rgba(15, 23, 42, 0.8)");
-    gradient.addColorStop(1, "rgba(30, 41, 59, 0.8)");
+    gradient.addColorStop(0, "rgba(248, 250, 252, 0.95)");
+    gradient.addColorStop(1, "rgba(241, 245, 249, 0.95)");
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
 
@@ -45,7 +45,7 @@ const MiniMapPreview = memo(() => {
     const scale = Math.min(scaleX, scaleY);
 
     // Draw links first (background)
-    ctx.strokeStyle = "rgba(148, 163, 184, 0.2)";
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.3)";
     ctx.lineWidth = 1;
     data.links?.forEach(link => {
       const source = data.nodes.find(n => n.id === link.source || n.id === link.source?.id);

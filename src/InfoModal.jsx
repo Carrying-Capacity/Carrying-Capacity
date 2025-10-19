@@ -12,6 +12,7 @@ import TimeSeriesLineChart from "./components/TimeSeriesLineChart.jsx";
 import { ModalHeader } from "./components/modal/ModalHeader.jsx";
 import { NodeInfoSection } from "./components/modal/NodeInfoSection.jsx";
 import { ComparisonSection } from "./components/modal/ComparisonSection.jsx";
+import "./InfoModal.css";
 
 const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison }) => {
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -209,7 +210,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                 />
             )}
             <div
-                className="bg-white border border-gray-300 rounded-lg shadow-2xl transition-all duration-700 ease-in-out opacity-100 modal-content"
+                className="modal-content-modern"
                 style={isFullscreen ? MODAL_STYLES.fullscreen : MODAL_STYLES.normal}
             >
                 <ModalHeader

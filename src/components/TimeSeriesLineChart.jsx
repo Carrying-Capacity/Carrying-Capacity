@@ -260,7 +260,7 @@ export default function TimeSeriesLineChart({
   return (
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
-        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 70 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
             dataKey="time" 
@@ -282,14 +282,6 @@ export default function TimeSeriesLineChart({
             }}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Legend 
-            content={<CustomLegend />}
-            wrapperStyle={{ 
-              paddingTop: '10px',
-              maxHeight: '140px',
-              overflow: 'visible'
-            }}
-          />
           
           {lineConfigs.map((config) => (
             <Line
@@ -305,6 +297,15 @@ export default function TimeSeriesLineChart({
           ))}
         </LineChart>
       </ResponsiveContainer>
+      
+      {/* External Legend */}
+      <div className="mt-3">
+        <CustomLegend payload={lineConfigs.map(config => ({
+          value: config.name,
+          dataKey: config.key,
+          color: config.color
+        }))} />
+      </div>
     </div>
   );
 }
