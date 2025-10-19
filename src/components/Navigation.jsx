@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, Zap } from "lucide-react";
-import logo from "../assets/logo.svg";
+import { Menu, X } from "lucide-react";
+import favicon from "../assets/favicon.svg";
 
 const NAVIGATION_ROUTES = [
   { path: "/", label: "Home" },
@@ -73,8 +73,8 @@ export const Navigation = memo(() => {
       <nav className="nav-container-modern">
         <div className="nav-content">
           <Link to="/" className="nav-logo-modern">
-            <div className="nav-logo-icon">
-              <Zap size={28} strokeWidth={2.5} />
+            <div className="nav-logo-icon-glass">
+              <img src={favicon} alt="Logo" className="nav-logo-svg" />
             </div>
             <div className="nav-logo-text">
               <span className="nav-logo-title">Carrying Capacity</span>
