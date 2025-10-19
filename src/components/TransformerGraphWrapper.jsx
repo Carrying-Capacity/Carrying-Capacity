@@ -83,7 +83,7 @@ export default function TransformerGraphWrapper() {
     }, []);
 
     const handleSearchSelect = useCallback((node) => {
-        setFocusNode(node.id);
+        setFocusNode(String(node.id));
         setSelectedNode(node);
         setSearchTerm("");
         setShowSearchResults(false);
