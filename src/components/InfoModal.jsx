@@ -20,7 +20,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
     const [selectedMetrics, setSelectedMetrics] = useState('voltage'); // 'voltage', 'power', 'reactive'
     
     // Data fetching for house nodes
-    const houseId = hasEnergyData(node) ? node.HouseID : null;
+    const houseId = hasEnergyData(node) ? node?.HouseID : null;
     const { monthlyData, loading: monthlyLoading, error: monthlyError } = useMonthlyData(houseId);
     const { dailyData, loading: dailyLoading, error: dailyError } = useDailyData(houseId);
     
@@ -147,8 +147,10 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
             );
             
             if (error) {
-                setPowerError(error);
-                setPowerLoading(false);
+                if (!cancelled) {
+                    setPowerError(error);
+                    setPowerLoading(false);
+                }
                 return;
             }
             

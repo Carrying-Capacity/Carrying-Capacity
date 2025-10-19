@@ -69,6 +69,7 @@ body.modal-open {
   transition: all 700ms ease-in-out;
   opacity: 1;
   overflow: hidden;
+  position: relative;
 }
 
 .modal-content-modern::before {

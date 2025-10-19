@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, CheckCircle, ArrowRight } from 'lucide-react';
+import {CheckCircle, ArrowRight } from 'lucide-react';
 import './FrontEnd.css';
 
 const TECHNOLOGIES = [
