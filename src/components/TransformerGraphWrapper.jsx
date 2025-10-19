@@ -16,6 +16,7 @@ export default function TransformerGraphWrapper() {
     const [searchTerm, setSearchTerm] = useState("");
     const [showSearchResults, setShowSearchResults] = useState(false);
     const [isModalFullscreen, setIsModalFullscreen] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const searchContainerRef = useRef(null);
     
     // Comparison feature state
@@ -140,6 +141,16 @@ export default function TransformerGraphWrapper() {
         return () => {
             document.removeEventListener('pointerdown', handleClickOutside);
         };
+    }, []);
+
+    // Track window resize for mobile detection
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     return (
@@ -285,8 +296,8 @@ export default function TransformerGraphWrapper() {
                 </div>
             </div>
 
-            {/* Network Metrics - Hidden when modal is fullscreen */}
-            {!isModalFullscreen && (
+            {/* Network Metrics - Hidden when modal is fullscreen or when any modal is open on mobile */}
+            {!isModalFullscreen && !(isMobile && (selectedNode || showComparison)) && (
                 <div className="network-metrics">
                 <div className="metric-card">
                     <div className="metric-icon-wrapper metric-icon-houses">

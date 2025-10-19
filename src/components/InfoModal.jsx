@@ -16,8 +16,8 @@ import "./InfoModal.css";
 
 const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison, onFullscreenChange }) => {
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const [chartType, setChartType] = useState('monthly'); // 'monthly' or 'daily'
-    const [selectedMetrics, setSelectedMetrics] = useState('voltage'); // 'voltage', 'power', 'reactive'
+    const [chartType, setChartType] = useState('monthly');
+    const [selectedMetrics, setSelectedMetrics] = useState('voltage');
     
     // Data fetching for house nodes
     const houseId = hasEnergyData(node) ? node?.HouseID : null;
@@ -43,32 +43,43 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
         onFullscreenChange?.(isFullscreen);
     }, [isFullscreen, onFullscreenChange]);
     
+    // Calculate dynamic modal position based on control panel height
+    useEffect(() => {
+        const updateModalPosition = () => {
+            const controlPanel = document.querySelector('.modern-control-panel');
+            if (controlPanel) {
+                const topOffset = controlPanel.getBoundingClientRect().bottom + 20;
+                document.documentElement.style.setProperty('--modal-top', `${topOffset}px`);
+            }
+        };
+        
+        updateModalPosition();
+        window.addEventListener('resize', updateModalPosition);
+        return () => window.removeEventListener('resize', updateModalPosition);
+    }, []);
+    
     // Handle escape key and body scroll prevention
     useEffect(() => {
-        const handleEscape = (event) => {
+        const handleKeydown = (event) => {
             const target = event.target;
-            const tag = (target?.tagName || '').toLowerCase();
-            const isTyping = tag === 'input' || tag === 'textarea' || target?.isContentEditable;
+            const isTyping = ['input', 'textarea'].includes(target?.tagName?.toLowerCase()) || target?.isContentEditable;
             if (isTyping) return;
 
             if (event.key === 'Escape') {
                 handleClose();
-            }
-            if ((event.key === 'f' || event.key === 'F') && !event.ctrlKey && !event.metaKey && !event.altKey) {
-                if (node || isComparison) {
-                    toggleFullscreen();
-                }
+            } else if ((event.key === 'f' || event.key === 'F') && !event.ctrlKey && !event.metaKey && !event.altKey) {
+                toggleFullscreen();
             }
         };
         
         document.body.classList.add('modal-open');
-        document.addEventListener('keydown', handleEscape);
+        document.addEventListener('keydown', handleKeydown);
         
         return () => {
-            document.removeEventListener('keydown', handleEscape);
+            document.removeEventListener('keydown', handleKeydown);
             document.body.classList.remove('modal-open');
         };
-    }, [handleClose, toggleFullscreen, node, isComparison]);
+    }, [handleClose, toggleFullscreen]);
     
     const graphData = useTransformerData();
     const nodeIsHouse = useMemo(() => isHouse(node), [node]);
@@ -305,7 +316,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                                 
                                 {/* Time Series Chart */}
                                 {!timeSeriesLoading && !timeSeriesError && (
-                                    <div className="border border-gray-200 rounded-lg p-4 bg-white">
+                                    <div className="border border-gray-200 rounded-lg p-4 bg-white overflow-visible">
                                         <TimeSeriesLineChart 
                                             data={chartTimeSeriesData}
                                             selectedProperty={selectedProperty}
@@ -362,9 +373,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
 
                             {/* Charts with state handling */}
 
-                            <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
-                                isFullscreen ? '' : 'h-96'
-                            }`}>
+                            <div className="border border-gray-200 rounded-lg p-4 bg-white overflow-visible">
                                 {transformerChartMode === 'houses' ? (
                                     <PhasePieChart data={housesPieData} title="Houses per Phase" />
                                 ) : (
@@ -421,9 +430,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                             {/* Charts */}
                             {((chartType === 'monthly' && !monthlyLoading && !monthlyError) || 
                             (chartType === 'daily' && !dailyLoading && !dailyError)) && (
-                                <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
-                                    isFullscreen ? '' : 'h-96'
-                                }`}>
+                                <div className="border border-gray-200 rounded-lg p-4 bg-white overflow-visible">
                                     {chartType === 'monthly' ? (
                                         <MonthlyBarChart data={chartData} selectedMetrics={selectedMetrics} />
                                     ) : (

@@ -62,36 +62,38 @@ export const ANIMATION_CONFIG = {
 
 export const CHART_DIMENSIONS = {
   height: 400,
-  margin: { top: 20, right: 30, left: 20, bottom: 5 }
+  margin: { top: 20, right: 30, left: 20, bottom: 60 }
 };
 
 export const MODAL_STYLES = {
   normal: {
     position: "fixed",
-    top: "152px",
+    top: "var(--modal-top, 152px)",
     right: "20px", 
     width: "480px",
     maxWidth: "calc(100vw - 40px)",
-    maxHeight: "calc(100vh - 172px)",
+    maxHeight: "calc(100vh - var(--modal-top, 172px) - 20px)",
     zIndex: 1005,
-    padding: "1.5rem",
-    overflow: "auto",
-    backgroundColor: "#fdfdfd",
-    borderRadius: 10,
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)"
+    backgroundColor: "#ffffff",
+    borderRadius: "16px",
+    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden"
   },
   fullscreen: {
     position: "fixed",
-    top: "152px",
+    top: "var(--modal-top, 152px)",
     left: "20px",
     right: "20px", 
     bottom: "20px",
     zIndex: 1006,
-    padding: "2rem",
-    overflow: "auto",
-    backgroundColor: "#fdfdfd",
-    borderRadius: 10,
-    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1)"
+    backgroundColor: "#ffffff",
+    borderRadius: "16px",
+    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden"
   }
 };
 
