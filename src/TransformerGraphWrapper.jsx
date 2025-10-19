@@ -250,7 +250,7 @@ export default function TransformerGraphWrapper() {
 
             <div style={{ 
                 position: 'fixed',
-                top: '110px', // nav (60px) + control panel (~50px)
+                top: '122px', // nav (72px) + control panel (~50px)
                 left: 0,
                 right: 0,
                 bottom: 0,
