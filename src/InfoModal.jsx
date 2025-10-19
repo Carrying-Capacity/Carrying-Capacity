@@ -30,26 +30,31 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
         : transformDailyData(dailyData, METRICS_MAP[selectedMetrics] || []);
     
     const toggleFullscreen = useCallback(() => {
-        setIsFullscreen(prev => {
-            const newValue = !prev;
-            onFullscreenChange?.(newValue);
-            return newValue;
-        });
-    }, [onFullscreenChange]);
+        setIsFullscreen(prev => !prev);
+    }, []);
     
     const handleClose = useCallback(() => {
         setIsFullscreen(false);
-        onFullscreenChange?.(false);
         onClose();
-    }, [onClose, onFullscreenChange]);
+    }, [onClose]);
+
+    // Single source of truth for notifying parent
+    useEffect(() => {
+        onFullscreenChange?.(isFullscreen);
+    }, [isFullscreen, onFullscreenChange]);
     
     // Handle escape key and body scroll prevention
     useEffect(() => {
         const handleEscape = (event) => {
+            const target = event.target;
+            const tag = (target?.tagName || '').toLowerCase();
+            const isTyping = tag === 'input' || tag === 'textarea' || target?.isContentEditable;
+            if (isTyping) return;
+
             if (event.key === 'Escape' || event.key === 'x') {
                 handleClose();
             }
-            if (event.key === 'f' || event.key === 'F') {
+            if ((event.key === 'f' || event.key === 'F') && !event.ctrlKey && !event.metaKey && !event.altKey) {
                 if (node || isComparison) {
                     toggleFullscreen();
                 }
@@ -217,6 +222,9 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
             <div
                 className="modal-content-modern"
                 style={isFullscreen ? MODAL_STYLES.fullscreen : MODAL_STYLES.normal}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="info-modal-title"
             >
                 <ModalHeader
                     title={isComparison ? `House Comparison (${comparisonList.length} houses)` : node?.label}

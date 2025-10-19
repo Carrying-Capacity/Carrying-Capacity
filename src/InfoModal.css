@@ -1,5 +1,29 @@
 /* Modern Info Modal Styles */
 
+/* Modal Container - provides overlay, centering, and backdrop */
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Prevent body scrolling when modal is open */
+body.modal-open {
+  overflow: hidden;
+  padding-right: 0; /* Prevent layout shift from scrollbar */
+}
+
 /* Modal Header */
 .modal-header {
   padding: 1.5rem 2rem;

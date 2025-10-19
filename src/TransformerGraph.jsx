@@ -163,11 +163,12 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
                 } else {
                     // For transformer, find all downstream nodes (recursively)
                     const allDownstreamNodes = collectDownstreamNodes(data, node);
+                    const downstreamIds = new Set(allDownstreamNodes.map(dn => dn.id));
 
                     fgRef.current.zoomToFit(
                         1000,
                         150,
-                        (n) => allDownstreamNodes.some((dn) => dn.id === n.id)
+                        (n) => downstreamIds.has(n.id)
                     );
                 }
             } else if (node.type === "house" || node.type === "street") {
@@ -176,10 +177,11 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
                 setFlowLinks(pathLinks);
 
                 // Zoom to fit all nodes along the path
+                const pathNodeIds = new Set(pathNodes.map(p => p.id));
                 fgRef.current.zoomToFit(
                     1000,
                     150,
-                    (n) => pathNodes.some((p) => p.id === n.id)
+                    (n) => pathNodeIds.has(n.id)
                 );
             } else {
                 setFlowLinks([]);
@@ -206,18 +208,20 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
                     fgRef.current.zoomToFit(1000, 150);
                 } else {
                     const allDownstreamNodes = collectDownstreamNodes(data, node);
+                    const downstreamIds = new Set(allDownstreamNodes.map(dn => dn.id));
                     fgRef.current.zoomToFit(
                         1000,
                         150,
-                        (n) => allDownstreamNodes.some((dn) => dn.id === n.id)
+                        (n) => downstreamIds.has(n.id)
                     );
                 }
             } else if (node.type === "house" || node.type === "street") {
                 const { pathNodes } = tracePathToFeeder(data, node);
+                const pathNodeIds = new Set(pathNodes.map(p => p.id));
                 fgRef.current.zoomToFit(
                     1000,
                     150,
-                    (n) => pathNodes.some((p) => p.id === n.id)
+                    (n) => pathNodeIds.has(n.id)
                 );
             }
         }, 200);

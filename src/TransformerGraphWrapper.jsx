@@ -8,10 +8,13 @@ const InfoModal = React.lazy(() => import("./InfoModal"));
 
 export default function TransformerGraphWrapper() {
     const data = useTransformerData();
+    // Safe fallbacks to avoid crashes when data is not yet loaded
+    const nodes = data?.nodes ?? [];
+    const links = data?.links ?? [];
+    
     const [focusNode, setFocusNode] = useState(null);
     const [selectedNode, setSelectedNode] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
     const [showSearchResults, setShowSearchResults] = useState(false);
     const [isModalFullscreen, setIsModalFullscreen] = useState(false);
     const searchContainerRef = useRef(null);
@@ -22,10 +25,26 @@ export default function TransformerGraphWrapper() {
 
     // Memoize expensive calculations
     const metrics = useMemo(() => ({
-        houses: data?.nodes?.filter(n => n.type === "house").length || 0,
-        transformers: data?.nodes?.filter(n => n.type === "transformer").length || 0,
-        connections: data?.links?.length || 0
-    }), [data?.nodes, data?.links]);
+        houses: nodes.filter(n => n.type === "house").length,
+        transformers: nodes.filter(n => n.type === "transformer").length,
+        connections: links.length
+    }), [nodes, links]);
+
+    // Precompute node lists for dropdown
+    const feederNodes = useMemo(
+        () => nodes.filter(n => n.type === "feeder"),
+        [nodes]
+    );
+    const transformerNodes = useMemo(
+        () => nodes.filter(n => n.type === "transformer"),
+        [nodes]
+    );
+
+    // Faster membership checks for comparison list
+    const comparisonIdSet = useMemo(
+        () => new Set(comparisonList.map(h => h.id)),
+        [comparisonList]
+    );
 
     const handleNodeClick = useCallback((node) => {
         setFocusNode(node.id);
@@ -36,7 +55,7 @@ export default function TransformerGraphWrapper() {
     const handleDropdownChange = useCallback((e) => {
         const nodeId = e.target.value;
         if (nodeId) {
-            const node = data.nodes.find(n => n.id === nodeId);
+            const node = nodes.find(n => String(n.id) === nodeId);
             setFocusNode(nodeId);
             setSelectedNode(node || null);
         } else {
@@ -44,30 +63,25 @@ export default function TransformerGraphWrapper() {
             setSelectedNode(null);
         }
         setShowComparison(false);
-    }, [data.nodes]);
+    }, [nodes]);
 
     // Memoize filtered search results
     const filteredNodes = useMemo(() => {
         if (!searchTerm.trim()) return [];
         
         const lowerTerm = searchTerm.toLowerCase();
-        return data.nodes.filter((n) => {
-            const label = (n.label || n.id || "").toLowerCase();
+        return nodes.filter((n) => {
+            const label = String(n.label ?? n.id ?? "").toLowerCase();
             const type = (n.type || "").toLowerCase();
             return label.includes(lowerTerm) || type.includes(lowerTerm);
         }).slice(0, 10); // Limit to 10 results
-    }, [searchTerm, data.nodes]);
+    }, [searchTerm, nodes]);
 
     const handleSearchChange = useCallback((e) => {
         const term = e.target.value;
         setSearchTerm(term);
         setShowSearchResults(term.trim().length > 0);
     }, []);
-
-    // Update search results when filteredNodes change
-    useEffect(() => {
-        setSearchResults(filteredNodes);
-    }, [filteredNodes]);
 
     const handleSearchSelect = useCallback((node) => {
         setFocusNode(node.id);
@@ -81,6 +95,7 @@ export default function TransformerGraphWrapper() {
         setFocusNode(null);
         setSelectedNode(null);
         setShowComparison(false);
+        setIsModalFullscreen(false);
     }, []);
 
     // Comparison helper functions
@@ -124,9 +139,9 @@ export default function TransformerGraphWrapper() {
             }
         };
 
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('pointerdown', handleClickOutside);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('pointerdown', handleClickOutside);
         };
     }, []);
 
@@ -145,25 +160,22 @@ export default function TransformerGraphWrapper() {
                                 onChange={handleDropdownChange} 
                                 value={focusNode || ""}
                                 className="modern-select"
+                                aria-label="Navigate to node"
                             >
                                 <option value="">Navigate to node...</option>
                                 <optgroup label="Feeders">
-                                    {data.nodes
-                                        .filter((n) => n.type === "feeder")
-                                        .map((t) => (
-                                            <option key={t.id} value={t.id}>
-                                                {t.name || `Feeder ${t.id}`}
-                                            </option>
-                                        ))}
+                                    {feederNodes.map((t) => (
+                                        <option key={t.id} value={t.id}>
+                                            {t.name || `Feeder ${t.id}`}
+                                        </option>
+                                    ))}
                                 </optgroup>
                                 <optgroup label="Transformers">
-                                    {data.nodes
-                                        .filter((n) => n.type === "transformer")
-                                        .map((t) => (
-                                            <option key={t.id} value={t.id}>
-                                                {t.name || `Transformer ${t.id}`}
-                                            </option>
-                                        ))}
+                                    {transformerNodes.map((t) => (
+                                        <option key={t.id} value={t.id}>
+                                            {t.name || `Transformer ${t.id}`}
+                                        </option>
+                                    ))}
                                 </optgroup>
                             </select>
                         </div>
@@ -178,7 +190,11 @@ export default function TransformerGraphWrapper() {
                                 placeholder="Search houses, transformers..."
                                 value={searchTerm}
                                 onChange={handleSearchChange}
+                                onFocus={() => {
+                                    if (searchTerm.trim()) setShowSearchResults(true);    
+                                }}
                                 className="modern-input"
+                                aria-label="Search nodes"
                             />
                             {searchTerm && (
                                 <button 
@@ -193,10 +209,10 @@ export default function TransformerGraphWrapper() {
                             )}
                             
                             {/* Search Results Dropdown */}
-                            {showSearchResults && searchResults.length > 0 && (
+                            {showSearchResults && filteredNodes.length > 0 && (
                                 <div className="modern-search-dropdown">
-                                    {searchResults.map((node) => {
-                                        const isInComparison = comparisonList.find(house => house.id === node.id);
+                                    {filteredNodes.map((node) => {
+                                        const isInComparison = comparisonIdSet.has(node.id);
                                         const isHouse = node.type === "house";
                                         const NodeIcon = node.type === "feeder" ? Network : node.type === "transformer" ? ZapIcon : Home;
                                         
