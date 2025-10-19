@@ -1,5 +1,5 @@
 import { memo, useCallback, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import favicon from "../assets/favicon.svg";
 

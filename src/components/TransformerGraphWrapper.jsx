@@ -101,7 +101,7 @@ export default function TransformerGraphWrapper() {
     const toggleHouseInComparison = useCallback((node) => {
         if (node.type === "house") {
             setComparisonList(prev => {
-                const isInList = prev.find(house => house.id === node.id);
+                const isInList = prev.some(house => house.id === node.id);
                 if (isInList) {
                     return prev.filter(house => house.id !== node.id);
                 } else {
@@ -111,9 +111,7 @@ export default function TransformerGraphWrapper() {
         }
     }, []);
     
-    const addToComparison = useCallback((node) => {
-        toggleHouseInComparison(node);
-    }, [toggleHouseInComparison]);
+
 
     const removeFromComparison = useCallback((nodeId) => {
         setComparisonList(prev => prev.filter(house => house.id !== nodeId));
@@ -335,7 +333,7 @@ export default function TransformerGraphWrapper() {
                     data={data}
                     focusNode={focusNode}
                     onNodeClick={handleNodeClick}
-                    onAddToComparison={addToComparison}
+                    onAddToComparison={toggleHouseInComparison}
                     comparisonList={comparisonList}
                 />
                 <Suspense fallback={null}>
@@ -345,7 +343,7 @@ export default function TransformerGraphWrapper() {
                         isComparison={showComparison}
                         comparisonList={comparisonList}
                         onRemoveFromComparison={removeFromComparison}
-                        onAddToComparison={addToComparison}
+                        onAddToComparison={toggleHouseInComparison}
                         onFullscreenChange={setIsModalFullscreen}
                     />
                 </Suspense>

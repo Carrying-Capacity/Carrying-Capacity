@@ -1,50 +1,80 @@
 import { useNavigate } from 'react-router-dom';
-import { Zap, Network, TrendingUp, Map as MapIcon, Database, GitBranch, ArrowRight, Sparkles } from 'lucide-react';
+import { Zap, Network, TrendingUp, Map as MapIcon, Database, GitBranch, ArrowRight, Layers } from 'lucide-react';
 import MiniMapPreview from '../components/MiniMapPreview';
 import './Home.css';
 
-const FEATURES = [
+const PROCESS_STEPS = [
   {
     icon: MapIcon,
-    title: "Interactive Network Map",
-    description: "Visualize and explore your entire electrical network with our interactive 2D force-directed graph.",
+    title: "Network Visualization",
+    description: "Our interactive map displays electrical networks as force-directed graphs, showing relationships between feeders, transformers, and houses. Each node represents a component, with connections showing the physical network topology.",
     path: "/transformer",
-    gradient: "from-blue-500 to-cyan-500"
+    gradient: "from-blue-500 to-cyan-500",
+    details: [
+      "Force-directed graph layout for intuitive network structure",
+      "Real-time interaction with network components",
+      "Energy consumption data visualization for individual houses"
+    ]
   },
   {
     icon: TrendingUp,
-    title: "Phase Estimation",
-    description: "Analyze and predict phase distribution across your network with advanced algorithms.",
+    title: "Phase Estimation Process",
+    description: "We use machine learning algorithms to predict which electrical phase each house is connected to. This is critical for load balancing and network planning when phase information is incomplete or unavailable.",
     path: "/phase_estimate",
-    gradient: "from-purple-500 to-pink-500"
+    gradient: "from-purple-500 to-pink-500",
+    details: [
+      "Analyzes voltage patterns and consumption data",
+      "Predicts phase allocation (A, B, or C) for each house",
+      "Helps identify phase imbalances in the network"
+    ]
   },
   {
     icon: Network,
-    title: "Network Estimation",
-    description: "Predict network load, performance metrics, and capacity constraints in real-time.",
+    title: "Network Load Estimation",
+    description: "Our system calculates aggregate load across transformers and feeders by analyzing downstream house consumption. This helps identify capacity constraints and potential overload scenarios.",
     path: "/network_estimate",
-    gradient: "from-green-500 to-emerald-500"
+    gradient: "from-green-500 to-emerald-500",
+    details: [
+      "Aggregates consumption data from connected houses",
+      "Calculates transformer and feeder load in real-time",
+      "Identifies potential capacity issues before they occur"
+    ]
   },
   {
     icon: GitBranch,
-    title: "Street Generation",
-    description: "Automatically generate optimized network layouts for streets and neighborhoods.",
+    title: "Street Network Generation",
+    description: "This tool generates optimized electrical network layouts for new developments. It creates transformer placements and connection topologies based on street geometry and expected load.",
     path: "/street_gen",
-    gradient: "from-orange-500 to-red-500"
+    gradient: "from-orange-500 to-red-500",
+    details: [
+      "Analyzes street layouts and building locations",
+      "Optimizes transformer placement for coverage",
+      "Generates connection topology minimizing cable length"
+    ]
   },
   {
     icon: Database,
-    title: "Data Processing",
-    description: "Process and analyze large-scale electrical network data with our powerful tools.",
+    title: "Data Processing Pipeline",
+    description: "Our backend processes raw smart meter data, network topology files, and GIS information. Data is cleaned, validated, and stored in a structured format for analysis and visualization.",
     path: "/data_processing_info",
-    gradient: "from-indigo-500 to-blue-500"
+    gradient: "from-indigo-500 to-blue-500",
+    details: [
+      "Ingests data from multiple sources (CSV, GIS, databases)",
+      "Validates and cleans network topology data",
+      "Stores processed data in Supabase for fast querying"
+    ]
   },
   {
-    icon: Sparkles,
-    title: "Front End Interface",
-    description: "Interactive interface for comprehensive data input, analysis, and visualization.",
+    icon: Layers,
+    title: "Interactive Interface",
+    description: "The frontend provides an intuitive interface for exploring network data. Built with React and modern web technologies, it enables real-time interaction with complex network datasets.",
     path: "/front_end",
-    gradient: "from-pink-500 to-rose-500"
+    gradient: "from-pink-500 to-rose-500",
+    details: [
+      "React-based single-page application",
+      "Real-time data fetching from Supabase",
+      "Responsive design for desktop and mobile devices"
+    ]
   }
 ];
 
@@ -58,17 +88,18 @@ export default function Home() {
         <div className="hero-content">
           <div className="hero-badge">
             <Zap size={16} />
-            <span>Next-Generation Network Intelligence</span>
+            <span>Electrical Network Analysis Platform</span>
           </div>
           
           <h1 className="hero-title">
-            Electrical Network Planning
-            <span className="hero-title-gradient">Reimagined</span>
+            Understanding Network
+            <span className="hero-title-gradient">Carrying Capacity</span>
           </h1>
           
           <p className="hero-description">
-            Model, analyze, and optimize electrical networks with cutting-edge visualization tools.
-            Designed for engineers and planners who demand precision and speed.
+            This platform analyzes electrical distribution networks by processing smart meter data, 
+            network topology, and GIS information. Our tools help visualize network structure, 
+            estimate phase allocation, and predict load distribution across transformers and feeders.
           </p>
           
           <div className="hero-actions">
@@ -76,30 +107,15 @@ export default function Home() {
               className="hero-btn-primary"
               onClick={() => navigate('/transformer')}
             >
-              <span>Explore Network Map</span>
+              <span>View Network Map</span>
               <ArrowRight size={20} />
             </button>
             <button 
               className="hero-btn-secondary"
               onClick={() => navigate('/data_processing_info')}
             >
-              Learn More
+              Data Processing Details
             </button>
-          </div>
-
-          <div className="hero-stats">
-            <div className="hero-stat">
-              <div className="hero-stat-value">10K+</div>
-              <div className="hero-stat-label">Network Nodes</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat-value">Real-time</div>
-              <div className="hero-stat-label">Analysis</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat-value">99.9%</div>
-              <div className="hero-stat-label">Accuracy</div>
-            </div>
           </div>
         </div>
 
@@ -108,61 +124,55 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Grid */}
+      {/* Process Explanation Section */}
       <section className="features-section">
         <div className="features-header">
-          <h2 className="features-title">Powerful Features</h2>
+          <h2 className="features-title">How Our System Works</h2>
           <p className="features-subtitle">
-            Everything you need to manage and optimize electrical networks
+            A breakdown of each component in our electrical network analysis pipeline
           </p>
         </div>
 
         <div className="features-grid">
-          {FEATURES.map((feature, index) => {
-            const Icon = feature.icon;
+          {PROCESS_STEPS.map((step, index) => {
+            const Icon = step.icon;
             return (
               <div
                 key={index}
                 className="feature-card"
-                onClick={() => navigate(feature.path)}
+                onClick={() => navigate(step.path)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    navigate(feature.path);
+                    navigate(step.path);
                   }
                 }}
                 role="button"
                 tabIndex={0}
-                aria-label={`Navigate to ${feature.title}`}
+                aria-label={`Learn about ${step.title}`}
               >
-                <div className={`feature-icon bg-gradient-to-br ${feature.gradient}`}>
+                <div className={`feature-icon bg-gradient-to-br ${step.gradient}`}>
                   <Icon size={24} />
                 </div>
-                <h3 className="feature-title">{feature.title}</h3>
-                <p className="feature-description">{feature.description}</p>
+                <h3 className="feature-title">{step.title}</h3>
+                <p className="feature-description">{step.description}</p>
+                
+                {/* Process Details */}
+                <ul className="process-details">
+                  {step.details.map((detail, idx) => (
+                    <li key={idx} className="process-detail-item">
+                      <span className="detail-bullet">•</span>
+                      <span>{detail}</span>
+                    </li>
+                  ))}
+                </ul>
+                
                 <div className="feature-arrow">
                   <ArrowRight size={16} />
                 </div>
               </div>
             );
           })}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="cta-section">
-        <div className="cta-content">
-          <h2 className="cta-title">Ready to optimize your network?</h2>
-          <p className="cta-description">
-            Start exploring our tools and transform the way you manage electrical networks.
-          </p>
-          <button 
-            className="cta-button"
-            onClick={() => navigate('/transformer')}
-          >
-            <Zap size={20} />
-            <span>Get Started Now</span>
-          </button>
         </div>
       </section>
     </div>

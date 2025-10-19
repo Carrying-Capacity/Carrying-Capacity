@@ -51,7 +51,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
             const isTyping = tag === 'input' || tag === 'textarea' || target?.isContentEditable;
             if (isTyping) return;
 
-            if (event.key === 'Escape' || event.key === 'x') {
+            if (event.key === 'Escape') {
                 handleClose();
             }
             if ((event.key === 'f' || event.key === 'F') && !event.ctrlKey && !event.metaKey && !event.altKey) {
@@ -106,6 +106,18 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
 
 
     // Derive downstream houses and phase counts when transformer selected
+    const areHouseListsEqual = useCallback((prev, next) => {
+        if (prev.length !== next.length) return false;
+        for (let i = 0; i < prev.length; i += 1) {
+            const prevId = String(prev[i]?.id ?? prev[i]?.HouseID ?? "");
+            const nextId = String(next[i]?.id ?? next[i]?.HouseID ?? "");
+            if (prevId !== nextId) {
+                return false;
+            }
+        }
+        return true;
+    }, []);
+
     useEffect(() => {
         if (!nodeIsTransformer || !graphData?.nodes || !node) {
             setDownstreamHouses([]);
@@ -115,15 +127,19 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
         const start = graphData.nodes.find((n) => n.id === node.id);
         if (!start) return;
         const dsNodes = collectDownstreamNodes(graphData, start);
-        const houses = dsNodes.filter((n) => n.type === 'house');
-        setDownstreamHouses(houses);
+        const houses = dsNodes
+            .filter((n) => n.type === 'house')
+            .sort((a, b) => String(a.id ?? a.HouseID ?? "").localeCompare(String(b.id ?? b.HouseID ?? "")));
+
+        setDownstreamHouses((prev) => (areHouseListsEqual(prev, houses) ? prev : houses));
+
         const counts = houses.reduce((acc, h) => {
             const p = h.predicted_phase || 'default';
             if (p === 'A' || p === 'B' || p === 'C') acc[p] = (acc[p] || 0) + 1;
             return acc;
         }, { A: 0, B: 0, C: 0 });
         setPhaseHouseCounts(counts);
-    }, [nodeIsTransformer, graphData, node]);
+    }, [nodeIsTransformer, graphData, node, areHouseListsEqual]);
 
     // Fetch monthly import power for transformer houses and aggregate per phase
     useEffect(() => {
@@ -315,7 +331,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
                                 <h5 className="text-md font-medium text-gray-700 mb-2">Select Analysis Type</h5>
                                 <div className="grid grid-cols-2 gap-2">
-                                    <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                    <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-3 rounded-lg border border-gray-200">
                                         <input
                                             type="radio"
                                             name="transformer-mode-selection"
@@ -328,7 +344,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                                             <p className="text-xs text-gray-500">Distribution of houses across phases</p>
                                         </div>
                                     </label>
-                                    <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                    <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-3 rounded-lg border border-gray-200">
                                         <input
                                             type="radio"
                                             name="transformer-mode-selection"
@@ -403,7 +419,8 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                             )}
 
                             {/* Charts */}
-                            {!monthlyLoading && !dailyLoading && !monthlyError && !dailyError && (
+                            {((chartType === 'monthly' && !monthlyLoading && !monthlyError) || 
+                            (chartType === 'daily' && !dailyLoading && !dailyError)) && (
                                 <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
                                     isFullscreen ? '' : 'h-96'
                                 }`}>
