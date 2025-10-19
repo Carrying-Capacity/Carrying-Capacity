@@ -1,5 +1,3 @@
-import React from 'react';
-
 const PROPERTY_CATEGORIES = {
   voltage: {
     label: 'Voltage',
@@ -16,9 +14,6 @@ const PROPERTY_CATEGORIES = {
 };
 
 export default function PropertySelector({ selectedProperty, onPropertyChange, className = "" }) {
-  const handlePropertyChange = (propertyKey) => {
-    onPropertyChange(propertyKey);
-  };
 
   return (
     <div className={`property-selector ${className}`}>
@@ -37,7 +32,7 @@ export default function PropertySelector({ selectedProperty, onPropertyChange, c
               type="radio"
               name="property-selection"
               checked={selectedProperty === propertyKey}
-              onChange={() => handlePropertyChange(propertyKey)}
+              onChange={() => onPropertyChange(propertyKey)}
               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
             />
             <div>

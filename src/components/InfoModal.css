@@ -1,0 +1,181 @@
+/* Modern Info Modal Styles */
+
+/* Modal Container - provides overlay, centering, and backdrop */
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Prevent body scrolling when modal is open */
+body.modal-open {
+  overflow: hidden;
+  padding-right: 0; /* Prevent layout shift from scrollbar */
+}
+
+/* Modal Header */
+.modal-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.modal-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.modal-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  background: linear-gradient(135deg, #0f172a 0%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.modal-header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-header-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.modal-header-button:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.modal-header-button:active {
+  transform: translateY(0);
+}
+
+.modal-header-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Modal Content Sections - Let Tailwind handle most spacing */
+.modal-content-modern > div {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* Remove Tailwind class overrides - these cause conflicts and performance issues */
+
+/* Keep only unique styles that Tailwind can't handle easily */
+
+/* Tailwind handles all of these - removed for performance */
+
+/* Scrollbar Styling */
+.modal-content-modern > div::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-content-modern > div::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.5);
+  border-radius: 5px;
+}
+
+.modal-content-modern > div::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 5px;
+}
+
+.modal-content-modern > div::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.7);
+}
+
+/* Removed - Tailwind handles these */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .modal-header-title {
+    font-size: 1.25rem;
+  }
+
+  .modal-header-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .modal-content-modern > div {
+    padding: 1rem 1.5rem;
+  }
+}
+
+/* Animation for modal entrance */
+.modal-content-modern {
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Fullscreen mode adjustments */
+.modal-content-modern[style*="position: fixed"] {
+  border-radius: 0 !important;
+}
+
+.modal-content-modern[style*="position: fixed"] .modal-header {
+  border-radius: 0;
+}
+
+/* Enhanced focus states */
+input[type="radio"]:focus {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Improved button states */
+button:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Node Info Card styles - REMOVED (converted to Tailwind in NodeInfoSection.jsx) */

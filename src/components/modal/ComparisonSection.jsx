@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { CircleMinus } from "lucide-react";
 
 export const ComparisonSection = memo(({ comparisonList = [], onRemoveFromComparison }) => {

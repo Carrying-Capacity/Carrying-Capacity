@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Zap, Network, TrendingUp, Map as MapIcon, Database, GitBranch, ArrowRight, Sparkles } from 'lucide-react';
 import MiniMapPreview from '../components/MiniMapPreview';

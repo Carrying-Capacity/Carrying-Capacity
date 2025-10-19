@@ -1,21 +1,84 @@
-import React, { memo } from "react";
+import { memo } from "react";
+import { Home, Zap, Sun, Network as NetworkIcon } from "lucide-react";
 import { isHouse as isHouseNode } from "../../utils/nodeUtils.js";
+import { getPhaseColor } from "../../constants/index.js";
 
 export const NodeInfoSection = memo(({ node }) => {
   const isHouse = isHouseNode(node);
 
+  const NodeTypeIcon = node?.type === 'house' ? Home : node?.type === 'transformer' ? Zap : NetworkIcon;
+
   return (
-    <div className="border-2 border-gray-200 rounded-lg p-4 mb-4">
-      <p className="text-lg mb-2">
-        <strong>Type:</strong> {node?.type ?? "—"}
-      </p>
+    <div className="bg-gradient-to-br from-white/95 to-slate-50/95 backdrop-blur-xl border border-slate-200/80 rounded-2xl p-6 mb-6 shadow-sm hover:shadow-md hover:border-blue-500/30 transition-all duration-300">
+      <div className="flex items-center gap-4 mb-6 pb-4 border-b border-slate-200/60">
+        <div className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl flex-shrink-0">
+          <NodeTypeIcon size={28} className="text-blue-600" />
+        </div>
+        <div className="flex-1">
+          <h4 className="text-lg font-bold text-slate-900 mb-1">Node Information</h4>
+          <span className="inline-block px-3 py-1 bg-slate-500/10 border border-slate-500/20 rounded-md text-xs font-semibold text-slate-600 capitalize">
+            {node?.type ?? "—"}
+          </span>
+        </div>
+      </div>
+      
       {isHouse && (
-        <dl className="space-y-1">
-          <div><dt className="font-semibold inline">House ID:</dt> <dd className="inline">{node?.HouseID ?? "—"}</dd></div>
-          <div><dt className="font-semibold inline">Predicted Phase:</dt> <dd className="inline">{node?.predicted_phase ?? "—"}</dd></div>
-          <div><dt className="font-semibold inline">Solar:</dt> <dd className="inline">{node?.solar ? "Yes" : "No"}</dd></div>
-          <div><dt className="font-semibold inline">Parent Transformer:</dt> <dd className="inline">{node?.parent ?? "—"}</dd></div>
-        </dl>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+              <Home size={16} className="flex-shrink-0" />
+              <span>House ID</span>
+            </div>
+            <div className="text-base font-semibold text-slate-900 pl-6">{node?.HouseID ?? "—"}</div>
+          </div>
+          
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+              <Zap size={16} className="flex-shrink-0" />
+              <span>Predicted Phase</span>
+            </div>
+            <div className="pl-6">
+              <span 
+                className="inline-block px-3.5 py-1.5 border rounded-lg text-sm font-bold uppercase tracking-wide"
+                style={{ 
+                  backgroundColor: `${getPhaseColor(node?.predicted_phase)}15`,
+                  color: getPhaseColor(node?.predicted_phase),
+                  borderColor: `${getPhaseColor(node?.predicted_phase)}40`
+                }}
+              >
+                Phase {node?.predicted_phase ?? "—"}
+              </span>
+            </div>
+          </div>
+          
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+              <Sun size={16} className="flex-shrink-0" />
+              <span>Solar Panel</span>
+            </div>
+            <div className="pl-6">
+              <span className={`inline-block px-3.5 py-1.5 rounded-lg text-sm font-semibold border ${
+                node?.solar 
+                  ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30' 
+                  : 'bg-slate-500/10 text-slate-600 border-slate-500/30'
+              }`}>
+                {node?.solar ? "Yes" : "No"}
+              </span>
+            </div>
+          </div>
+          
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+              <NetworkIcon size={16} className="flex-shrink-0" />
+              <span>Parent Transformer</span>
+            </div>
+            <div className="pl-6">
+              <span className="inline-block px-3 py-1.5 bg-slate-500/5 border border-slate-500/15 rounded-md font-mono text-sm font-semibold text-slate-900">
+                {node?.parent ?? "—"}
+              </span>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

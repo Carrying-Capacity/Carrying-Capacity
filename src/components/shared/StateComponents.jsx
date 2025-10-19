@@ -1,4 +1,3 @@
-import React from "react";
 
 // Loading spinner component
 export const LoadingSpinner = ({ size = "md", message = "Loading..." }) => {

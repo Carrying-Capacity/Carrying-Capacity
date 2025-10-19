@@ -1,13 +1,21 @@
-import React, { memo, useRef, useEffect, useState } from "react";
+import { memo, useRef, useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Maximize2, Zap, Activity } from "lucide-react";
 import { useTransformerData } from "../hooks/useTransformerData";
+import { getPhaseColor } from "../constants/index.js";
 
 const MiniMapPreview = memo(() => {
   const navigate = useNavigate();
   const canvasRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const data = useTransformerData();
+
+  // Memoize expensive metric calculations
+  const metrics = useMemo(() => ({
+    houses: data?.nodes?.filter(n => n.type === "house").length || 0,
+    transformers: data?.nodes?.filter(n => n.type === "transformer").length || 0,
+    connections: data?.links?.length || 0
+  }), [data?.nodes, data?.links]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -22,8 +30,8 @@ const MiniMapPreview = memo(() => {
 
     // Create gradient background
     const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, "rgba(15, 23, 42, 0.8)");
-    gradient.addColorStop(1, "rgba(30, 41, 59, 0.8)");
+    gradient.addColorStop(0, "rgba(248, 250, 252, 0.95)");
+    gradient.addColorStop(1, "rgba(241, 245, 249, 0.95)");
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
 
@@ -45,7 +53,7 @@ const MiniMapPreview = memo(() => {
     const scale = Math.min(scaleX, scaleY);
 
     // Draw links first (background)
-    ctx.strokeStyle = "rgba(148, 163, 184, 0.2)";
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.3)";
     ctx.lineWidth = 1;
     data.links?.forEach(link => {
       const source = data.nodes.find(n => n.id === link.source || n.id === link.source?.id);
@@ -84,13 +92,7 @@ const MiniMapPreview = memo(() => {
         ctx.fill();
       } else if (node.type === "house") {
         ctx.arc(x, y, 1.5, 0, 2 * Math.PI);
-        const phaseColors = {
-          A: "#ef4444",
-          B: "#10b981",
-          C: "#3b82f6",
-          default: "#94a3b8"
-        };
-        ctx.fillStyle = phaseColors[node.predicted_phase] || phaseColors.default;
+        ctx.fillStyle = getPhaseColor(node.predicted_phase);
         ctx.fill();
       }
     });
@@ -142,15 +144,15 @@ const MiniMapPreview = memo(() => {
 
       <div className="mini-map-stats">
         <div className="mini-map-stat">
-          <span className="mini-map-stat-value">{data?.nodes?.filter(n => n.type === "house").length || 0}</span>
+          <span className="mini-map-stat-value">{metrics.houses}</span>
           <span className="mini-map-stat-label">Houses</span>
         </div>
         <div className="mini-map-stat">
-          <span className="mini-map-stat-value">{data?.nodes?.filter(n => n.type === "transformer").length || 0}</span>
+          <span className="mini-map-stat-value">{metrics.transformers}</span>
           <span className="mini-map-stat-label">Transformers</span>
         </div>
         <div className="mini-map-stat">
-          <span className="mini-map-stat-value">{data?.links?.length || 0}</span>
+          <span className="mini-map-stat-value">{metrics.connections}</span>
           <span className="mini-map-stat-label">Connections</span>
         </div>
       </div>

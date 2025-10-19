@@ -1,25 +1,26 @@
-import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
-import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData, useTimeSeriesData, transformTimeSeriesData } from "./hooks/useEnergyData";
-import { MonthlyBarChart, DailyLineChart, ChartControls, PhasePieChart, MonthlyPhaseBarChart } from "./components/EnergyCharts";
-import { useTransformerData } from "./hooks/useTransformerData.js";
-import { collectDownstreamNodes } from "./utils/graphUtils.js";
-import { METRICS_MAP, MODAL_STYLES, MONTH_OPTIONS } from "./constants/index.js";
-import { fetchMultipleHousesData } from "./utils/dataFetching.js";
-import { isHouse, isTransformer, hasEnergyData } from "./utils/nodeUtils.js";
-import { DataStateWrapper } from "./components/shared/StateComponents.jsx";
-import PropertySelector from "./components/PropertySelector.jsx";
-import TimeSeriesLineChart from "./components/TimeSeriesLineChart.jsx";
-import { ModalHeader } from "./components/modal/ModalHeader.jsx";
-import { NodeInfoSection } from "./components/modal/NodeInfoSection.jsx";
-import { ComparisonSection } from "./components/modal/ComparisonSection.jsx";
+import { useState, useEffect, useMemo, useCallback, memo } from "react";
+import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData, useTimeSeriesData, transformTimeSeriesData } from "../hooks/useEnergyData";
+import { MonthlyBarChart, DailyLineChart, ChartControls, PhasePieChart, MonthlyPhaseBarChart } from "./EnergyCharts";
+import { useTransformerData } from "../hooks/useTransformerData.js";
+import { collectDownstreamNodes } from "../utils/graphUtils.js";
+import { METRICS_MAP, MODAL_STYLES, MONTH_OPTIONS } from "../constants/index.js";
+import { fetchMultipleHousesData } from "../utils/dataFetching.js";
+import { isHouse, isTransformer, hasEnergyData } from "../utils/nodeUtils.js";
+import { DataStateWrapper } from "./shared/StateComponents.jsx";
+import PropertySelector from "./PropertySelector.jsx";
+import TimeSeriesLineChart from "./TimeSeriesLineChart.jsx";
+import { ModalHeader } from "./modal/ModalHeader.jsx";
+import { NodeInfoSection } from "./modal/NodeInfoSection.jsx";
+import { ComparisonSection } from "./modal/ComparisonSection.jsx";
+import "./InfoModal.css";
 
-const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison }) => {
+const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison, onFullscreenChange }) => {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [chartType, setChartType] = useState('monthly'); // 'monthly' or 'daily'
     const [selectedMetrics, setSelectedMetrics] = useState('voltage'); // 'voltage', 'power', 'reactive'
     
     // Data fetching for house nodes
-    const houseId = hasEnergyData(node) ? node.HouseID : null;
+    const houseId = hasEnergyData(node) ? node?.HouseID : null;
     const { monthlyData, loading: monthlyLoading, error: monthlyError } = useMonthlyData(houseId);
     const { dailyData, loading: dailyLoading, error: dailyError } = useDailyData(houseId);
     
@@ -36,14 +37,24 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
         setIsFullscreen(false);
         onClose();
     }, [onClose]);
+
+    // Single source of truth for notifying parent
+    useEffect(() => {
+        onFullscreenChange?.(isFullscreen);
+    }, [isFullscreen, onFullscreenChange]);
     
     // Handle escape key and body scroll prevention
     useEffect(() => {
         const handleEscape = (event) => {
+            const target = event.target;
+            const tag = (target?.tagName || '').toLowerCase();
+            const isTyping = tag === 'input' || tag === 'textarea' || target?.isContentEditable;
+            if (isTyping) return;
+
             if (event.key === 'Escape' || event.key === 'x') {
                 handleClose();
             }
-            if (event.key === 'f' || event.key === 'F') {
+            if ((event.key === 'f' || event.key === 'F') && !event.ctrlKey && !event.metaKey && !event.altKey) {
                 if (node || isComparison) {
                     toggleFullscreen();
                 }
@@ -136,8 +147,10 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
             );
             
             if (error) {
-                setPowerError(error);
-                setPowerLoading(false);
+                if (!cancelled) {
+                    setPowerError(error);
+                    setPowerLoading(false);
+                }
                 return;
             }
             
@@ -191,7 +204,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
     if (!node && (!isComparison || comparisonList.length === 0)) return null;
     
     return (
-        <div className="modal-container">
+        <>
             {isFullscreen && (
                 <div
                     style={{
@@ -200,17 +213,21 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        backgroundColor: "black",
-                        opacity: 0.5,
-                        transition: "opacity 700ms ease-in-out",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        backdropFilter: "blur(4px)",
+                        WebkitBackdropFilter: "blur(4px)",
+                        transition: "opacity 300ms ease-in-out",
                         zIndex: 999
                     }}
                     onClick={() => setIsFullscreen(false)}
                 />
             )}
             <div
-                className="bg-white border border-gray-300 rounded-lg shadow-2xl transition-all duration-700 ease-in-out opacity-100 modal-content"
+                className="modal-content-modern"
                 style={isFullscreen ? MODAL_STYLES.fullscreen : MODAL_STYLES.normal}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="info-modal-title"
             >
                 <ModalHeader
                     title={isComparison ? `House Comparison (${comparisonList.length} houses)` : node?.label}
@@ -402,7 +419,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = 
                 </div>
                 )}
             </div>
-        </div>
+        </>
     );
 });
 

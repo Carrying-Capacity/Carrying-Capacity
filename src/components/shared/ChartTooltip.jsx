@@ -1,4 +1,3 @@
-import React from "react";
 
 // Unified tooltip component for all charts
 export const ChartTooltip = ({ active, payload, label, unit = '', labelFormatter, valueFormatter }) => {

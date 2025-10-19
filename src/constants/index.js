@@ -147,3 +147,13 @@ export const HOUSE_COLORS = [
   '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b'
 ];
 
+// Utility function to get phase color
+export const getPhaseColor = (phase) => {
+  switch(phase) {
+    case 'A': return '#ef4444';
+    case 'B': return '#22c55e';
+    case 'C': return '#3b82f6';
+    default: return '#94a3b8';
+  }
+};
+
