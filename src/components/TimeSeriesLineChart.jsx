@@ -197,23 +197,42 @@ export default function TimeSeriesLineChart({
   // Custom legend to show house and property info
   const CustomLegend = (props) => {
     const { payload } = props;
+    const hasMany = payload?.length > 8;
     
     return (
-      <div className="flex flex-wrap gap-4 mt-4 justify-center">
-        {payload?.map((entry, index) => {
-          const config = lineConfigs.find(c => c.key === entry.dataKey);
-          if (!config) return null;
-          
-          return (
-            <div key={index} className="flex items-center space-x-2">
-              <div 
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: entry.color }}
-              />
-              <span className="text-xs text-gray-600">{entry.value}</span>
-            </div>
-          );
-        })}
+      <div className="relative">
+        {hasMany && (
+          <div className="text-center mb-1">
+            <span className="text-xs text-gray-400 italic">Scroll to see all items ↕</span>
+          </div>
+        )}
+        <div 
+          className="px-2"
+          style={{
+            maxHeight: '120px',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#cbd5e1 #f1f1f1'
+          }}
+        >
+          <div className="flex flex-wrap gap-3 justify-center pb-2">
+            {payload?.map((entry, index) => {
+              const config = lineConfigs.find(c => c.key === entry.dataKey);
+              if (!config) return null;
+              
+              return (
+                <div key={index} className="flex items-center space-x-2 shrink-0">
+                  <div 
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: entry.color }}
+                  />
+                  <span className="text-xs text-gray-600">{entry.value}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     );
   };
@@ -238,7 +257,7 @@ export default function TimeSeriesLineChart({
   return (
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
-        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
             dataKey="time" 
@@ -262,7 +281,11 @@ export default function TimeSeriesLineChart({
           <Tooltip content={<CustomTooltip />} />
           <Legend 
             content={<CustomLegend />}
-            wrapperStyle={{ paddingTop: '20px' }}
+            wrapperStyle={{ 
+              paddingTop: '10px',
+              maxHeight: '140px',
+              overflow: 'visible'
+            }}
           />
           
           {lineConfigs.map((config) => (
