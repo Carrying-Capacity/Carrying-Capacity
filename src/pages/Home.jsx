@@ -126,6 +126,15 @@ export default function Home() {
                 key={index}
                 className="feature-card"
                 onClick={() => navigate(feature.path)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate(feature.path);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Navigate to ${feature.title}`}
               >
                 <div className={`feature-icon bg-gradient-to-br ${feature.gradient}`}>
                   <Icon size={24} />
