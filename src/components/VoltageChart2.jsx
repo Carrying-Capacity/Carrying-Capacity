@@ -31,7 +31,7 @@ const VoltageChart = () => {
   const [houseInput, setHouseInput] = useState(String(defaultState)); // text box value
   const [houseId, setHouseId] = useState(defaultState); // debounced numeric value
 
-  // 🕒 Debounce input (wait 500 ms before applying)
+  // Debounce input (wait 500 ms before applying)
   useEffect(() => {
     const handler = setTimeout(() => {
       const parsed = parseInt(houseInput);
@@ -42,7 +42,7 @@ const VoltageChart = () => {
     return () => clearTimeout(handler);
   }, [houseInput]);
 
-  // ⚡ Fetch data whenever debounced houseId changes
+  // Fetch data whenever debounced houseId changes
   useEffect(() => {
     const fetchData = async () => {
       if (!houseId) return; // avoid empty fetch
@@ -71,7 +71,7 @@ const VoltageChart = () => {
     <div className="flex flex-col items-center space-y-4 w-full">
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3">
-        {/* 🏠 House input */}
+        {/* House input */}
         <label className="flex items-center gap-2">
           <span className="font-medium">House ID:</span>
           <input
@@ -83,7 +83,7 @@ const VoltageChart = () => {
           />
         </label>
 
-        {/* 📈 Data type dropdown */}
+        {/* Data type dropdown */}
         <label className="flex items-center gap-2">
           <span className="font-medium">Data Type:</span>
           <select

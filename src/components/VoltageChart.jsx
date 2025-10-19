@@ -67,7 +67,7 @@ const VoltageChart = () => {
     <div className="flex flex-col items-center space-y-4 w-full">
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3">
-        {/* 🏠 House input */}
+        {/* House input */}
         <label className="flex items-center gap-2">
           <span className="font-medium">House ID:</span>
           <input
@@ -79,7 +79,7 @@ const VoltageChart = () => {
           />
         </label>
 
-        {/* 📈 Data type dropdown */}
+        {/* Data type dropdown */}
         <label className="flex items-center gap-2">
           <span className="font-medium">Data Type:</span>
           <select

@@ -9,6 +9,7 @@ import StreetGeneration from "./pages/StreetGeneration";
 import DataProcessingInfo from "./pages/DataProcessingInfo";
 import FrontEnd from "./pages/FrontEnd";
 import Transformer from "./components/TransformerGraphWrapper";
+import ReferencesCitations from "./pages/ReferencesCitations";
 import "./styles/shared.css";
 
 const RedirectHandler =() => {
@@ -45,6 +46,7 @@ export default function App() {
               <Route path="/front_end" element={<FrontEnd />} />
               <Route path="/data_processing_info" element={<DataProcessingInfo />} />
               <Route path="/transformer" element={<Transformer />} />
+              <Route path="/references_citations" element={<ReferencesCitations />} />
             </Routes>
           </main>
         </div>

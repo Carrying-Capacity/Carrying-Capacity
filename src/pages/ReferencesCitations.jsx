@@ -1,0 +1,60 @@
+import { useEffect, useState } from "react";
+import PageLayout from "../components/PageLayout";
+import bibtexParse from "bibtex-parse-js";
+
+// Import BibTeX file directly as a raw string
+import bibText from "../data/references.bib?raw";
+
+export default function ReferencesCitations() {
+  const [citations, setCitations] = useState([]);
+
+  useEffect(() => {
+    const parsed = bibtexParse.toJSON(bibText);
+    const formatted = parsed.map((entry) => formatAPA(entry.entryTags));
+    setCitations(formatted);
+  }, []);
+
+  function formatAPA(tags) {
+    // Convert all keys to lowercase
+    const t = {};
+    for (const key in tags) {
+      t[key.toLowerCase()] = tags[key];
+    }
+
+    const authors = t.author
+      ? t.author
+          .split(" and ")
+          .map((a) => {
+            const parts = a.split(",").map((s) => s.trim()).filter(Boolean);
+            if (parts.length === 2) {
+              const [last, first] = parts;
+              return `${last}, ${first[0]}.`;
+            } else {
+              return parts[0]; // fallback
+            }
+          })
+          .join(", ")
+      : "";
+
+    const year = t.year ? `(${t.year}).` : "";
+    const title = t.title ? `${t.title}.` : "";
+    const journal = t.journal ? `<i>${t.journal}</i>.` : "";
+    const publisher = t.publisher ? `${t.publisher}.` : "";
+    const doi = t.doi ? `https://doi.org/${t.doi}` : "";
+    const url = t.url ? t.url : "";
+
+    return [authors, year, title, journal, publisher, doi, url].filter(Boolean).join(" ");
+  }
+
+  return (
+    <PageLayout>
+      <h1>References</h1>
+      <p>Below are the references  used for this project.</p>
+      <div style={{ maxHeight: "100vh", overflowY: "auto" }}>
+        {citations.map((cite, i) => (
+          <p key={i} dangerouslySetInnerHTML={{ __html: `${i + 1}. ${cite}` }} />
+        ))}
+      </div>
+    </PageLayout>
+  );
+}
