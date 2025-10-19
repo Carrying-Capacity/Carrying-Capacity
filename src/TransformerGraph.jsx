@@ -1,81 +1,77 @@
 // src/TransformerGraph.jsx
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect, useCallback, useMemo, memo } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 import { iconCache, phaseColors, getNodeSize } from "./utils/iconCache.js";
 import { useWindowDimensions } from "./hooks/useWindowDimensions.js";
 import { collectDownstreamNodes, tracePathToFeeder } from "./utils/graphUtils.js";
 import { ANIMATION_CONFIG } from './constants/index.js';
 
-export default function TransformerGraph({ data, focusNode, onNodeClick, onAddToComparison, comparisonList }) {
+const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison, comparisonList }) => {
     const fgRef = useRef();
     const [hoverNode, setHoverNode] = useState(null);
-    const [showCompareButton, setShowCompareButton] = useState(null);
-
-    const [flowLinks, setFlowLinks] = useState([]); // links along the path to grid
-    const [tick, setTick] = useState(0); // for animated dashed lines
+    const [flowLinks, setFlowLinks] = useState([]);
+    const [tick, setTick] = useState(0);
     
     const dimensions = useWindowDimensions();
 
-    // Icons and node sizes are now imported from utils
+    // Create a stable comparison list lookup
+    const comparisonSet = useMemo(() => 
+        new Set(comparisonList?.map(h => h.id) || []),
+        [comparisonList]
+    );
 
     const renderNode = useCallback((node, ctx) => {
         const size = getNodeSize(node.type);
         const icon = iconCache[node.type];
 
-        // Draw a semi-transparent phase color behind the icon for houses only
         if (node.type === "house") {
+            ctx.save();
             ctx.beginPath();
             ctx.arc(node.x, node.y + 0.5, size / 1.5, 0, 2 * Math.PI);
             ctx.fillStyle = phaseColors[node.predicted_phase] || phaseColors.default;
-            ctx.globalAlpha = 0.4; // semi-transparent
+            ctx.globalAlpha = 0.4;
             ctx.fill();
-            ctx.globalAlpha = 1;
-            
             // Add border for houses in comparison list
-            const isInComparison = comparisonList && comparisonList.some(h => h.id === node.id);
-            if (isInComparison) {
-                ctx.strokeStyle = "#3b82f6"; // blue border
+            if (comparisonSet.has(node.id)) {
+                ctx.strokeStyle = "#3b82f6";
                 ctx.lineWidth = 3;
                 ctx.stroke();
             }
+            ctx.restore();
         }
 
         // Draw the icon on top (all types)
         if (icon && icon.complete) {
             ctx.drawImage(icon, node.x - size / 2, node.y - size / 2, size, size);
         }
-    }, []);
+    }, [comparisonSet]);
 
     const renderLabel = useCallback((node, ctx) => {
         if (hoverNode && hoverNode.id === node.id) {
             const label = node.label || node.id;
-            
-            // Set up text style
-            ctx.font = "bold 12px Arial";
-            const labelWidth = ctx.measureText(label).width;
-            
-            // Calculate positions
             const padding = 6;
             const boxX = node.x + 15;
             const boxY = node.y - 12;
+            
+            ctx.font = "bold 12px Arial";
+            const labelWidth = ctx.measureText(label).width;
             const boxWidth = labelWidth + padding * 2;
             let boxHeight = 24;
             
-            // Add space for comparison hint if applicable
             let actionText = "";
             if (node.type === "house" && onAddToComparison) {
-                const isInComparison = comparisonList && comparisonList.some(h => h.id === node.id);
+                const isInComparison = comparisonSet.has(node.id);
                 actionText = isInComparison ? "Right-click to remove" : "Right-click to compare";
                 ctx.font = "10px Arial";
                 const actionWidth = ctx.measureText(actionText).width;
                 const maxWidth = Math.max(labelWidth, actionWidth);
                 boxHeight = 36;
                 
-                // Draw background with shadow
+                // Draw shadow
                 ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
                 ctx.fillRect(boxX + 2, boxY + 2, maxWidth + padding * 2, boxHeight);
                 
-                // Draw main background
+                // Draw background
                 ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
                 ctx.fillRect(boxX, boxY, maxWidth + padding * 2, boxHeight);
                 
@@ -84,11 +80,11 @@ export default function TransformerGraph({ data, focusNode, onNodeClick, onAddTo
                 ctx.lineWidth = 1;
                 ctx.strokeRect(boxX, boxY, maxWidth + padding * 2, boxHeight);
             } else {
-                // Draw background with shadow for non-house nodes
+                // Draw shadow
                 ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
                 ctx.fillRect(boxX + 2, boxY + 2, boxWidth, boxHeight);
                 
-                // Draw main background
+                // Draw background
                 ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
                 ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
                 
@@ -107,23 +103,24 @@ export default function TransformerGraph({ data, focusNode, onNodeClick, onAddTo
             // Draw action text for houses
             if (actionText) {
                 ctx.font = "10px Arial";
-                const isInComparison = comparisonList && comparisonList.some(h => h.id === node.id);
-                ctx.fillStyle = isInComparison ? "#3b82f6" : "#666";
+                ctx.fillStyle = comparisonSet.has(node.id) ? "#3b82f6" : "#666";
                 ctx.fillText(actionText, boxX + padding, boxY + 30);
             }
         }
-    }, [hoverNode, comparisonList, onAddToComparison]);
+    }, [hoverNode, comparisonSet, onAddToComparison]);
 
     // Only run animation when there are flow links to animate
+    const hasFlowLinks = flowLinks.length > 0;
+    const flowLinkSet = useMemo(() => new Set(flowLinks), [flowLinks]);
     useEffect(() => {
-        if (flowLinks.length === 0) {
+        if (!hasFlowLinks) {
             setTick(0);
             return;
         }
         
         const interval = setInterval(() => setTick((t) => t + 1), ANIMATION_CONFIG.animationInterval);
         return () => clearInterval(interval);
-    }, [flowLinks.length > 0]);
+    }, [hasFlowLinks]);
 
 
     useEffect(() => {
@@ -195,7 +192,7 @@ export default function TransformerGraph({ data, focusNode, onNodeClick, onAddTo
                 }}
                 linkCanvasObject={(link, ctx) => {
                     // Highlight path links
-                    if (flowLinks.includes(link)) {
+                    if (flowLinkSet.has(link)) {
                         ctx.strokeStyle = "orange";
                         ctx.lineWidth = 2;
                         ctx.setLineDash([5, 5]);
@@ -236,20 +233,23 @@ export default function TransformerGraph({ data, focusNode, onNodeClick, onAddTo
                     ctx.lineTo(-arrowLength / 2, arrowWidth / 2);
                     ctx.closePath();
                     
-                    ctx.fillStyle = flowLinks.includes(link) ? "orange" : "#999";
+                    ctx.fillStyle = flowLinkSet.has(link) ? "orange" : "#999";
                     ctx.fill();
                     
                     ctx.restore();
                 }}
-                onNodeClick={(node) => {
-                    onNodeClick(node);
-                }}
-                onNodeRightClick={(node) => {
+                onNodeClick={onNodeClick}
+                onNodeRightClick={useCallback((node, event) => {
+                    event?.preventDefault();
                     if (node.type === "house" && onAddToComparison) {
                         onAddToComparison(node);
                     }
-                }}
+                }, [onAddToComparison])}
             />
         </div>
     );
-}
+});
+
+TransformerGraph.displayName = "TransformerGraph";
+
+export default TransformerGraph;

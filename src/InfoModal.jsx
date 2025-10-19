@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData, useTimeSeriesData, transformTimeSeriesData } from "./hooks/useEnergyData";
 import { MonthlyBarChart, DailyLineChart, ChartControls, PhasePieChart, MonthlyPhaseBarChart } from "./components/EnergyCharts";
-import { Maximize2, Minimize2, X as XIcon, CirclePlus, CircleMinus } from "lucide-react";
 import { useTransformerData } from "./hooks/useTransformerData.js";
 import { collectDownstreamNodes } from "./utils/graphUtils.js";
 import { METRICS_MAP, MODAL_STYLES, MONTH_OPTIONS } from "./constants/index.js";
@@ -10,8 +9,11 @@ import { isHouse, isTransformer, hasEnergyData } from "./utils/nodeUtils.js";
 import { DataStateWrapper } from "./components/shared/StateComponents.jsx";
 import PropertySelector from "./components/PropertySelector.jsx";
 import TimeSeriesLineChart from "./components/TimeSeriesLineChart.jsx";
+import { ModalHeader } from "./components/modal/ModalHeader.jsx";
+import { NodeInfoSection } from "./components/modal/NodeInfoSection.jsx";
+import { ComparisonSection } from "./components/modal/ComparisonSection.jsx";
 
-export default function InfoModal({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison }) {
+const InfoModal = memo(({ node, onClose, isComparison = false, comparisonList = [], onRemoveFromComparison, onAddToComparison }) => {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [chartType, setChartType] = useState('monthly'); // 'monthly' or 'daily'
     const [selectedMetrics, setSelectedMetrics] = useState('voltage'); // 'voltage', 'power', 'reactive'
@@ -26,46 +28,44 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
         ? transformMonthlyData(monthlyData, METRICS_MAP[selectedMetrics] || [])
         : transformDailyData(dailyData, METRICS_MAP[selectedMetrics] || []);
     
-    const toggleFullscreen = () => {
-        setIsFullscreen(!isFullscreen);
-    };
+    const toggleFullscreen = useCallback(() => {
+        setIsFullscreen(prev => !prev);
+    }, []);
+    
+    const handleClose = useCallback(() => {
+        setIsFullscreen(false);
+        onClose();
+    }, [onClose]);
     
     // Handle escape key and body scroll prevention
     useEffect(() => {
         const handleEscape = (event) => {
             if (event.key === 'Escape' || event.key === 'x') {
-                setIsFullscreen(false);
-                onClose();
+                handleClose();
             }
             if (event.key === 'f' || event.key === 'F') {
-                // Allow fullscreen toggle for both single node and comparison modals
                 if (node || isComparison) {
-                    if (isFullscreen) {
-                        setIsFullscreen(false);
-                    } else {
-                        setIsFullscreen(true);
-                    }
+                    toggleFullscreen();
                 }
             }
         };
         
-        // Prevent body scroll when modal is open
         document.body.classList.add('modal-open');
-        
         document.addEventListener('keydown', handleEscape);
         
         return () => {
             document.removeEventListener('keydown', handleEscape);
             document.body.classList.remove('modal-open');
         };
-    }, [isFullscreen, onClose, node, isComparison]);
+    }, [handleClose, toggleFullscreen, node, isComparison]);
     
-    const baseModalClasses = "bg-white border border-gray-300 rounded-lg shadow-2xl transition-all duration-700 ease-in-out opacity-100";
-
-    // Data for transformer aggregations
     const graphData = useTransformerData();
-    const nodeIsHouse = isHouse(node);
-    const nodeIsTransformer = isTransformer(node);
+    const nodeIsHouse = useMemo(() => isHouse(node), [node]);
+    const nodeIsTransformer = useMemo(() => isTransformer(node), [node]);
+    const isInComparison = useMemo(() => 
+        comparisonList?.some(h => h.id === node?.id),
+        [comparisonList, node]
+    );
 
     // Transformer-specific state
     const [transformerChartMode, setTransformerChartMode] = useState('houses'); // 'houses' | 'power'
@@ -116,9 +116,10 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
 
     // Fetch monthly import power for transformer houses and aggregate per phase
     useEffect(() => {
+        let cancelled = false;
         const fetchPower = async () => {
             if (!nodeIsTransformer || transformerChartMode !== 'power' || !downstreamHouses.length) {
-                setMonthlyPhasePowerData([]);
+                if (!cancelled) setMonthlyPhasePowerData([]);
                 return;
             }
             
@@ -168,11 +169,14 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                 };
             });
             
-            setMonthlyPhasePowerData(monthlyData);
-            setPowerLoading(false);
+            if (!cancelled) {
+              setMonthlyPhasePowerData(monthlyData);
+              setPowerLoading(false);
+            }
         };
         fetchPower();
-    }, [nodeIsTransformer, transformerChartMode, downstreamHouses]);
+        return () => { cancelled = true; };
+     }, [nodeIsTransformer, transformerChartMode, downstreamHouses]);
 
     const housesPieData = useMemo(() => (
         [
@@ -205,95 +209,31 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                 />
             )}
             <div
-                className={`${baseModalClasses} modal-content`}
+                className="bg-white border border-gray-300 rounded-lg shadow-2xl transition-all duration-700 ease-in-out opacity-100 modal-content"
                 style={isFullscreen ? MODAL_STYLES.fullscreen : MODAL_STYLES.normal}
             >
-                <div className="modal-header">
-                    <div className="modal-header-row">
-                        <h3 className="modal-header-title">
-                            {isComparison ? `House Comparison (${comparisonList.length} houses)` : node?.label}
-                        </h3>
-                        <div className="modal-header-buttons">
-                            {/* Comparison button for houses */}
-                            {!isComparison && nodeIsHouse && onAddToComparison && (
-                                <button
-                                    onClick={() => onAddToComparison(node)}
-                                    className="modal-header-button"
-                                    title={comparisonList && comparisonList.some(h => h.id === node.id) 
-                                        ? "Remove from comparison list" 
-                                        : "Add to comparison list"}
-                                    aria-label={comparisonList && comparisonList.some(h => h.id === node.id) 
-                                        ? "Remove from comparison" 
-                                        : "Add to comparison"}
-                                >
-                                    {comparisonList && comparisonList.some(h => h.id === node.id) ? (
-                                        <CircleMinus className="modal-header-icon" />
-                                    ) : (
-                                        <CirclePlus className="modal-header-icon" />
-                                    )}
-                                </button>
-                            )}
-                            <button
-                                onClick={toggleFullscreen}
-                                className="modal-header-button"
-                                title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                                aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                            >
-                                {isFullscreen ? (
-                                    <Minimize2 className="modal-header-icon" />
-                                ) : (
-                                    <Maximize2 className="modal-header-icon" />
-                                )}
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setIsFullscreen(false);
-                                    onClose();
-                                }}
-                                className="modal-header-button"
-                                title="Close (ESC)"
-                                aria-label="Close"
-                            >
-                                <XIcon className="modal-header-icon" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <ModalHeader
+                    title={isComparison ? `House Comparison (${comparisonList.length} houses)` : node?.label}
+                    isFullscreen={isFullscreen}
+                    onToggleFullscreen={toggleFullscreen}
+                    onClose={handleClose}
+                    showComparisonButton={!isComparison && nodeIsHouse && !!onAddToComparison}
+                    isInComparison={isInComparison}
+                    onToggleComparison={() =>
+                    isInComparison
+                        ? onRemoveFromComparison?.(node.id)
+                        : onAddToComparison?.(node)
+                    }
+
+                />
                 
                 {isComparison ? (
                     /* Comparison Content */
                     <div>
-                        <div className="mb-6 border-2 border-gray-200 rounded-lg p-4">
-                            <h4 className="text-xl font-semibold mb-3 text-gray-800">House Comparison</h4>
-                            {comparisonList.length === 0 ? (
-                                <p className="text-gray-600">No houses selected for comparison. Right-click on houses in the graph to add them.</p>
-                            ) : (
-                                <div className="space-y-4">
-                                    {comparisonList.map((house, index) => (
-                                        <div key={house.id} className="p-3 border border-gray-300 rounded-lg bg-gray-50">
-                                            <div className="flex justify-between items-start">
-                                                <div>
-                                                    <h5 className="font-semibold text-lg">{house.label || house.id}</h5>
-                                                    <p className="text-sm text-gray-600"><strong>House ID:</strong> {house.HouseID}</p>
-                                                    <p className="text-sm text-gray-600"><strong>Phase:</strong> {house.predicted_phase}</p>
-                                                    <p className="text-sm text-gray-600"><strong>Transformer:</strong> {house.parent}</p>
-                                                </div>
-                                                {onRemoveFromComparison && (
-                                                    <button
-                                                        onClick={() => onRemoveFromComparison(house.id)}
-                                                        className="modal-header-button"
-                                                        title="Remove from comparison"
-                                                        aria-label="Remove from comparison"
-                                                    >
-                                                        <CircleMinus className="modal-header-icon" />
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        <ComparisonSection 
+                            comparisonList={comparisonList}
+                            onRemoveFromComparison={onRemoveFromComparison}
+                        />
                         
                         {/* Time Series Comparison Chart */}
                         {comparisonList.length > 0 && (
@@ -322,7 +262,7 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                                 {timeSeriesError && (
                                     <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                                         <p className="text-red-600">
-                                            Error loading time series data: {timeSeriesError}
+                                            Error loading time series data: {timeSeriesError?.message ?? String(timeSeriesError)}
                                         </p>
                                         <p className="text-sm text-red-500 mt-2">
                                             Please check your internet connection and try again.
@@ -332,9 +272,7 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                                 
                                 {/* Time Series Chart */}
                                 {!timeSeriesLoading && !timeSeriesError && (
-                                    <div className={`border border-gray-200 rounded-lg p-4 bg-white ${
-                                        isFullscreen ? '' : ''
-                                    }`}>
+                                    <div className="border border-gray-200 rounded-lg p-4 bg-white">
                                         <TimeSeriesLineChart 
                                             data={chartTimeSeriesData}
                                             selectedProperty={selectedProperty}
@@ -346,25 +284,12 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                             </div>
                         )}
                     </div>
-                ) : (
-                /* Single Node Information */
-                    <div></div>
-                )}
+                ) : null}
                 
                 {/* Basic Node Information (Single Node Mode) */}
                 {!isComparison && node && (
                 <div>
-                    <div className="border-2 border-gray-200 rounded-lg p-4 mb-4">
-                        <p className="text-lg mb-2"><strong>Type:</strong> {node.type}</p>
-                        {nodeIsHouse && (
-                            <>
-                                <p className="mb-1"><strong>House ID:</strong> {node.HouseID}</p>
-                                <p className="mb-1"><strong>Predicted Phase:</strong> {node.predicted_phase}</p>
-                                <p className="mb-1"><strong>Solar:</strong> {node.solar ? "Yes" : "No"}</p>
-                                <p className="mb-1"><strong>Parent Transformer:</strong> {node.parent}</p>
-                            </>
-                        )}
-                    </div>
+                    <NodeInfoSection node={node} />
                     {nodeIsTransformer && (
                         <div className="mb-4 border-2 border-gray-200 rounded-lg p-4">
                             <h4 className="text-xl font-semibold mb-4 text-gray-800">Transformer Visualisation</h4>
@@ -448,7 +373,11 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
                             {((chartType === 'monthly' && monthlyError) || (chartType === 'daily' && dailyError)) && (
                                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                                     <p className="text-red-600">
-                                        Error loading data: {chartType === 'monthly' ? monthlyError : dailyError}
+                                        Error loading data: {
+                                          chartType === 'monthly'
+                                            ? (monthlyError?.message ?? String(monthlyError))
+                                            : (dailyError?.message ?? String(dailyError))
+                                        }
                                     </p>
                                     <p className="text-sm text-red-500 mt-2">
                                         Please check your internet connection and try again.
@@ -475,4 +404,8 @@ export default function InfoModal({ node, onClose, isComparison = false, compari
             </div>
         </div>
     );
-}
+});
+
+InfoModal.displayName = "InfoModal";
+
+export default InfoModal;
