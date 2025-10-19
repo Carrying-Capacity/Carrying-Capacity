@@ -1,6 +1,7 @@
-import React, { memo, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/logo.svg";
+import React, { memo, useCallback, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import favicon from "../assets/favicon.svg";
 
 const NAVIGATION_ROUTES = [
   { path: "/", label: "Home" },
@@ -12,40 +13,106 @@ const NAVIGATION_ROUTES = [
   { path: "/front_end", label: "Front End" }
 ];
 
-const NavDropdown = memo(() => {
-  const navigate = useNavigate();
-  
-  const handleChange = useCallback((e) => {
-    const path = e.target.value;
-    if (path) navigate(path);
-  }, [navigate]);
+const NavLink = memo(({ to, label, isActive }) => (
+  <Link
+    to={to}
+    className={`nav-link-item ${isActive ? 'nav-link-active' : ''}`}
+  >
+    {label}
+  </Link>
+));
+
+NavLink.displayName = "NavLink";
+
+const MobileMenu = memo(({ isOpen, onClose, currentPath, navigate }) => {
+  if (!isOpen) return null;
 
   return (
-    <select 
-      className="nav-dropdown" 
-      onChange={handleChange} 
-      defaultValue=""
-      aria-label="Navigate to page"
-    >
-      <option value="" disabled>Navigate to page...</option>
-      {NAVIGATION_ROUTES.map(({ path, label }) => (
-        <option key={path} value={path}>{label}</option>
-      ))}
-    </select>
+    <div className="mobile-menu-overlay" onClick={onClose}>
+      <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+        <div className="mobile-menu-header">
+          <h2 className="mobile-menu-title">Navigation</h2>
+          <button onClick={onClose} className="mobile-menu-close" aria-label="Close menu">
+            <X size={24} />
+          </button>
+        </div>
+        <nav className="mobile-menu-nav">
+          {NAVIGATION_ROUTES.map(({ path, label }) => (
+            <Link
+              key={path}
+              to={path}
+              className={`mobile-menu-link ${currentPath === path ? 'mobile-menu-link-active' : ''}`}
+              onClick={onClose}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+    </div>
   );
 });
 
-NavDropdown.displayName = "NavDropdown";
+MobileMenu.displayName = "MobileMenu";
 
 export const Navigation = memo(() => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = useCallback(() => {
+    setMobileMenuOpen(prev => !prev);
+  }, []);
+
+  const closeMobileMenu = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
+
   return (
-    <nav className="nav-container">
-      <Link to="/" className="nav-logo">
-        <img src={logo} alt="Carrying Capacity Logo" />
-        <h1>Carrying Capacity Website</h1>
-      </Link>
-      <NavDropdown />
-    </nav>
+    <>
+      <nav className="nav-container-modern">
+        <div className="nav-content">
+          <Link to="/" className="nav-logo-modern">
+            <div className="nav-logo-icon-glass">
+              <img src={favicon} alt="Logo" className="nav-logo-svg" />
+            </div>
+            <div className="nav-logo-text">
+              <span className="nav-logo-title">Carrying Capacity</span>
+              <span className="nav-logo-subtitle">Network Intelligence</span>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="nav-links-desktop">
+            {NAVIGATION_ROUTES.slice(1).map(({ path, label }) => (
+              <NavLink
+                key={path}
+                to={path}
+                label={label}
+                isActive={location.pathname === path}
+              />
+            ))}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="nav-mobile-toggle"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle menu"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={mobileMenuOpen}
+        onClose={closeMobileMenu}
+        currentPath={location.pathname}
+        navigate={navigate}
+      />
+    </>
   );
 });
 
