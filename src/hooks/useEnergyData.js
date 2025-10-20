@@ -1,52 +1,53 @@
 import { useState, useEffect, useMemo } from 'react'
 import { fetchMonthlyData, fetchDailyData, fetchTimeSeriesData } from '../utils/dataFetching.js'
 
-// Hook to fetch monthly data for a specific house
-export const useMonthlyData = (houseId) => {
-  const [monthlyData, setMonthlyData] = useState(null)
+/**
+ * Generic hook for data fetching with loading and error states
+ * @param {Function} fetchFn - Async function to fetch data
+ * @param {any} dependency - Dependency to trigger refetch
+ * @param {string} dataKey - Key name for returned data
+ * @returns {Object} Data, loading, and error states
+ */
+const useDataFetch = (fetchFn, dependency, dataKey = 'data') => {
+  const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    const loadMonthlyData = async () => {
-      if (!houseId) return
-      
-      setLoading(true)
-      const { data, error } = await fetchMonthlyData(houseId)
-      
-      setMonthlyData(data)
-      setError(error)
+    if (!dependency) {
+      setData(null)
       setLoading(false)
+      return
     }
 
-    loadMonthlyData()
-  }, [houseId])
+    let cancelled = false
+    
+    const loadData = async () => {
+      setLoading(true)
+      const result = await fetchFn(dependency)
+      
+      if (!cancelled) {
+        setData(result.data)
+        setError(result.error)
+        setLoading(false)
+      }
+    }
 
-  return { monthlyData, loading, error }
+    loadData()
+    return () => { cancelled = true }
+  }, [dependency, fetchFn])
+
+  return { [dataKey]: data, loading, error }
+}
+
+// Hook to fetch monthly data for a specific house
+export const useMonthlyData = (houseId) => {
+  return useDataFetch(fetchMonthlyData, houseId, 'monthlyData')
 }
 
 // Hook to fetch 30-minute daily data for a specific house
 export const useDailyData = (houseId) => {
-  const [dailyData, setDailyData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    const loadDailyData = async () => {
-      if (!houseId) return
-      
-      setLoading(true)
-      const { data, error } = await fetchDailyData(houseId)
-      
-      setDailyData(data)
-      setError(error)
-      setLoading(false)
-    }
-
-    loadDailyData()
-  }, [houseId])
-
-  return { dailyData, loading, error }
+  return useDataFetch(fetchDailyData, houseId, 'dailyData')
 }
 
 // Utility functions to transform data for charts

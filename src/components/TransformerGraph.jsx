@@ -1,24 +1,20 @@
 import { useRef, useState, useEffect, useCallback, useMemo, memo } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 import { iconCache, phaseColors, getNodeSize } from "../utils/iconCache.js";
-import { useWindowDimensions } from "../hooks/useWindowDimensions.js";
+import { useContainerSize } from "../hooks/useContainerSize.js";
+import { useComparison } from "../context/ComparisonContext.jsx";
 import { collectDownstreamNodes, tracePathToFeeder } from "../utils/graphUtils.js";
 import { ANIMATION_CONFIG } from '../constants/index.js';
 
-const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison, comparisonList }) => {
+const TransformerGraph = memo(({ data, focusNode, onNodeClick }) => {
     const fgRef = useRef();
     const [hoverNode, setHoverNode] = useState(null);
     const [flowLinks, setFlowLinks] = useState([]);
     const [tick, setTick] = useState(0);
     const [lastFocusNode, setLastFocusNode] = useState(null);
     
-    const dimensions = useWindowDimensions();
-
-    // Create a stable comparison list lookup
-    const comparisonSet = useMemo(() => 
-        new Set(comparisonList?.map(h => h.id) || []),
-        [comparisonList]
-    );
+    const [containerRef, dimensions] = useContainerSize();
+    const { comparisonIdSet, toggleHouseInComparison } = useComparison();
 
     const renderNode = useCallback((node, ctx) => {
         const size = getNodeSize(node.type);
@@ -32,7 +28,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
             ctx.globalAlpha = 0.4;
             ctx.fill();
             // Add border for houses in comparison list
-            if (comparisonSet.has(node.id)) {
+            if (comparisonIdSet.has(node.id)) {
                 ctx.strokeStyle = "#3b82f6";
                 ctx.lineWidth = 3;
                 ctx.stroke();
@@ -44,7 +40,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
         if (icon && icon.complete) {
             ctx.drawImage(icon, node.x - size / 2, node.y - size / 2, size, size);
         }
-    }, [comparisonSet]);
+    }, [comparisonIdSet]);
 
     const renderLabel = useCallback((node, ctx) => {
         if (hoverNode && hoverNode.id === node.id) {
@@ -60,8 +56,8 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
             let actionText = "";
             let maxWidth = labelWidth;
             
-            if (node.type === "house" && onAddToComparison) {
-                const isInComparison = comparisonSet.has(node.id);
+            if (node.type === "house") {
+                const isInComparison = comparisonIdSet.has(node.id);
                 actionText = isInComparison ? "Right-click to remove" : "Right-click to compare";
                 ctx.font = "500 11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
                 const actionWidth = ctx.measureText(actionText).width;
@@ -115,11 +111,11 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
             // Draw action text for houses with modern styling
             if (actionText) {
                 ctx.font = "500 11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
-                ctx.fillStyle = comparisonSet.has(node.id) ? "#3b82f6" : "#64748b";
+                ctx.fillStyle = comparisonIdSet.has(node.id) ? "#3b82f6" : "#64748b";
                 ctx.fillText(actionText, boxX + padding, boxY + 34);
             }
         }
-    }, [hoverNode, comparisonSet, onAddToComparison]);
+    }, [hoverNode, comparisonIdSet]);
 
     // Only run animation when there are flow links to animate
     const hasFlowLinks = flowLinks.length > 0;
@@ -229,7 +225,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
     }, [dimensions.width, dimensions.height, lastFocusNode, data]);
 
     return (
-        <div style={{ width: "100%", height: "100%" }}>
+        <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
             <ForceGraph2D
                 ref={fgRef}
                 graphData={data}
@@ -303,10 +299,10 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, onAddToComparison
                 onNodeClick={onNodeClick}
                 onNodeRightClick={useCallback((node, event) => {
                     event?.preventDefault();
-                    if (node.type === "house" && onAddToComparison) {
-                        onAddToComparison(node);
+                    if (node.type === "house") {
+                        toggleHouseInComparison(node);
                     }
-                }, [onAddToComparison])}
+                }, [toggleHouseInComparison])}
             />
         </div>
     );

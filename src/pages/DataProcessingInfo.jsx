@@ -6,7 +6,7 @@ import VoltageChart2 from "../components/VoltageChart2";
 export default function DataProcessingInfo() {
   return (
     <PageLayout>
-      <h1>Data visualization and Processing</h1>
+      <h1>Data Visualisation and Processing</h1>
       {/* <img src={NetworkImage} alt="Electrical Network" className="home-image" /> */}
       <p>The original data was given to us in CSV format. James helped with converting this format into 
         parquets, because this was faster for loading into python files. After the data was converted into Parquet format, Alex had made a standardized cleaned format for everyone
@@ -19,9 +19,7 @@ export default function DataProcessingInfo() {
         chronologically and the timestamps were ordered, but no further processing was done.
       </p>
       <div className="voltage-box">
-        <div style={{ width: "100%", height: "100%" }}>
-          <VoltageChart2/>
-        </div>
+        <VoltageChart2/>
       </div>
 
       <p className="mt-6">

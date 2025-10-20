@@ -12,6 +12,22 @@ import Transformer from "./components/TransformerGraphWrapper";
 import ReferencesCitations from "./pages/ReferencesCitations";
 import "./styles/shared.css";
 
+const ScrollToTop = () => {
+    const location = useLocation();
+
+    useEffect(() => {
+        // Scroll window
+        window.scrollTo(0, 0);
+        // Also scroll document element and body for better compatibility
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }, [location.pathname]);
+
+    return null;
+};
+
+ScrollToTop.displayName = "ScrollToTop";
+
 const RedirectHandler =() => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -34,6 +50,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <Router basename="/Carrying-Capacity">
+        <ScrollToTop />
         <RedirectHandler />
         <div className="app-container">
           <Navigation />

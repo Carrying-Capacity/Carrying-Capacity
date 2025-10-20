@@ -154,3 +154,19 @@ export const getPhaseColor = (phase) => {
   return PHASE_COLORS[phase] || PHASE_COLORS.default;
 };
 
+// Responsive breakpoints
+export const BREAKPOINTS = {
+  mobile: 640,
+  tablet: 768,
+  desktop: 1024,
+  wide: 1280,
+};
+
+// UI Constants
+export const UI_CONSTANTS = {
+  defaultGraphTopOffset: 132,
+  searchResultsLimit: 10,
+  comparisonDropdownMaxHeight: 300,
+  modalOffset: 20,
+};
+

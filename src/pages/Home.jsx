@@ -5,18 +5,6 @@ import './Home.css';
 
 const PROCESS_STEPS = [
   {
-    icon: MapIcon,
-    title: "Network Visualization",
-    description: "Our interactive map displays electrical networks as force-directed graphs, showing relationships between feeders, transformers, and houses. Each node represents a component, with connections showing the physical network topology.",
-    path: "/transformer",
-    gradient: "from-blue-500 to-cyan-500",
-    details: [
-      "Force-directed graph layout for intuitive network structure",
-      "Real-time interaction with network components",
-      "Energy consumption data visualization for individual houses"
-    ]
-  },
-  {
     icon: TrendingUp,
     title: "Phase Estimation Process",
     description: "We use machine learning algorithms to predict which electrical phase each house is connected to. This is critical for load balancing and network planning when phase information is incomplete or unavailable.",
@@ -97,9 +85,9 @@ export default function Home() {
           </h1>
           
           <p className="hero-description">
-            This platform analyzes electrical distribution networks by processing smart meter data, 
+            This platform analyses electrical distribution networks by processing smart meter data, 
             network topology, and GIS information. Our tools help visualize network structure, 
-            estimate phase allocation, and predict load distribution across transformers and feeders.
+            estimate phase allocation, and predict load distribution across transformers.
           </p>
           
           <div className="hero-actions">

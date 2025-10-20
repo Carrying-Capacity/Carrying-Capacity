@@ -108,7 +108,7 @@ const VoltageChart = () => {
       ) : data.length === 0 ? (
         <div>No data found for House {houseId}.</div>
       ) : (
-        <div style={{ width: "100%", height: "50vh" }}>
+        <div style={{ width: "100%", height: "400px" }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
