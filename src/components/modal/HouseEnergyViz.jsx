@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo} from 'react';
 import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData } from "../../hooks/useEnergyData";
 import { MonthlyBarChart, DailyLineChart, ChartControls } from "../EnergyCharts";
 import { METRICS_MAP } from "../../constants/index.js";
@@ -9,12 +9,24 @@ export const HouseEnergyViz = ({ node }) => {
     const [selectedMetrics, setSelectedMetrics] = useState('voltage');
     
     const houseId = hasEnergyData(node) ? node?.HouseID : null;
+    if (!houseId) {
+        return (
+            <div className="mb-4 border-2 border-gray-200 rounded-lg p-4">
+                <h4 className="text-xl font-semibold mb-4 text-gray-800">Energy Data Visualisation</h4>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <p className="text-yellow-800">No energy data available for this house.</p>
+                </div>
+            </div>
+        );
+    }
     const { monthlyData, loading: monthlyLoading, error: monthlyError } = useMonthlyData(houseId);
     const { dailyData, loading: dailyLoading, error: dailyError } = useDailyData(houseId);
     
-    const chartData = chartType === 'monthly' 
-        ? transformMonthlyData(monthlyData, METRICS_MAP[selectedMetrics] || [])
-        : transformDailyData(dailyData, METRICS_MAP[selectedMetrics] || []);
+    const chartData = useMemo(() => {
+        return chartType === 'monthly'
+            ? transformMonthlyData(monthlyData, METRICS_MAP[selectedMetrics] || [])
+            : transformDailyData(dailyData, METRICS_MAP[selectedMetrics] || []);
+    }, [chartType, monthlyData, dailyData, selectedMetrics]);
     
     const isLoading = (chartType === 'monthly' && monthlyLoading) || (chartType === 'daily' && dailyLoading);
     const error = (chartType === 'monthly' && monthlyError) || (chartType === 'daily' && dailyError);

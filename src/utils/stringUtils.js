@@ -10,7 +10,7 @@
  * @returns {string} Pluralized word
  */
 export const pluralize = (word, count, suffix = 's') => {
-  return count === 1 ? word : `${word}${suffix}`;
+  return Number(count) === 1 ? word : `${word}${suffix}`;
 };
 
 /**
@@ -21,6 +21,7 @@ export const pluralize = (word, count, suffix = 's') => {
  * @returns {string} Formatted string like "3 houses" or "1 house"
  */
 export const formatCount = (count, singular, plural) => {
-  const word = count === 1 ? singular : (plural || `${singular}s`);
-  return `${count} ${word}`;
+  const numericCount = Number(count);
+  const word = numericCount === 1 ? singular : (plural || `${singular}s`);
+  return `${numericCount} ${word}`;
 };

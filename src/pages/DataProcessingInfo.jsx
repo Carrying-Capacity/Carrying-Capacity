@@ -1,5 +1,4 @@
 import PageLayout from '../components/PageLayout';
-import NetworkImage from '../assets/transformer.png'; // adjust the path
 import ReactiveTable from "../components/TransformerDisplayTable";
 import VoltageChart2 from "../components/VoltageChart2";
 

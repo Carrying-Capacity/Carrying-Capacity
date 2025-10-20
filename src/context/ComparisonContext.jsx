@@ -46,7 +46,15 @@ export const ComparisonProvider = ({ children }) => {
     clearComparison,
     toggleComparisonModal,
     setShowComparison,
-  }), [comparisonList, comparisonIdSet, showComparison]);
+  }), [
+    comparisonList,
+    comparisonIdSet,
+    showComparison,
+    toggleHouseInComparison,
+    removeFromComparison,
+    clearComparison,
+    toggleComparisonModal,
+  ]);
 
   return (
     <ComparisonContext.Provider value={value}>

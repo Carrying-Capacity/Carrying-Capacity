@@ -18,9 +18,6 @@ const ScrollToTop = () => {
     useEffect(() => {
         // Scroll window
         window.scrollTo(0, 0);
-        // Also scroll document element and body for better compatibility
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
     }, [location.pathname]);
 
     return null;

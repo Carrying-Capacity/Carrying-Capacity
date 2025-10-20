@@ -40,13 +40,27 @@ const TransformerGraphWrapperContent = () => {
         toggleComparisonModal,
         setShowComparison,
     } = useComparison();
-    const graphTopOffset = useControlPanelHeight([comparisonList.length]);
+    const graphTopOffset = useControlPanelHeight();
 
-    const feederNodes = nodes.filter(n => n.type === "feeder");
-    const transformerNodes = nodes.filter(n => n.type === "transformer");
-    const houseCount = nodes.filter(n => n.type === "house").length;
-    const transformerCount = transformerNodes.length;
-    const connectionCount = links.length;
+    const { feederNodes, transformerNodes, houseCount, transformerCount, connectionCount } = useMemo(() => {
+        const feeders = [];
+        const transformers = [];
+        let houses = 0;
+        
+        nodes.forEach(n => {
+            if (n.type === "feeder") feeders.push(n);
+            else if (n.type === "transformer") transformers.push(n);
+            else if (n.type === "house") houses++;
+        });
+        
+        return {
+            feederNodes: feeders,
+            transformerNodes: transformers,
+            houseCount: houses,
+            transformerCount: transformers.length,
+            connectionCount: links.length
+        };
+    }, [nodes, links]);
 
     const handleNodeClick = (node) => {
         setFocusNode(String(node.id));

@@ -341,8 +341,8 @@
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 1001;
-  animation: slideDown 0.2s ease-out;
+  z-index: var(--z-modal);
+  animation: slideDown var(--transition-fast) ease-out;
   overflow: hidden;
 }
 

@@ -47,7 +47,7 @@ const InfoModal = memo(({ node, onClose, isComparison = false, onFullscreenChang
             document.removeEventListener('keydown', handleKeydown);
             document.body.classList.remove('modal-open');
         };
-    }, [isFullscreen, onClose, onFullscreenChange]);
+    }, [onClose]);
     
     const { comparisonList, removeFromComparison, toggleHouseInComparison } = useComparison();
     

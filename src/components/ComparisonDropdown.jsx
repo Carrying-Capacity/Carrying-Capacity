@@ -4,6 +4,10 @@ import { useComparison } from "../context/ComparisonContext.jsx";
 export const ComparisonDropdown = ({ onClearAll }) => {
   const { comparisonList, removeFromComparison } = useComparison();
 
+  if (!comparisonList || !Array.isArray(comparisonList)) {
+    return null;
+  }
+
   return (
     <div className="comparison-dropdown">
       <div className="comparison-dropdown-header">

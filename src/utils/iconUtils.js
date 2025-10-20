@@ -6,14 +6,10 @@ import { Network, Zap, Home } from 'lucide-react';
  * @returns {React.Component} Icon component
  */
 export const getNodeIcon = (nodeType) => {
-  switch (nodeType) {
-    case 'feeder':
-      return Network;
-    case 'transformer':
-      return Zap;
-    case 'house':
-      return Home;
-    default:
-      return Home;
-  }
+  const iconMap = {
+    feeder: Network,
+    transformer: Zap,
+    house: Home,
+  };
+  return iconMap[nodeType] || Home;
 };

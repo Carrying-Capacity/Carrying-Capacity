@@ -43,12 +43,17 @@ export const ComparisonTimeSeriesViz = ({ comparisonList, isFullscreen }) => {
                         Error loading time series data: {error?.message ?? String(error)}
                     </p>
                     <p className="text-sm text-red-500 mt-2">
-                        Please check your internet connection and try again.
+                        Please try again. If the problem persists, contact support.
                     </p>
                 </div>
             )}
             
             {!loading && !error && (
+                comparisonHouseIds.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                    No houses selected for comparison.
+                </div>
+                ) : (
                 <div className="border border-gray-200 rounded-lg p-4 bg-white overflow-visible">
                     <TimeSeriesLineChart 
                         data={chartData}
@@ -57,6 +62,7 @@ export const ComparisonTimeSeriesViz = ({ comparisonList, isFullscreen }) => {
                         height={isFullscreen ? 550 : 350}
                     />
                 </div>
+                )
             )}
         </div>
     );

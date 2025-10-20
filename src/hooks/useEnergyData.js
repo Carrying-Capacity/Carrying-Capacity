@@ -3,7 +3,7 @@ import { fetchMonthlyData, fetchDailyData, fetchTimeSeriesData } from '../utils/
 
 /**
  * Generic hook for data fetching with loading and error states
- * @param {Function} fetchFn - Async function to fetch data
+ * @param {Function} fetchFn - Async function to fetch data (should be memoized or stable)
  * @param {any} dependency - Dependency to trigger refetch
  * @param {string} dataKey - Key name for returned data
  * @returns {Object} Data, loading, and error states
@@ -17,6 +17,7 @@ const useDataFetch = (fetchFn, dependency, dataKey = 'data') => {
     if (!dependency) {
       setData(null)
       setLoading(false)
+      setError(null)
       return
     }
 
@@ -24,17 +25,27 @@ const useDataFetch = (fetchFn, dependency, dataKey = 'data') => {
     
     const loadData = async () => {
       setLoading(true)
-      const result = await fetchFn(dependency)
-      
-      if (!cancelled) {
-        setData(result.data)
-        setError(result.error)
-        setLoading(false)
+      try {
+        const result = await fetchFn(dependency)
+        
+        if (!cancelled) {
+          setData(result.data)
+          setError(result.error)
+          setLoading(false)
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setData(null)
+          setError(err.message || 'Failed to fetch data')
+          setLoading(false)
+        }
       }
     }
 
     loadData()
     return () => { cancelled = true }
+    // Note: fetchFn must be a stable reference (module-level function or memoized with useCallback)
+    // to avoid infinite re-renders. Current usage with fetchMonthlyData and fetchDailyData is safe.
   }, [dependency, fetchFn])
 
   return { [dataKey]: data, loading, error }

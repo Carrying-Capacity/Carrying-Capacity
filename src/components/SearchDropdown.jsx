@@ -5,7 +5,7 @@ import { getNodeIcon } from "../utils/iconUtils.js";
 export const SearchDropdown = ({ nodes, onSelect }) => {
   const { comparisonIdSet, toggleHouseInComparison } = useComparison();
 
-  if (!nodes.length) return null;
+  if (!nodes?.length) return null;
 
   return (
     <div className="modern-search-dropdown">

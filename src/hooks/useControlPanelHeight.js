@@ -15,7 +15,7 @@ const setupControlPanelObserver = (callback) => {
   return observer;
 };
 
-export const useControlPanelHeight = (dependencies = []) => {
+export const useControlPanelHeight = () => {
   const [height, setHeight] = useState(132);
 
   useEffect(() => {
@@ -34,8 +34,7 @@ export const useControlPanelHeight = (dependencies = []) => {
       window.removeEventListener('resize', updateHeight);
       observer?.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies);
+  }, []);
 
   return height;
 };
@@ -57,6 +56,7 @@ export const useModalPosition = () => {
     return () => {
       window.removeEventListener('resize', updatePosition);
       observer?.disconnect();
+      document.documentElement.style.removeProperty('--modal-top');
     };
   }, []);
 };

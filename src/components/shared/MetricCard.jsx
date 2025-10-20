@@ -1,6 +1,6 @@
 export const MetricCard = ({ icon: Icon, value, label, iconClass }) => (
   <div className="metric-card">
-    <div className={`metric-icon-wrapper ${iconClass}`}>
+    <div className={`metric-icon-wrapper ${iconClass || ''}`}>
       <Icon size={20} />
     </div>
     <div className="metric-content">

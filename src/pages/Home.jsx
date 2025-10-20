@@ -11,7 +11,7 @@ const PROCESS_STEPS = [
     path: "/phase_estimate",
     gradient: "from-purple-500 to-pink-500",
     details: [
-      "Analyzes voltage patterns and consumption data",
+      "Analyses voltage patterns and consumption data",
       "Predicts phase allocation (A, B, or C) for each house",
       "Helps identify phase imbalances in the network"
     ]
@@ -19,12 +19,12 @@ const PROCESS_STEPS = [
   {
     icon: Network,
     title: "Network Load Estimation",
-    description: "Our system calculates aggregate load across transformers and feeders by analyzing downstream house consumption. This helps identify capacity constraints and potential overload scenarios.",
+    description: "Our system calculates aggregate load across transformers by analyzing downstream house consumption. This helps identify capacity constraints and potential overload scenarios.",
     path: "/network_estimate",
     gradient: "from-green-500 to-emerald-500",
     details: [
       "Aggregates consumption data from connected houses",
-      "Calculates transformer and feeder load in real-time",
+      "Calculates transformer load in real-time",
       "Identifies potential capacity issues before they occur"
     ]
   },

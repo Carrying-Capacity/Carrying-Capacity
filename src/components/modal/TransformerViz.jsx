@@ -29,7 +29,7 @@ export const TransformerViz = ({ node }) => {
         const dsNodes = collectDownstreamNodes(graphData, start);
         const houses = dsNodes
             .filter(n => n.type === 'house')
-            .sort((a, b) => String(a.id || a.HouseID).localeCompare(String(b.id || b.HouseID)));
+            .sort((a, b) => String(a.HouseID).localeCompare(String(b.HouseID)));
 
         setDownstreamHouses(houses);
 
