@@ -65,6 +65,14 @@ export const CHART_DIMENSIONS = {
   margin: { top: 20, right: 30, left: 20, bottom: 60 }
 };
 
+// UI Constants - must be defined before MODAL_STYLES
+export const UI_CONSTANTS = {
+  defaultGraphTopOffset: 132,
+  searchResultsLimit: 10,
+  comparisonDropdownMaxHeight: 300,
+  modalOffset: 20,
+};
+
 export const MODAL_STYLES = {
   normal: {
     position: "fixed",
@@ -161,12 +169,3 @@ export const BREAKPOINTS = {
   desktop: 1024,
   wide: 1280,
 };
-
-// UI Constants
-export const UI_CONSTANTS = {
-  defaultGraphTopOffset: 132,
-  searchResultsLimit: 10,
-  comparisonDropdownMaxHeight: 300,
-  modalOffset: 20,
-};
-
