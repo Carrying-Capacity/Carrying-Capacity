@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import PageLayout from "../components/PageLayout";
 import bibtexParse from "bibtex-parse-js";
+import ReadTenPrompter from "../components/ReadTenPrompter";
+import conversationData from "../data/ten_prompter.json"
 
 // Import BibTeX file directly as a raw string
 import bibText from "../data/references.bib?raw";
@@ -55,6 +57,12 @@ export default function ReferencesCitations() {
           <p key={i} dangerouslySetInnerHTML={{ __html: `${i + 1}. ${cite}` }} />
         ))}
       </div>
+      {/* AI usage section */}
+      <h1>AI usage</h1>
+      <p>Chatbots and AI was used in the production and development of this project, and the primary chat bot used was ChatGPT. 
+        The prompts and their responses that we have used were placed here.
+      </p>
+      <ReadTenPrompter conversations={conversationData}/>
     </PageLayout>
   );
 }
