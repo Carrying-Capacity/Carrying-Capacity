@@ -10,8 +10,10 @@ export const ComparisonDropdown = ({ onClearAll }) => {
 
   // Sort houses by HouseID
   const sortedList = [...comparisonList].sort((a, b) => {
-    const numA = a.HouseID || a.house_number || 0;
-    const numB = b.HouseID || b.house_number || 0;
+    const rawA = Number(a.HouseID ?? a.house_number ?? 0);
+    const rawB = Number(b.HouseID ?? b.house_number ?? 0);
+    const numA = Number.isNaN(rawA) ? 0 : rawA;
+    const numB = Number.isNaN(rawB) ? 0 : rawB;
     return numA - numB;
   });
 

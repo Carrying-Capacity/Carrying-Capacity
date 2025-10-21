@@ -17,13 +17,13 @@ export const SearchDropdown = ({ nodes, onSelect }) => {
 
     // Within same type, sort by number
     if (a.type === 'house') {
-      const numA = a.HouseID || a.house_number || 0;
-      const numB = b.HouseID || b.house_number || 0;
+      const numA = parseInt(a.HouseID || a.house_number, 10) || Number.MAX_SAFE_INTEGER;
+      const numB = parseInt(b.HouseID || b.house_number, 10) || Number.MAX_SAFE_INTEGER;
       return numA - numB;
     }
     if (a.type === 'transformer') {
-      const numA = a.transformer_number || a.transformer || 0;
-      const numB = b.transformer_number || b.transformer || 0;
+      const numA = parseInt(a.transformer_number || a.transformer, 10) || Number.MAX_SAFE_INTEGER;
+      const numB = parseInt(b.transformer_number || b.transformer, 10) || Number.MAX_SAFE_INTEGER;
       return numA - numB;
     }
     return 0;
