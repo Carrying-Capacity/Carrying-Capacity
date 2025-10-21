@@ -55,7 +55,10 @@ export const fetchTimeSeriesData = async (tableName, options = {}) => {
   } = options;
 
   // Use House_id for towndatamarch_1_2 table, house_id for others
-  const houseIdColumn = tableName === 'towndatamarch_1_2' ? 'House_id' : 'house_id';
+  const houseIdColumn =
+    tableName === 'towndatamarch_1_2' || tableName === 'houses_monthly_metric_avg_compact'
+      ? 'House_id'
+      : 'house_id';
   
   let query = supabase
     .from(tableName)
@@ -98,7 +101,10 @@ export const fetchMultipleHousesData = async (tableName, houseIds, metric = null
   if (!houseIds?.length) return { data: [], error: null };
 
   // Use House_id for towndatamarch_1_2 table, house_id for others
-  const houseIdColumn = tableName === 'towndatamarch_1_2' ? 'House_id' : 'house_id';
+  const houseIdColumn =
+    tableName === 'towndatamarch_1_2' || tableName === 'houses_monthly_metric_avg_compact'
+      ? 'House_id'
+      : 'house_id';
 
   let query = supabase
     .from(tableName)
@@ -110,6 +116,19 @@ export const fetchMultipleHousesData = async (tableName, houseIds, metric = null
   }
 
   return fetchData(query, `multiple houses data from ${tableName}`);
+};
+
+// Fetch house IDs by transformer ID
+export const fetchHousesByTransformer = async (transformerId) => {
+  if (!transformerId) return { data: [], error: null };
+  
+  return fetchData(
+    supabase
+      .from('towndatamarch_1_2')
+      .select('House_id')
+      .eq('Transformer_id', transformerId),
+    'houses by transformer'
+  );
 };
 
 // Generic query builder for complex queries
