@@ -1,0 +1,1 @@
+import{j as e}from"./index-BH1irPY1.js";import"./force-graph-D6mYncco.js";function r({children:r,className:s=""}){return e.jsx("div",{className:`home-container ${s}`,children:e.jsx("div",{className:"content-stripe",children:r})})}export{r as P};
