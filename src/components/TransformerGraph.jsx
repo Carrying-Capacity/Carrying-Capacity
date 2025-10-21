@@ -7,7 +7,7 @@ import { useComparison } from "../context/ComparisonContext.jsx";
 import { collectDownstreamNodes, tracePathToFeeder } from "../utils/graphUtils.js";
 import { ANIMATION_CONFIG } from '../constants/index.js';
 
-const TransformerGraph = memo(({ data, focusNode, onNodeClick }) => {
+const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false }) => {
     const fgRef = useRef();
     const [hoverNode, setHoverNode] = useState(null);
     const [flowLinks, setFlowLinks] = useState([]);
@@ -173,6 +173,12 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick }) => {
 
     // Focus effect - runs when focusNode changes or dimensions change significantly
     useEffect(() => {
+        if (isMobile) {
+            // Do not perform auto zoom on mobile
+            setFlowLinks([]);
+            setLastFocusNode(null);
+            return;
+        }
         if (!fgRef.current || !focusNode) {
             // Stop flow animation when focusNode is cleared
             setFlowLinks([]);
@@ -225,10 +231,11 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick }) => {
         }, 150); // Increased delay for fullscreen transitions
 
         return () => clearTimeout(timeoutId);
-    }, [focusNode, data]);
+    }, [focusNode, data, isMobile]);
 
     // Re-trigger focus when dimensions change significantly (e.g., fullscreen toggle)
     useEffect(() => {
+        if (isMobile) return; // Disable re-focus auto zoom on mobile
         if (!lastFocusNode || !fgRef.current) return;
 
         const node = data.nodes.find((n) => n.id === lastFocusNode);
@@ -262,7 +269,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick }) => {
         }, 200);
 
         return () => clearTimeout(timeoutId);
-    }, [dimensions.width, dimensions.height, lastFocusNode, data]);
+    }, [dimensions.width, dimensions.height, lastFocusNode, data, isMobile]);
 
     return (
         <div ref={containerRef} style={{ width: "100%", height: "100%" }}>

@@ -132,6 +132,10 @@ const TransformerGraphWrapperContent = () => {
     useClickOutside([searchContainerRef], handleSearchClickOutside);
     useClickOutside([comparisonDropdownRef], handleComparisonClickOutside);
 
+    const modalOpen = Boolean(selectedNode) || showComparison;
+    // Reserve space for the right-side modal so the graph doesn't render under it
+    const rightInset = (!isMobile && modalOpen && !isModalFullscreen) ? 520 : 0; // ~480px modal + 20px gutters
+
     return (
         <div className="transformer-wrapper-modern">
             <div className="modern-control-panel">
@@ -273,7 +277,7 @@ const TransformerGraphWrapperContent = () => {
                 position: 'fixed',
                 top: `${graphTopOffset}px`,
                 left: 0,
-                right: 0,
+                right: `${rightInset}px`,
                 bottom: 0,
                 overflow: 'hidden',
                 background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)'
@@ -282,6 +286,7 @@ const TransformerGraphWrapperContent = () => {
                     data={data}
                     focusNode={focusNode}
                     onNodeClick={handleNodeClick}
+                    isMobile={isMobile}
                 />
                 <Suspense fallback={null}>
                     <InfoModal 

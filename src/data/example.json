@@ -18,11 +18,11 @@
         "next_nodes": [
             "79ef7f0a06f84"
         ],
-        "prev_nodes": [],
+        "prev_nodes": ["9bc782d3a6ba4"],
         "prev_node_distance": 45.007091479130395,
         "x_meters": 45.007091479130395,
         "y_meters": 0.0,
-        "transformer": 1
+        "transformer": 9
     },
     {
         "type": "house",

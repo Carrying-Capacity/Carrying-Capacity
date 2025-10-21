@@ -119,7 +119,7 @@ const MiniMapPreview = memo(() => {
       <div className="mini-map-header">
         <div className="mini-map-title">
           <Activity size={20} />
-          <span>Network Visualization</span>
+          <span>Network Visualisation</span>
         </div>
         <div className="mini-map-badge">
           <Zap size={14} />
