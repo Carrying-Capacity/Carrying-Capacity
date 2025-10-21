@@ -14,6 +14,11 @@ export const fetchData = async (query, errorContext = 'data') => {
   }
 };
 
+// Central helper to determine house id column by table
+export const getHouseIdColumnForTable = (tableName) => {
+  return tableName === 'towndatamarch_1_2' ? 'House_id' : 'house_id';
+};
+
 // Fetch monthly data for a house
 export const fetchMonthlyData = async (houseId) => {
   if (!houseId) return { data: null, error: null };
@@ -54,11 +59,8 @@ export const fetchTimeSeriesData = async (tableName, options = {}) => {
     filters = {}
   } = options;
 
-  // Use House_id for towndatamarch_1_2 table, house_id for others
-  const houseIdColumn =
-    tableName === 'towndatamarch_1_2' || tableName === 'houses_monthly_metric_avg_compact'
-      ? 'House_id'
-      : 'house_id';
+  // Determine correct house id column per table
+  const houseIdColumn = getHouseIdColumnForTable(tableName);
   
   let query = supabase
     .from(tableName)
@@ -100,11 +102,8 @@ export const fetchTimeSeriesData = async (tableName, options = {}) => {
 export const fetchMultipleHousesData = async (tableName, houseIds, metric = null) => {
   if (!houseIds?.length) return { data: [], error: null };
 
-  // Use House_id for towndatamarch_1_2 table, house_id for others
-  const houseIdColumn =
-    tableName === 'towndatamarch_1_2' || tableName === 'houses_monthly_metric_avg_compact'
-      ? 'House_id'
-      : 'house_id';
+  // Determine correct house id column per table
+  const houseIdColumn = getHouseIdColumnForTable(tableName);
 
   let query = supabase
     .from(tableName)

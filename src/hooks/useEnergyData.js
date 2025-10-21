@@ -173,9 +173,15 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
   // Create a map of house phases for quick lookup
   const housePhaseMap = comparisonList.reduce((map, house) => {
     if (house.HouseID && house.predicted_phase) {
+      // Handle both old array format and new string format
+      const phaseValue = house.predicted_phase;
+      const isArray = Array.isArray(phaseValue);
+      const phaseString = isArray ? phaseValue.join('') : phaseValue;
+      
       map[house.HouseID] = {
-        phase: house.predicted_phase,
-        isThreePhase: Array.isArray(house.predicted_phase) && house.predicted_phase.length > 1
+        phase: phaseValue,
+        phaseString: phaseString,
+        isThreePhase: isArray ? phaseValue.length > 1 : phaseString.length > 1
       }
     }
     return map
@@ -212,11 +218,12 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
         if (houseInfo) {
           if (houseInfo.isThreePhase) {
             // 3-phase customer - rename all phases according to phase order
-            const phaseOrder = houseInfo.phase // e.g., ['B', 'C', 'A']
+            const phaseOrder = houseInfo.phaseString // e.g., "BCA" or ['B', 'C', 'A']
+            const phaseArray = Array.isArray(houseInfo.phase) ? houseInfo.phase : phaseOrder.split('')
             const phaseMap = {
-              'Voltage.PhA': `Voltage.Ph${phaseOrder[0]}`,
-              'Voltage.PhB': `Voltage.Ph${phaseOrder[1]}`,
-              'Voltage.PhC': `Voltage.Ph${phaseOrder[2]}`
+              'Voltage.PhA': `Voltage.Ph${phaseArray[0]}`,
+              'Voltage.PhB': `Voltage.Ph${phaseArray[1]}`,
+              'Voltage.PhC': `Voltage.Ph${phaseArray[2]}`
             }
             
             if (phaseMap[property]) {
@@ -226,7 +233,7 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
             }
           } else {
             // Single-phase customer
-            const singlePhase = Array.isArray(houseInfo.phase) ? houseInfo.phase[0] : houseInfo.phase
+            const singlePhase = Array.isArray(houseInfo.phase) ? houseInfo.phase[0] : houseInfo.phaseString[0]
             
             if (property === 'Voltage.PhA') {
               // Check if this is a single-phase customer (only PhA has data, PhB and PhC are zero)

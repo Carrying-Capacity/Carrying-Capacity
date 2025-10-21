@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   LineChart,
   Line,
@@ -10,6 +10,8 @@ import {
   Legend,
 } from "recharts";
 import { fetchTimeSeriesData } from "../utils/dataFetching";
+import { DataStateWrapper } from "./shared/StateComponents";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
 
 const VALUE_TYPES = [
   { key: "Voltage.PhA", label: "Voltage Phase A" },
@@ -25,42 +27,52 @@ const VALUE_TYPES = [
 const VoltageChart = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [selectedKey, setSelectedKey] = useState("Voltage.PhA");
-  const [houseInput, setHouseInput] = useState("20"); // text box value
-  const [houseId, setHouseId] = useState(20); // debounced numeric value
+  const [houseInput, setHouseInput] = useState("20");
+  const debouncedHouseInput = useDebouncedValue(houseInput, 500);
+  const houseId = useMemo(() => {
+    const parsed = parseInt(debouncedHouseInput);
+    return Number.isFinite(parsed) ? parsed : null;
+  }, [debouncedHouseInput]);
 
-  // 🕒 Debounce input (wait 500 ms before applying)
+  // Fetch data whenever debounced houseId changes
   useEffect(() => {
-    const handler = setTimeout(() => {
-      const parsed = parseInt(houseInput);
-      if (!isNaN(parsed) && houseInput.trim() !== "") {
-        setHouseId(parsed);
+    let cancelled = false;
+    const run = async () => {
+      if (!houseId) {
+         if (cancelled) return;
+        setData([]);
+        setError(null);
+        setLoading(false);
+        return;
       }
-    }, 500);
-    return () => clearTimeout(handler);
-  }, [houseInput]);
-
-  // ⚡ Fetch data whenever debounced houseId changes
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!houseId) return; // avoid empty fetch
       setLoading(true);
-
-      const { data, error } = await fetchTimeSeriesData("towndatamarch_1_2", {
-        houseId: houseId,
-        columns: "*",
-        orderBy: "timestamp",
-        ascending: true
-      });
-
-      if (!error) {
-        setData(data || []);
+      setError(null);
+      try {
+        const { data: rows, error: err } = await fetchTimeSeriesData("towndatamarch_1_2", {
+          houseId,
+          columns: "*",
+          orderBy: "timestamp",
+          ascending: true
+        });
+        if (cancelled) return;
+        if (err) {
+          setError(err);
+          setData([]);
+          return;
+        }
+        setData(rows || []);
+      } catch (e) {
+        if (cancelled) return;
+        setError(e);
+      } finally {
+        if (cancelled) return;
+        setLoading(false);
       }
-
-      setLoading(false);
     };
-
-    fetchData();
+    run();
+    return () => { cancelled = true };
   }, [houseId]);
 
   return (
@@ -96,16 +108,18 @@ const VoltageChart = () => {
         </label>
       </div>
 
+      const displayData = houseInput.trim() === "" ? [] : data;
+
       {/* Chart display */}
-      {loading ? (
-        <div>Loading data for house {houseId}...</div>
-      ) : houseInput.trim() === "" ? (
-        <div>Please enter a house ID.</div>
-      ) : data.length === 0 ? (
-        <div>No data found for House {houseId}.</div>
-      ) : (
+      <DataStateWrapper 
+        loading={loading}
+        error={error}
+        data={displayData}
+        loadingMessage={`Loading data for house ${houseId ?? "-"}...`}
+        emptyMessage={houseInput.trim() === "" ? "Please enter a house ID." : `No data found for House ${houseId}.`}
+      >
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data}>
+          <LineChart data={displayData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="timestamp"
@@ -133,7 +147,7 @@ const VoltageChart = () => {
             />
           </LineChart>
         </ResponsiveContainer>
-      )}
+      </DataStateWrapper>
     </div>
   );
 };

@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { PhasePieChart, MonthlyPhaseBarChart } from "../EnergyCharts";
 import { useTransformerData } from "../../hooks/useTransformerData.js";
 import { collectDownstreamNodes } from "../../utils/graphUtils.js";
 import { MONTH_OPTIONS } from "../../constants/index.js";
 import { fetchMultipleHousesData, fetchHousesByTransformer } from "../../utils/dataFetching.js";
 import { DataStateWrapper } from "../shared/StateComponents.jsx";
+import { normalizePhase } from "../../utils/stringUtils.js";
 
 export const TransformerViz = ({ node }) => {
     const [transformerChartMode, setTransformerChartMode] = useState('houses');
@@ -54,8 +55,8 @@ export const TransformerViz = ({ node }) => {
                 setDownstreamHouses(houses);
 
                 const counts = houses.reduce((acc, h) => {
-                    const phase = Array.isArray(h.predicted_phase) ? h.predicted_phase[0] : h.predicted_phase;
-                    if (phase === 'A' || phase === 'B' || phase === 'C') {
+                    const phase = normalizePhase(h.predicted_phase);
+                    if (phase) {
                         acc[phase] = (acc[phase] || 0) + 1;
                     }
                     return acc;
@@ -75,8 +76,8 @@ export const TransformerViz = ({ node }) => {
                 setDownstreamHouses(houses);
 
                 const counts = houses.reduce((acc, h) => {
-                    const phase = Array.isArray(h.predicted_phase) ? h.predicted_phase[0] : h.predicted_phase;
-                    if (phase === 'A' || phase === 'B' || phase === 'C') {
+                    const phase = normalizePhase(h.predicted_phase);
+                    if (phase) {
                         acc[phase] = (acc[phase] || 0) + 1;
                     }
                     return acc;
@@ -125,7 +126,10 @@ export const TransformerViz = ({ node }) => {
             if (!cancelled) {
                 const phaseByHouse = {};
                 downstreamHouses.forEach(h => {
-                    phaseByHouse[String(h.HouseID)] = h.predicted_phase || 'default';
+                    const phase = normalizePhase(h.predicted_phase);
+                    if (phase) {
+                        phaseByHouse[String(h.HouseID)] = phase;
+                    }
                 });
                 
                 const monthlyData = MONTH_OPTIONS.map((monthOption, index) => {
@@ -133,7 +137,8 @@ export const TransformerViz = ({ node }) => {
                     const totals = { A: 0, B: 0, C: 0 };
                     
                     data?.forEach(row => {
-                        const phase = phaseByHouse[String(row.house_id)];
+                        const houseKey = String(row.house_id ?? row.House_id ?? row.HouseID);
+                        const phase = phaseByHouse[houseKey];
                         if (phase === 'A' || phase === 'B' || phase === 'C') {
                             totals[phase] += Number(row[monthCol]) || 0;
                         }
@@ -155,11 +160,11 @@ export const TransformerViz = ({ node }) => {
         return () => { cancelled = true; };
     }, [transformerChartMode, downstreamHouses]);
 
-    const housesPieData = [
+    const housesPieData = useMemo(() => ([
         { name: 'Phase A', phase: 'A', value: phaseHouseCounts.A || 0 },
         { name: 'Phase B', phase: 'B', value: phaseHouseCounts.B || 0 },
         { name: 'Phase C', phase: 'C', value: phaseHouseCounts.C || 0 },
-    ];
+    ]), [phaseHouseCounts]);
 
     return (
         <div className="mb-4 border-2 border-gray-200 rounded-lg p-4">

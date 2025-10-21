@@ -87,6 +87,9 @@ const TransformerGraphWrapperContent = () => {
         const lowerTerm = searchTerm.toLowerCase();
         return nodes
             .filter(n => {
+                // Exclude streets from search results
+                if (n.type === 'street') return false;
+                
                 const label = String(n.label || n.id).toLowerCase();
                 return label.includes(lowerTerm) || (n.type || '').toLowerCase().includes(lowerTerm);
             })
@@ -150,16 +153,19 @@ const TransformerGraphWrapperContent = () => {
                                 <optgroup label="Feeders">
                                     {feederNodes.map((t) => (
                                         <option key={t.id} value={t.id}>
-                                            {t.name || `Feeder ${t.id}`}
+                                            Feeder
                                         </option>
                                     ))}
                                 </optgroup>
                                 <optgroup label="Transformers">
-                                    {transformerNodes.map((t) => (
-                                        <option key={t.id} value={t.id}>
-                                            {t.name || `Transformer ${t.id}`}
-                                        </option>
-                                    ))}
+                                    {transformerNodes.map((t) => {
+                                        const transformerNumber = t.transformer_number || t.transformer;
+                                        return (
+                                            <option key={t.id} value={t.id}>
+                                                Transformer {transformerNumber ?? ''}
+                                            </option>
+                                        );
+                                    })}
                                 </optgroup>
                             </select>
                         </div>
