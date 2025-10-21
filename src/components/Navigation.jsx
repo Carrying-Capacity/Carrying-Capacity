@@ -78,7 +78,7 @@ export const Navigation = memo(() => {
             </div>
             <div className="nav-logo-text">
               <span className="nav-logo-title">Carrying Capacity</span>
-              <span className="nav-logo-subtitle">Network Intelligence</span>
+              <span className="nav-logo-subtitle">LV Network Estimator</span>
             </div>
           </Link>
 

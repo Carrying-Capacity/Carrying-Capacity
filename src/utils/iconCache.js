@@ -1,4 +1,5 @@
-import houseIcon from "../assets/house.png";
+import houseIcon from "../assets/house.svg";
+import houseSolarIcon from "../assets/house-solar.svg";
 import transformerIcon from "../assets/transformer.png";
 import gridIcon from "../assets/grid.png";
 import streetIcon from "../assets/street.png";
@@ -7,17 +8,22 @@ import { PHASE_COLORS, NODE_SIZES } from '../constants/index.js';
 // Pre-load and cache images at module level
 const createIconCache = () => {
   const imgHouse = new Image();
+  const imgHouseSolar = new Image();
+  const imgApartment = new Image();
   const imgTransformer = new Image();
   const imgGrid = new Image();
   const imgStreet = new Image();
 
   imgHouse.src = houseIcon;
+  imgHouseSolar.src = houseSolarIcon;
   imgTransformer.src = transformerIcon;
   imgGrid.src = gridIcon;
   imgStreet.src = streetIcon;
 
   return { 
-    house: imgHouse, 
+    house: imgHouse,
+    houseSolar: imgHouseSolar,
+    apartment: imgApartment,
     transformer: imgTransformer, 
     grid: imgGrid,
     street: imgStreet,

@@ -173,7 +173,10 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
   // Create a map of house phases for quick lookup
   const housePhaseMap = comparisonList.reduce((map, house) => {
     if (house.HouseID && house.predicted_phase) {
-      map[house.HouseID] = house.predicted_phase
+      map[house.HouseID] = {
+        phase: house.predicted_phase,
+        isThreePhase: Array.isArray(house.predicted_phase) && house.predicted_phase.length > 1
+      }
     }
     return map
   }, {})
@@ -202,28 +205,48 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
       const key = `${row.House_id}_${property}`
       let value = row[property] || 0
       
-      // For voltage data, handle phase renaming for single-phase customers
-      if (selectedCategory === 'voltage' && property === 'Voltage.PhA') {
-        const housePhase = housePhaseMap[row.House_id]
+      // For voltage data, handle phase renaming
+      if (selectedCategory === 'voltage') {
+        const houseInfo = housePhaseMap[row.House_id]
         
-        if (housePhase && (housePhase === 'A' || housePhase === 'B' || housePhase === 'C')) {
-          // Check if this is a single-phase customer (only PhA has data, PhB and PhC are zero)
-          const phBValue = row['Voltage.PhB'] || 0
-          const phCValue = row['Voltage.PhC'] || 0
-          
-          if (phBValue === 0 && phCValue === 0) {
-            // Single-phase customer - rename PhA to match assigned phase
-            const renamedKey = `${row.House_id}_Voltage.Ph${housePhase}`
-            acc[timeKey][renamedKey] = value
-            return // Skip adding the original PhA key
+        if (houseInfo) {
+          if (houseInfo.isThreePhase) {
+            // 3-phase customer - rename all phases according to phase order
+            const phaseOrder = houseInfo.phase // e.g., ['B', 'C', 'A']
+            const phaseMap = {
+              'Voltage.PhA': `Voltage.Ph${phaseOrder[0]}`,
+              'Voltage.PhB': `Voltage.Ph${phaseOrder[1]}`,
+              'Voltage.PhC': `Voltage.Ph${phaseOrder[2]}`
+            }
+            
+            if (phaseMap[property]) {
+              const renamedKey = `${row.House_id}_${phaseMap[property]}`
+              acc[timeKey][renamedKey] = value
+              return // Skip adding the original key
+            }
+          } else {
+            // Single-phase customer
+            const singlePhase = Array.isArray(houseInfo.phase) ? houseInfo.phase[0] : houseInfo.phase
+            
+            if (property === 'Voltage.PhA') {
+              // Check if this is a single-phase customer (only PhA has data, PhB and PhC are zero)
+              const phBValue = row['Voltage.PhB'] || 0
+              const phCValue = row['Voltage.PhC'] || 0
+              
+              if (phBValue === 0 && phCValue === 0) {
+                // Single-phase customer - rename PhA to match assigned phase
+                const renamedKey = `${row.House_id}_Voltage.Ph${singlePhase}`
+                acc[timeKey][renamedKey] = value
+                return // Skip adding the original PhA key
+              }
+            }
+            
+            // For single-phase, skip PhB and PhC (they will be zero)
+            if (property === 'Voltage.PhB' || property === 'Voltage.PhC') {
+              return
+            }
           }
         }
-      }
-      
-      // For voltage data, skip original PhB and PhC properties for single-phase customers
-      // (they will be zero and would overwrite our renamed values)
-      if (selectedCategory === 'voltage' && (property === 'Voltage.PhB' || property === 'Voltage.PhC')) {
-        return
       }
       
       acc[timeKey][key] = value

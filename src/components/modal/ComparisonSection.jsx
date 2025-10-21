@@ -26,7 +26,13 @@ export const ComparisonSection = memo(({ comparisonList = [], onRemoveFromCompar
                   <strong>House ID:</strong> {house.HouseID}
                 </p>
                 <p className="text-sm text-gray-600">
-                  <strong>Phase:</strong> {house.predicted_phase}
+                  <strong>Phase:</strong> {
+                    Array.isArray(house.predicted_phase) && house.predicted_phase.length > 1
+                      ? `3-Phase (${house.predicted_phase.join(' → ')})`
+                      : Array.isArray(house.predicted_phase) 
+                        ? house.predicted_phase[0]
+                        : house.predicted_phase
+                  }
                 </p>
                 <p className="text-sm text-gray-600">
                   <strong>Transformer:</strong> {house.parent}

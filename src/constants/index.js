@@ -15,14 +15,24 @@ export const PHASE_COLORS = {
   A: CHART_COLORS.error,    // red
   B: CHART_COLORS.success,  // green  
   C: CHART_COLORS.info,     // blue
+  THREE_PHASE: '#9333ea',   // purple for 3-phase customers
   default: CHART_COLORS.neutral
+};
+
+// Softer colors for house backgrounds (glassmorphism style)
+export const PHASE_COLORS_SOFT = {
+  A: '#f87171',      // softer red
+  B: '#4ade80',      // softer green
+  C: '#60a5fa',      // softer blue
+  THREE_PHASE: '#a78bfa',  // softer purple
+  default: '#94a3b8'  // softer gray
 };
 
 export const NODE_SIZES = {
   grid: 100,
-  feeder: 100,
-  transformer: 60,
-  street: 14,
+  feeder: 60,
+  transformer: 30,
+  street: 10,
   house: 14,
   default: 14
 };

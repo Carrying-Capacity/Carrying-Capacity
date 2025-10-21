@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Home, Zap, Sun, Network as NetworkIcon } from "lucide-react";
 import { isHouse as isHouseNode } from "../../utils/nodeUtils.js";
-import { getPhaseColor } from "../../constants/index.js";
+import { getPhaseColor, PHASE_COLORS } from "../../constants/index.js";
 
 export const NodeInfoSection = memo(({ node }) => {
   const isHouse = isHouseNode(node);
@@ -38,16 +38,43 @@ export const NodeInfoSection = memo(({ node }) => {
               <span>Predicted Phase</span>
             </div>
             <div className="pl-6">
-              <span 
-                className="inline-block px-3.5 py-1.5 border rounded-lg text-sm font-bold uppercase tracking-wide"
-                style={{ 
-                  backgroundColor: `${getPhaseColor(node?.predicted_phase)}15`,
-                  color: getPhaseColor(node?.predicted_phase),
-                  borderColor: `${getPhaseColor(node?.predicted_phase)}40`
-                }}
-              >
-                Phase {node?.predicted_phase ?? "—"}
-              </span>
+              {(() => {
+                const isThreePhase = Array.isArray(node?.predicted_phase) && node.predicted_phase.length > 1;
+                const phase = Array.isArray(node?.predicted_phase) ? node.predicted_phase[0] : node?.predicted_phase;
+                
+                if (isThreePhase) {
+                  return (
+                    <div className="flex flex-col gap-2">
+                      <span 
+                        className="inline-block px-3.5 py-1.5 border rounded-lg text-sm font-bold uppercase tracking-wide"
+                        style={{ 
+                          backgroundColor: `${PHASE_COLORS.THREE_PHASE}15`,
+                          color: PHASE_COLORS.THREE_PHASE,
+                          borderColor: `${PHASE_COLORS.THREE_PHASE}40`
+                        }}
+                      >
+                        3-Phase Customer
+                      </span>
+                      <div className="text-xs text-slate-600 mt-1">
+                        Phase Order: {node.predicted_phase.join(' → ')}
+                      </div>
+                    </div>
+                  );
+                }
+                
+                return (
+                  <span 
+                    className="inline-block px-3.5 py-1.5 border rounded-lg text-sm font-bold uppercase tracking-wide"
+                    style={{ 
+                      backgroundColor: `${getPhaseColor(phase)}15`,
+                      color: getPhaseColor(phase),
+                      borderColor: `${getPhaseColor(phase)}40`
+                    }}
+                  >
+                    Phase {phase ?? "—"}
+                  </span>
+                );
+              })()}
             </div>
           </div>
           

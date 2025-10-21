@@ -36,7 +36,9 @@
         "x_meters": 86.95239354232335,
         "y_meters": 0.0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 1
     },
@@ -53,7 +55,9 @@
         "x_meters": 86.95239354232335,
         "y_meters": 29.6723963083821,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 2
     },
@@ -71,7 +75,9 @@
         "x_meters": 109.66920662826567,
         "y_meters": 46.041745088703166,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 3
     },
@@ -88,7 +94,9 @@
         "x_meters": 119.44115610958497,
         "y_meters": 16.111661680530496,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": true,
         "house_number": 4
     },
@@ -105,7 +113,9 @@
         "x_meters": 117.61805361983465,
         "y_meters": 26.07245872166887,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 5
     },
@@ -123,7 +133,9 @@
         "x_meters": 107.40305191758067,
         "y_meters": 11.339233202322365,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 6
     },
@@ -140,7 +152,9 @@
         "x_meters": 94.14408402223847,
         "y_meters": -15.145671687476856,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 7
     },
@@ -157,7 +171,9 @@
         "x_meters": 79.88119162228587,
         "y_meters": -36.86104746502531,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": true,
         "house_number": 8
     },
@@ -174,7 +190,9 @@
         "x_meters": 52.25438462561328,
         "y_meters": -21.856829561050393,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 9
     },
@@ -191,7 +209,9 @@
         "x_meters": 62.31571392476831,
         "y_meters": 12.887489802122778,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 10
     },
@@ -208,7 +228,9 @@
         "x_meters": 77.7776963979814,
         "y_meters": 38.23763911306755,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 11
     },
@@ -223,7 +245,9 @@
         "x_meters": 92.9538765392663,
         "y_meters": 59.92431376305057,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 12
     },
@@ -240,7 +264,9 @@
         "x_meters": 122.43520874123365,
         "y_meters": 0.0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 13
     },
@@ -257,7 +283,9 @@
         "x_meters": 155.98511537983083,
         "y_meters": 0.0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 14
     },
@@ -274,7 +302,9 @@
         "x_meters": 170.67116254296758,
         "y_meters": 31.621250944801957,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 15
     },
@@ -291,7 +321,9 @@
         "x_meters": 143.42037225481414,
         "y_meters": 17.847531069952307,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 16
     },
@@ -308,7 +340,9 @@
         "x_meters": 143.42037225481414,
         "y_meters": -27.163260564040705,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 17
     },
@@ -325,7 +359,9 @@
         "x_meters": 101.92853180226493,
         "y_meters": -27.163260564040677,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 18
     },
@@ -342,7 +378,9 @@
         "x_meters": 119.66538892366226,
         "y_meters": -51.59783560635087,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 19
     },
@@ -360,7 +398,9 @@
         "x_meters": 164.3850640842204,
         "y_meters": -51.5978356063509,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 20
     },
@@ -377,7 +417,9 @@
         "x_meters": 164.38506408422032,
         "y_meters": -79.60544960402967,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 21
     },
@@ -392,7 +434,9 @@
         "x_meters": 127.95944999461317,
         "y_meters": -5.340598334851219,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 22
     },
@@ -409,7 +453,9 @@
         "x_meters": 143.37740693936496,
         "y_meters": 46.041745088703166,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 23
     },
@@ -426,7 +472,9 @@
         "x_meters": 127.50283402232054,
         "y_meters": 27.147021840071027,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 24
     },
@@ -443,7 +491,9 @@
         "x_meters": 127.50283402232054,
         "y_meters": 57.550776743758576,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 25
     },
@@ -460,7 +510,9 @@
         "x_meters": 104.21602219608849,
         "y_meters": 75.82989931580865,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 26
     },
@@ -477,7 +529,9 @@
         "x_meters": 60.725530919827335,
         "y_meters": 75.82989931580869,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 27
     },
@@ -494,7 +548,9 @@
         "x_meters": 60.725530919827236,
         "y_meters": 34.76429134748804,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 28
     },
@@ -511,7 +567,9 @@
         "x_meters": 27.388567873797072,
         "y_meters": 25.722641989685947,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 29
     },
@@ -528,7 +586,9 @@
         "x_meters": 27.388567873796966,
         "y_meters": -13.427403616371699,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 30
     },
@@ -545,7 +605,9 @@
         "x_meters": 27.388567873796863,
         "y_meters": -51.90785447051792,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 31
     },
@@ -562,7 +624,9 @@
         "x_meters": 41.74303760287966,
         "y_meters": -84.40844618262817,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 32
     },
@@ -579,7 +643,9 @@
         "x_meters": 72.61134528156566,
         "y_meters": -100.10363213834162,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 33
     },
@@ -596,7 +662,9 @@
         "x_meters": 114.22631429116427,
         "y_meters": -100.10363213834167,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 34
     },
@@ -613,7 +681,9 @@
         "x_meters": 151.2651818509128,
         "y_meters": -100.10363213834171,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 35
     },
@@ -630,7 +700,11 @@
         "x_meters": 192.38944624239718,
         "y_meters": -100.10363213834175,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "B",
+            "C",
+            "A"
+        ],
         "solar": false,
         "house_number": 36
     },
@@ -647,7 +721,9 @@
         "x_meters": 192.38944624239718,
         "y_meters": -61.28027721619528,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 37
     },
@@ -664,7 +740,9 @@
         "x_meters": 224.03896013122508,
         "y_meters": -43.57168659596405,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 38
     },
@@ -681,7 +759,9 @@
         "x_meters": 220.06573177213028,
         "y_meters": -9.989738455284602,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 39
     },
@@ -698,7 +778,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 40
     },
@@ -715,7 +797,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 41
     },
@@ -732,7 +816,9 @@
         "x_meters": 179.66263817448592,
         "y_meters": -30.542902258111113,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": true,
         "house_number": 42
     },
@@ -749,7 +835,9 @@
         "x_meters": 194.07440559853387,
         "y_meters": -5.931475549285166,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 43
     },
@@ -766,7 +854,9 @@
         "x_meters": 194.07440559853387,
         "y_meters": 39.623205376997426,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 44
     },
@@ -783,7 +873,9 @@
         "x_meters": 177.04810000592684,
         "y_meters": 69.89012495874334,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 45
     },
@@ -798,7 +890,9 @@
         "x_meters": 155.76526786703974,
         "y_meters": 90.10194474556167,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 46
     },
@@ -815,7 +909,9 @@
         "x_meters": 114.02044423863967,
         "y_meters": -79.60544960402967,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 47
     },
@@ -832,7 +928,9 @@
         "x_meters": 68.7401543288488,
         "y_meters": -79.60544960402967,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": true,
         "house_number": 48
     },
@@ -849,7 +947,9 @@
         "x_meters": 84.49737571845922,
         "y_meters": -50.77740605574887,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 49
     },
@@ -866,7 +966,9 @@
         "x_meters": 68.62346285558357,
         "y_meters": -41.12046933697556,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 50
     },
@@ -883,7 +985,9 @@
         "x_meters": 54.496866916923665,
         "y_meters": -67.9245165921836,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 51
     },
@@ -900,7 +1004,9 @@
         "x_meters": 98.65139339469246,
         "y_meters": -67.92451659218364,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 52
     },
@@ -917,7 +1023,9 @@
         "x_meters": 133.989121380697,
         "y_meters": -67.92451659218368,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 53
     },
@@ -932,7 +1040,9 @@
         "x_meters": 141.90009156856553,
         "y_meters": -32.58294491212813,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 54
     },
@@ -947,7 +1057,9 @@
         "x_meters": 141.90009156856553,
         "y_meters": -32.58294491212813,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 55
     },
@@ -977,7 +1089,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 56
     },
@@ -995,7 +1109,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 57
     },
@@ -1012,7 +1128,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 58
     },
@@ -1029,7 +1147,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": true,
         "house_number": 59
     },
@@ -1046,7 +1166,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 60
     },
@@ -1063,7 +1185,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 61
     },
@@ -1080,7 +1204,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 62
     },
@@ -1097,7 +1223,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 63
     },
@@ -1114,7 +1242,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 64
     },
@@ -1132,7 +1262,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 65
     },
@@ -1149,7 +1281,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 66
     },
@@ -1166,7 +1300,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": true,
         "house_number": 67
     },
@@ -1183,7 +1319,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 68
     },
@@ -1200,7 +1338,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 69
     },
@@ -1217,7 +1357,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": true,
         "house_number": 70
     },
@@ -1234,7 +1376,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 71
     },
@@ -1251,7 +1395,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 72
     },
@@ -1268,7 +1414,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 73
     },
@@ -1285,7 +1433,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 74
     },
@@ -1302,7 +1452,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 75
     },
@@ -1319,7 +1471,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 76
     },
@@ -1336,7 +1490,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 77
     },
@@ -1354,7 +1510,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 78
     },
@@ -1371,7 +1529,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 79
     },
@@ -1388,7 +1548,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 80
     },
@@ -1405,7 +1567,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 81
     },
@@ -1422,7 +1586,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 82
     },
@@ -1440,7 +1606,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 83
     },
@@ -1457,7 +1625,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 84
     },
@@ -1474,7 +1644,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 85
     },
@@ -1491,7 +1663,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": true,
         "house_number": 86
     },
@@ -1508,7 +1682,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 87
     },
@@ -1525,7 +1701,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 88
     },
@@ -1542,7 +1720,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 89
     },
@@ -1559,7 +1739,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 90
     },
@@ -1576,7 +1758,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 91
     },
@@ -1593,7 +1777,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 92
     },
@@ -1610,7 +1796,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 93
     },
@@ -1627,7 +1815,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 94
     },
@@ -1644,7 +1834,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": true,
         "house_number": 95
     },
@@ -1661,7 +1853,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 96
     },
@@ -1678,7 +1872,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 97
     },
@@ -1695,7 +1891,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 98
     },
@@ -1712,7 +1910,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 99
     },
@@ -1729,7 +1929,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 100
     },
@@ -1746,7 +1948,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": true,
         "house_number": 101
     },
@@ -1763,7 +1967,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 102
     },
@@ -1780,7 +1986,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "A",
+        "predicted_phase": [
+            "A"
+        ],
         "solar": false,
         "house_number": 103
     },
@@ -1797,7 +2005,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 104
     },
@@ -1814,7 +2024,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 105
     },
@@ -1831,7 +2043,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 106
     },
@@ -1848,7 +2062,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": true,
         "house_number": 107
     },
@@ -1865,7 +2081,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 108
     },
@@ -1882,7 +2100,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 109
     },
@@ -1899,7 +2119,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "B",
+        "predicted_phase": [
+            "B"
+        ],
         "solar": false,
         "house_number": 110
     },
@@ -1914,7 +2136,9 @@
         "x_meters": 0,
         "y_meters": 0,
         "voltage_data": [],
-        "predicted_phase": "C",
+        "predicted_phase": [
+            "C"
+        ],
         "solar": false,
         "house_number": 111
     },

@@ -97,6 +97,18 @@ export default function TimeSeriesLineChart({
       // Get actual voltage properties from the data (including renamed ones)
       const actualVoltageProperties = getActualVoltageProperties();
       
+      // Different dash patterns and stroke widths for better differentiation
+      const dashPatterns = [
+        undefined,           // Solid line
+        "8 4",              // Long dash
+        "4 4",              // Medium dash
+        "2 2",              // Short dash
+        "8 4 2 4",          // Long-short dash
+        "4 2 4 2",          // Alternating dash
+      ];
+      
+      const strokeWidths = [3, 2.5, 2, 2.5, 3, 2];
+      
       // For voltage, show each phase as separate lines across all houses, but skip all-zero phases
       actualVoltageProperties.forEach(property => {
         houses.forEach((house, houseIndex) => {
@@ -108,13 +120,14 @@ export default function TimeSeriesLineChart({
           }
           
           const phaseName = property.replace('Voltage.Ph', 'Phase ');
+          const patternIndex = houseIndex % dashPatterns.length;
           
           const config = {
             key,
             name: `${house.label || house.HouseID} - ${phaseName}`,
             color: VOLTAGE_PHASE_COLORS[property] || VOLTAGE_PHASE_COLORS['Voltage.PhA'], // Fallback to PhA color for renamed properties
-            strokeWidth: 2,
-            strokeDasharray: houseIndex > 0 ? "5 5" : undefined, // Dash for houses after first
+            strokeWidth: strokeWidths[patternIndex],
+            strokeDasharray: dashPatterns[patternIndex],
             property,
             houseId: house.HouseID
           };
@@ -226,10 +239,17 @@ export default function TimeSeriesLineChart({
               
               return (
                 <div key={index} className="flex items-center space-x-2 shrink-0">
-                  <div 
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: entry.color }}
-                  />
+                  <svg width="24" height="12" style={{ marginTop: '2px' }}>
+                    <line
+                      x1="0"
+                      y1="6"
+                      x2="24"
+                      y2="6"
+                      stroke={entry.color}
+                      strokeWidth={config.strokeWidth || 2}
+                      strokeDasharray={config.strokeDasharray}
+                    />
+                  </svg>
                   <span className="text-xs text-gray-600">{entry.value}</span>
                 </div>
               );
@@ -290,6 +310,7 @@ export default function TimeSeriesLineChart({
               dataKey={config.key}
               stroke={config.color}
               strokeWidth={config.strokeWidth}
+              strokeDasharray={config.strokeDasharray}
               dot={false}
               name={config.name}
               connectNulls={false}

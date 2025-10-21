@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useCallback, useMemo, memo } from "react";
 import ForceGraph2D from "react-force-graph-2d";
-import { iconCache, phaseColors, getNodeSize } from "../utils/iconCache.js";
+import { iconCache, getNodeSize } from "../utils/iconCache.js";
+import { PHASE_COLORS_SOFT } from "../constants/index.js";
 import { useContainerSize } from "../hooks/useContainerSize.js";
 import { useComparison } from "../context/ComparisonContext.jsx";
 import { collectDownstreamNodes, tracePathToFeeder } from "../utils/graphUtils.js";
@@ -18,27 +19,67 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick }) => {
 
     const renderNode = useCallback((node, ctx) => {
         const size = getNodeSize(node.type);
-        const icon = iconCache[node.type];
+        
+        // Select icon based on node type and solar status
+        let icon = iconCache[node.type];
+        if (node.type === "house" && node.solar) {
+            icon = iconCache.houseSolar;
+        }
 
         if (node.type === "house") {
             ctx.save();
+            
+            // Check if 3-phase customer (array with multiple phases)
+            const isThreePhase = Array.isArray(node.predicted_phase) && node.predicted_phase.length > 1;
+            
+            let bgColor;
+            if (isThreePhase) {
+                bgColor = PHASE_COLORS_SOFT.THREE_PHASE;
+            } else {
+                // Get phase color (handle both array and string formats)
+                const phase = Array.isArray(node.predicted_phase) ? node.predicted_phase[0] : node.predicted_phase;
+                bgColor = PHASE_COLORS_SOFT[phase] || PHASE_COLORS_SOFT.default;
+            }
+            
+            // Draw rounded square background (full opacity)
+            const squareSize = size * 1.2;
+            const cornerRadius = 4;
+            ctx.fillStyle = bgColor;
+            ctx.globalAlpha = 1.0;
             ctx.beginPath();
-            ctx.arc(node.x, node.y + 0.5, size / 1.5, 0, 2 * Math.PI);
-            ctx.fillStyle = phaseColors[node.predicted_phase] || phaseColors.default;
-            ctx.globalAlpha = 0.4;
+            ctx.roundRect(
+                node.x - squareSize / 2, 
+                node.y - squareSize / 2, 
+                squareSize, 
+                squareSize, 
+                cornerRadius
+            );
             ctx.fill();
+            
             // Add border for houses in comparison list
             if (comparisonIdSet.has(node.id)) {
                 ctx.strokeStyle = "#3b82f6";
                 ctx.lineWidth = 3;
                 ctx.stroke();
             }
+            
             ctx.restore();
-        }
-
-        // Draw the icon on top (all types)
-        if (icon && icon.complete) {
-            ctx.drawImage(icon, node.x - size / 2, node.y - size / 2, size, size);
+            
+            // Draw the icon in white, slightly smaller
+            if (icon && icon.complete) {
+                ctx.save();
+                const iconSize = size * 0.7; // Make icon smaller
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.globalAlpha = 1.0;
+                ctx.filter = 'brightness(0) invert(1)'; // Make it white
+                ctx.drawImage(icon, node.x - iconSize / 2, node.y - iconSize / 2, iconSize, iconSize);
+                ctx.restore();
+            }
+        } else {
+            // Draw non-house nodes normally
+            if (icon && icon.complete) {
+                ctx.drawImage(icon, node.x - size / 2, node.y - size / 2, size, size);
+            }
         }
     }, [comparisonIdSet]);
 
@@ -237,7 +278,24 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick }) => {
                 warmupTicks={0}
                 nodeRelSize={6}
                 nodeLabel={() => ""}
-                onNodeHover={setHoverNode}
+                nodePointerAreaPaint={(node, color, ctx) => {
+                    // Disable pointer area for street nodes
+                    if (node.type === "street") {
+                        return;
+                    }
+                    // Default pointer area for other nodes
+                    ctx.fillStyle = color;
+                    const size = getNodeSize(node.type);
+                    ctx.fillRect(node.x - size / 2, node.y - size / 2, size, size);
+                }}
+                onNodeHover={(node) => {
+                    // Don't show hover for street nodes
+                    if (node && node.type === "street") {
+                        setHoverNode(null);
+                    } else {
+                        setHoverNode(node);
+                    }
+                }}
                 nodeCanvasObject={renderNode}
                 onRenderFramePost={(ctx) => {
                     // Render all hover labels after all nodes are rendered to ensure they appear on top
@@ -296,7 +354,12 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick }) => {
                     
                     ctx.restore();
                 }}
-                onNodeClick={onNodeClick}
+                onNodeClick={(node) => {
+                    // Don't allow clicking on street nodes
+                    if (node.type !== "street") {
+                        onNodeClick(node);
+                    }
+                }}
                 onNodeRightClick={useCallback((node, event) => {
                     event?.preventDefault();
                     if (node.type === "house") {
