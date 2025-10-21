@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import data from "../data/json_maker_result.json"; // adjust path
+import data from "../data/json_maker_result.json"; // make this actually use James' table
 
 // Categories moved outside the component
 const categories = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"];

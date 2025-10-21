@@ -12,7 +12,7 @@ export default function PhaseEstimate() {
       <p>The initial goal of the project was phase estimation. To accomplish this, research was done to find the simplest way to classify time-series data into distinct categories, a classic machine learning problem. 
         The methods that we used are as follows:
         <ul className="list-disc list-inside text-center">
-          <li>Fuzzy c-means (pronounced Fuzzy semens)</li>
+          <li>Fuzzy c-means</li>
           <li>Pearson's correlation</li>
           <li>Spearman's Correlation</li>
           <li>Spectral clustering</li>
@@ -25,6 +25,7 @@ export default function PhaseEstimate() {
       
       <p>The accuracy score of the transformers was calculated by...</p>
       <AlexResultTable/>
+      The final results can be tablulated in the final thing:
     </PageLayout>
   );
 }
