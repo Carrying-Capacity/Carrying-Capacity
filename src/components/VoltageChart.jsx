@@ -23,7 +23,6 @@ const VALUE_TYPES = [
   { key: "CapacitivePower", label: "Capacitive Power" },
 ];
 
-
 const VoltageChart = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -31,6 +30,7 @@ const VoltageChart = () => {
   const [selectedKey, setSelectedKey] = useState("Voltage.PhA");
   const [houseInput, setHouseInput] = useState("20");
   const debouncedHouseInput = useDebouncedValue(houseInput, 500);
+
   const houseId = useMemo(() => {
     const parsed = parseInt(debouncedHouseInput);
     return Number.isFinite(parsed) ? parsed : null;
@@ -41,7 +41,7 @@ const VoltageChart = () => {
     let cancelled = false;
     const run = async () => {
       if (!houseId) {
-         if (cancelled) return;
+        if (cancelled) return;
         setData([]);
         setError(null);
         setLoading(false);
@@ -54,7 +54,7 @@ const VoltageChart = () => {
           houseId,
           columns: "*",
           orderBy: "timestamp",
-          ascending: true
+          ascending: true,
         });
         if (cancelled) return;
         if (err) {
@@ -72,8 +72,12 @@ const VoltageChart = () => {
       }
     };
     run();
-    return () => { cancelled = true };
+    return () => {
+      cancelled = true;
+    };
   }, [houseId]);
+
+  const displayData = houseInput.trim() === "" ? [] : data;
 
   return (
     <div className="flex flex-col items-center space-y-4 w-full">
@@ -108,23 +112,20 @@ const VoltageChart = () => {
         </label>
       </div>
 
-      const displayData = houseInput.trim() === "" ? [] : data;
-
       {/* Chart display */}
-      <DataStateWrapper 
+      <DataStateWrapper
         loading={loading}
         error={error}
         data={displayData}
         loadingMessage={`Loading data for house ${houseId ?? "-"}...`}
-        emptyMessage={houseInput.trim() === "" ? "Please enter a house ID." : `No data found for House ${houseId}.`}
+        emptyMessage={
+          houseInput.trim() === "" ? "Please enter a house ID." : `No data found for House ${houseId}.`
+        }
       >
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={displayData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="timestamp"
-              tickFormatter={(t) => new Date(t).toLocaleTimeString()}
-            />
+            <XAxis dataKey="timestamp" tickFormatter={(t) => new Date(t).toLocaleTimeString()} />
             <YAxis
               domain={["auto", "auto"]}
               label={{
@@ -133,10 +134,7 @@ const VoltageChart = () => {
                 position: "insideLeft",
               }}
             />
-            <Tooltip
-              labelFormatter={(t) => new Date(t).toLocaleString()}
-              formatter={(value) => [value, selectedKey]}
-            />
+            <Tooltip labelFormatter={(t) => new Date(t).toLocaleString()} formatter={(value) => [value, selectedKey]} />
             <Legend />
             <Line
               type="monotone"

@@ -151,22 +151,24 @@ const TransformerGraphWrapperContent = () => {
                             >
                                 <option value="">Navigate to node...</option>
                                 <optgroup label="Feeders">
-                                    {feederNodes.map((t) => (
-                                        <option key={t.id} value={t.id}>
-                                            Feeder
-                                        </option>
-                                    ))}
-                                </optgroup>
-                                <optgroup label="Transformers">
-                                    {transformerNodes.map((t) => {
-                                        const transformerNumber = t.transformer_number || t.transformer;
+                                    {feederNodes.map((t) => {
+                                        const feederLabel = t.name || t.label || t.feeder_number || t.id;
                                         return (
                                             <option key={t.id} value={t.id}>
-                                                Transformer {transformerNumber ?? ''}
+                                                {`Feeder - ${feederLabel}`}
                                             </option>
                                         );
                                     })}
                                 </optgroup>
+                                <optgroup label="Transformers">
+                                    {transformerNodes.map((t) => {
+                                        const transformerNumber = t.transformer_number || t.transformer || t.id;
+                                        return (
+                                            <option key={t.id} value={t.id}>
+                                                Transformer {transformerNumber}
+                                            </option>
+                                        );
+                                    })}                                </optgroup>
                             </select>
                         </div>
 

@@ -56,12 +56,12 @@ export const TransformerViz = ({ node }) => {
 
                 const counts = houses.reduce((acc, h) => {
                     const phase = normalizePhase(h.predicted_phase);
-                    if (phase) {
+                    if (phase === 'A' || phase === 'B' || phase === 'C') {
                         acc[phase] = (acc[phase] || 0) + 1;
                     }
                     return acc;
                 }, { A: 0, B: 0, C: 0 });
-                
+
                 setPhaseHouseCounts(counts);
             } else {
                 // Fallback to graph-based downstream collection

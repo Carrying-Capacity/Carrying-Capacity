@@ -9,7 +9,7 @@ const getNodeLabel = (node) => {
         case "feeder":
             return node.name || "Main Feeder";
         case "transformer":
-            return node.name || `Transformer ${node.transformer_number || node.transformer || ''}`;
+            return node.name || `Transformer ${node.transformer_number || node.transformer || 'Unknown'}`;
         case "house":
             return `House ${node.HouseID || node.house_number || node.id}`;
         case "street":
@@ -68,7 +68,7 @@ export function loadTransformerData() {
             next_nodes: cleanNextNodes,
             prev_node: cleanPrevNodes.length > 0 ? cleanPrevNodes[0] : null,
             current_node: node.id,
-            name: node.name || (node.type === "transformer" ? `Transformer ${node.transformer_number || node.transformer || ''}` : node.type === "feeder" ? "Feeder" : null),
+            name: node.name || (node.type === "transformer" ? `Transformer ${node.transformer_number || node.transformer || 'Unknown'}` : node.type === "feeder" ? "Feeder" : null),
             HouseID: assignedHouseId, // Ensure HouseID is always present for houses
             parent: node.parent_transformer || node.parent || node.transformer, // Support multiple parent field formats
             transformer_number: node.transformer_number || node.transformer // Preserve transformer number

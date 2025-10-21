@@ -176,12 +176,17 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
       // Handle both old array format and new string format
       const phaseValue = house.predicted_phase;
       const isArray = Array.isArray(phaseValue);
-      const phaseString = isArray ? phaseValue.join('') : phaseValue;
+      const phaseString = isArray ? phaseValue.join('') : String(phaseValue);
+
+      if (phaseString.length !== 1 && phaseString.length !== 3) {
+        console.warn(`Invalid phase data for House ${house.HouseID}: expected 1 or 3 phases, got ${phaseString.length}`);
+        return map;
+      }
       
       map[house.HouseID] = {
         phase: phaseValue,
         phaseString: phaseString,
-        isThreePhase: isArray ? phaseValue.length > 1 : phaseString.length > 1
+        isThreePhase: phaseString.length === 3
       }
     }
     return map
