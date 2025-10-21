@@ -26,7 +26,7 @@ export default function DataProcessingInfo() {
       </p>
       <p>The transformers and their corresponding houses is displayed as table here.</p>
 
-      <div style={{ width: "80%", height: "100%", margin: "0 auto" }}>
+      <div style={{ width: "100%", height: "100%", margin: "0 auto" }}>
           <ReactiveTable/>
       </div>
     </PageLayout>
