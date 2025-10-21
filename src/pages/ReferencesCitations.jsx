@@ -62,7 +62,8 @@ export default function ReferencesCitations() {
       <p>Chatbots and AI was used in the production and development of this project, and the primary chat bot used was ChatGPT. 
         The prompts and their responses that we have used were placed here.
       </p>
-      <ReadTenPrompter conversations={conversationData}/>
+      {/* Sam said this was unneccesary but i have it here for legacy */}
+      {/* <ReadTenPrompter conversations={conversationData}/> */}
     </PageLayout>
   );
 }
