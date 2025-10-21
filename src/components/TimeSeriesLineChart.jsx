@@ -27,7 +27,6 @@ export default function TimeSeriesLineChart({
   className = "",
   height = 400 
 }) {
-  
   // Get the actual properties to display based on category
   const propertiesToShow = PROPERTY_MAPPINGS[selectedProperty] || [];
   
@@ -280,7 +279,7 @@ export default function TimeSeriesLineChart({
   return (
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
-        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+        <LineChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
             dataKey="time" 

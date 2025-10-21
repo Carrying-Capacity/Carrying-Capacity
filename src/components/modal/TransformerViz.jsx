@@ -184,8 +184,8 @@ export const TransformerViz = ({ node }) => {
     ]), [phaseHouseCounts]);
 
     return (
-        <div className="mb-4 border-2 border-gray-200 rounded-lg p-4">
-            <h4 className="text-xl font-semibold mb-4 text-gray-800">Transformer Visualisation</h4>
+        <div className="mb-3 border-2 border-gray-200 rounded-lg p-3 md:p-4">
+            <h4 className="text-lg md:text-xl font-semibold mb-3 text-gray-800">Transformer Visualisation</h4>
 
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
                 <h5 className="text-md font-medium text-gray-700 mb-2">Select Analysis Type</h5>
@@ -219,7 +219,7 @@ export const TransformerViz = ({ node }) => {
                 </div>
             </div>
 
-            <div className="border border-gray-200 rounded-lg p-4 bg-white overflow-visible">
+            <div className="border border-gray-200 rounded-lg p-2 md:p-3 bg-white overflow-visible">
                 {transformerChartMode === 'houses' ? (
                     <PhasePieChart data={housesPieData} title="Houses per Phase" />
                 ) : (

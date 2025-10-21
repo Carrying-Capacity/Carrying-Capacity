@@ -22,14 +22,21 @@ export const ComparisonDropdown = ({ onClearAll }) => {
         </button>
       </div>
       <div className="comparison-dropdown-list">
-        {comparisonList.map((house) => (
+        {comparisonList.map((house) => {
+          const phaseDisplay = Array.isArray(house.predicted_phase) && house.predicted_phase.length > 1
+            ? `3-Phase (${house.predicted_phase.join(' → ')})`
+            : Array.isArray(house.predicted_phase)
+              ? `Phase ${house.predicted_phase[0]}`
+              : `Phase ${house.predicted_phase || 'Unknown'}`;
+          
+          return (
           <div key={house.id} className="comparison-dropdown-item">
             <div className="comparison-item-icon">
               <Home size={16} />
             </div>
             <div className="comparison-item-info">
               <span className="comparison-item-name">{house.label || house.id}</span>
-              <span className="comparison-item-id">ID: {house.id}</span>
+              <span className="comparison-item-id">{phaseDisplay}</span>
             </div>
             <button
               onClick={() => removeFromComparison(house.id)}
@@ -39,7 +46,8 @@ export const ComparisonDropdown = ({ onClearAll }) => {
               <X size={16} />
             </button>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

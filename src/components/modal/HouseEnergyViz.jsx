@@ -32,8 +32,8 @@ export const HouseEnergyViz = ({ node }) => {
     const error = (chartType === 'monthly' && monthlyError) || (chartType === 'daily' && dailyError);
 
     return (
-        <div className="mb-4 border-2 border-gray-200 rounded-lg p-4">
-            <h4 className="text-xl font-semibold mb-4 text-gray-800">Energy Data Visualisation</h4>
+        <div className="mb-3 border-2 border-gray-200 rounded-lg p-3 md:p-4">
+            <h4 className="text-lg md:text-xl font-semibold mb-3 text-gray-800">Energy Data Visualisation</h4>
 
             <ChartControls
                 chartType={chartType}
@@ -61,7 +61,7 @@ export const HouseEnergyViz = ({ node }) => {
             )}
 
             {!isLoading && !error && (
-                <div className="border border-gray-200 rounded-lg p-4 bg-white overflow-visible">
+                <div className="border border-gray-200 rounded-lg p-2 md:p-3 bg-white overflow-visible">
                     {chartType === 'monthly' ? (
                         <MonthlyBarChart data={chartData} selectedMetrics={selectedMetrics} />
                     ) : (

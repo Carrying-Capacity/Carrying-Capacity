@@ -71,7 +71,7 @@ export const ANIMATION_CONFIG = {
 
 export const CHART_DIMENSIONS = {
   height: 400,
-  margin: { top: 20, right: 30, left: 20, bottom: 60 }
+  margin: { top: 10, right: 10, left: 10, bottom: 10 }
 };
 
 // UI Constants - must be defined before MODAL_STYLES

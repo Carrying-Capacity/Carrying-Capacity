@@ -19,8 +19,8 @@ export const ComparisonTimeSeriesViz = ({ comparisonList, isFullscreen }) => {
     );
 
     return (
-        <div className="mb-4 border-2 border-gray-200 rounded-lg p-4">
-            <h4 className="text-xl font-semibold mb-4 text-gray-800">Time Series Data Visualisation</h4>
+        <div className="mb-3 border-2 border-gray-200 rounded-lg p-3 md:p-4">
+            <h4 className="text-lg md:text-xl font-semibold mb-3 text-gray-800">Time Series Data Visualisation</h4>
             
             <div className="mb-4">
                 <PropertySelector 
@@ -54,7 +54,7 @@ export const ComparisonTimeSeriesViz = ({ comparisonList, isFullscreen }) => {
                     No houses selected for comparison.
                 </div>
                 ) : (
-                <div className="border border-gray-200 rounded-lg p-4 bg-white overflow-visible">
+                <div className="border border-gray-200 rounded-lg p-2 md:p-3 bg-white overflow-visible">
                     <TimeSeriesLineChart 
                         data={chartData}
                         selectedProperty={selectedProperty}

@@ -437,7 +437,7 @@
 .comparison-item-id {
   font-size: 0.75rem;
   color: var(--gray-500);
-  font-family: 'Courier New', monospace;
+  font-weight: 500;
 }
 
 .comparison-item-remove {
