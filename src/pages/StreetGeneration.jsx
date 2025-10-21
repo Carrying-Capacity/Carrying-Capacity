@@ -11,10 +11,6 @@ export default function StreetGeneration() {
         </p>
 
         <div>
-          <p>This is my power level ranking:</p>
-          <ul className="list-disc list-inside text-center">
-            <li>boobs are superior to ass</li>
-          </ul>
           <p className="text-center">
             We were given the network estimate. However, due to privacy concerns, there was no data given on the location of the hosues.
             This was quite annoying for display, since we then were required to make an artificial neighborhood so that the houses could be displayed properly.

@@ -29,11 +29,6 @@ export default function DataProcessingInfo() {
       <div style={{ width: "80%", height: "100%", margin: "0 auto" }}>
           <ReactiveTable/>
       </div>
-
-
-
-
-
     </PageLayout>
   );
 }
