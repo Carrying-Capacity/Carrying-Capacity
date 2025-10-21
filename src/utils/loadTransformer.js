@@ -1,6 +1,6 @@
-import example from "../data/example.json";
+import example2 from "../data/example2.json";
 
-const datasets = [example];
+const datasets = [example2];
 const normalizeType = (t) => (t ? t.toLowerCase() : t);
 
 // Helper function to generate appropriate labels for nodes
