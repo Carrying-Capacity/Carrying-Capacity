@@ -65,13 +65,12 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick }) => {
             
             ctx.restore();
             
-            // Draw the icon in white, slightly smaller
+            // Draw the icon, slightly smaller
             if (icon && icon.complete) {
                 ctx.save();
                 const iconSize = size * 0.7; // Make icon smaller
                 ctx.globalCompositeOperation = 'source-over';
                 ctx.globalAlpha = 1.0;
-                ctx.filter = 'brightness(0) invert(1)'; // Make it white
                 ctx.drawImage(icon, node.x - iconSize / 2, node.y - iconSize / 2, iconSize, iconSize);
                 ctx.restore();
             }

@@ -29,7 +29,6 @@ export const PHASE_COLORS_SOFT = {
 };
 
 export const NODE_SIZES = {
-  grid: 100,
   feeder: 60,
   transformer: 30,
   street: 10,
