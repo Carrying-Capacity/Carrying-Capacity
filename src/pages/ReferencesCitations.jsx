@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import PageLayout from "../components/PageLayout";
 import bibtexParse from "bibtex-parse-js";
-import ReadTenPrompter from "../components/ReadTenPrompter";
-import conversationData from "../data/ten_prompter.json"
+// import ReadTenPrompter from "../components/ReadTenPrompter";
+// import conversationData from "../data/ten_prompter.json"
 
 // Import BibTeX file directly as a raw string
 import bibText from "../data/references.bib?raw";
