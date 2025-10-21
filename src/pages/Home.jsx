@@ -12,43 +12,40 @@ const PROCESS_STEPS = [
     gradient: "from-purple-500 to-pink-500",
     details: [
       "Analyses voltage patterns and consumption data",
-      "Predicts phase allocation (A, B, or C) for each house",
-      "Helps identify phase imbalances in the network"
+      "Predicts phase allocation (A, B, or C) for each house"
     ]
   },
   {
     icon: Network,
-    title: "Network Load Estimation",
-    description: "Our system calculates aggregate load across transformers by analyzing downstream house consumption. This helps identify capacity constraints and potential overload scenarios.",
+    title: "Network Topology Generation",
+    description: "Our system generates the connection of houses inside the network. This helps generate network topology.",
     path: "/network_estimate",
     gradient: "from-green-500 to-emerald-500",
     details: [
-      "Aggregates consumption data from connected houses",
-      "Calculates transformer load in real-time",
-      "Identifies potential capacity issues before they occur"
+      "Generates connection order for houses",
+      "Generates connection topology for transformers"
     ]
   },
   {
     icon: GitBranch,
     title: "Street Network Generation",
-    description: "This tool generates optimized electrical network layouts for new developments. It creates transformer placements and connection topologies based on street geometry and expected load.",
+    description: "This tool generates electrical network layouts based on network topology. It creates transformer placements and connection topologies based on street geometry and expected load.",
     path: "/street_gen",
     gradient: "from-orange-500 to-red-500",
     details: [
-      "Analyzes street layouts and building locations",
-      "Optimizes transformer placement for coverage",
-      "Generates connection topology minimizing cable length"
+      "Analyses street layouts and building locations",
+      "Generates physical connection topology"
     ]
   },
   {
     icon: Database,
     title: "Data Processing Pipeline",
-    description: "Our backend processes raw smart meter data, network topology files, and GIS information. Data is cleaned, validated, and stored in a structured format for analysis and visualization.",
+    description: "Our backend processes raw smart meter data alone. Data is cleaned, validated, and stored in a structured format for analysis and visualisation.",
     path: "/data_processing_info",
     gradient: "from-indigo-500 to-blue-500",
     details: [
       "Ingests data from multiple sources (CSV, GIS, databases)",
-      "Validates and cleans network topology data",
+      "Validates and cleans smart meter data",
       "Stores processed data in Supabase for fast querying"
     ]
   },
@@ -59,7 +56,7 @@ const PROCESS_STEPS = [
     path: "/front_end",
     gradient: "from-pink-500 to-rose-500",
     details: [
-      "React-based single-page application",
+      "React-based application",
       "Real-time data fetching from Supabase",
       "Responsive design for desktop and mobile devices"
     ]
@@ -85,8 +82,8 @@ export default function Home() {
           </h1>
           
           <p className="hero-description">
-            This platform analyses electrical distribution networks by processing smart meter data, 
-            network topology, and GIS information. Our tools help visualize network structure, 
+            This platform analyses electrical distribution networks by processing only smart meter data. 
+            Our tool help visualise network structure, 
             estimate phase allocation, and predict load distribution across transformers.
           </p>
           
@@ -117,7 +114,7 @@ export default function Home() {
         <div className="features-header">
           <h2 className="features-title">How Our System Works</h2>
           <p className="features-subtitle">
-            A breakdown of each component in our electrical network analysis pipeline
+            A breakdown of each step of the process
           </p>
         </div>
 

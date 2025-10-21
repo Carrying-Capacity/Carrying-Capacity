@@ -16,11 +16,9 @@
         "type": "Transformer",
         "id": "fba25f0162154",
         "next_nodes": [
-            "3fcbf02761894"
+            "79ef7f0a06f84"
         ],
-        "prev_nodes": [
-            "9bc782d3a6ba4"
-        ],
+        "prev_nodes": ["9bc782d3a6ba4"],
         "prev_node_distance": 45.007091479130395,
         "x_meters": 45.007091479130395,
         "y_meters": 0.0,
@@ -30,10 +28,10 @@
         "type": "house",
         "id": "cb622753eee44",
         "next_nodes": [
-            "729b89f7d5244"
+            "a3973b0979044"
         ],
         "prev_nodes": [
-            "3f972bc630ad4"
+            "c435fcbbdbd04"
         ],
         "prev_node_distance": 12.899174433592524,
         "x_meters": 45.007091479130395,
@@ -48,10 +46,10 @@
         "type": "house",
         "id": "ccb4a85f12134",
         "next_nodes": [
-            "7bc18d5eb3314"
+            "a528ee00b5674"
         ],
         "prev_nodes": [
-            "94f9a36ea38a4"
+            "b1d6ae06b68b4"
         ],
         "prev_node_distance": 12.578430260133656,
         "x_meters": 45.007091479130395,
@@ -66,10 +64,10 @@
         "type": "house",
         "id": "8042fef1f0984",
         "next_nodes": [
-            "12bf98ddd9694"
+            "c630fb4321db4"
         ],
         "prev_nodes": [
-            "3bf30a6bcd4c4"
+            "0c39e9ed2f644"
         ],
         "prev_node_distance": 12.423590624803024,
         "x_meters": 17.939189418495353,
@@ -84,10 +82,10 @@
         "type": "house",
         "id": "9804c40287be4",
         "next_nodes": [
-            "4016cfc2f52e4"
+            "1fffb0c496044"
         ],
         "prev_nodes": [
-            "04a123de24554"
+            "6531d66a40b44"
         ],
         "prev_node_distance": 18.713048415359815,
         "x_meters": -29.054098832992107,
@@ -102,11 +100,11 @@
         "type": "house",
         "id": "c21699d88bec4",
         "next_nodes": [
-            "a52f00312ccd4",
-            "b72ce610a72e4"
+            "c238607336a44",
+            "d821ad61bf5e4"
         ],
         "prev_nodes": [
-            "e08207a2204a4"
+            "185598abbe534"
         ],
         "prev_node_distance": 8.600967015492937,
         "x_meters": -63.99072459790706,
@@ -121,10 +119,10 @@
         "type": "house",
         "id": "48f12be2fdf84",
         "next_nodes": [
-            "992c2e0bea5d4"
+            "89427d145f8d4"
         ],
         "prev_nodes": [
-            "108ab18302574"
+            "fc1443e3d54e4"
         ],
         "prev_node_distance": 12.24071440110617,
         "x_meters": -63.99072459790706,
@@ -139,10 +137,10 @@
         "type": "house",
         "id": "0359710041f74",
         "next_nodes": [
-            "8af0b9a66a394"
+            "8ac1eece05004"
         ],
         "prev_nodes": [
-            "c56cf4fb819a4"
+            "aae79ef016934"
         ],
         "prev_node_distance": 14.733989946769059,
         "x_meters": -63.99072459790706,
@@ -157,10 +155,10 @@
         "type": "house",
         "id": "bff1d1c372554",
         "next_nodes": [
-            "8cb30cdc68d24"
+            "e200b6888a2c4"
         ],
         "prev_nodes": [
-            "8f8d76a3740a4"
+            "00634f4daa0b4"
         ],
         "prev_node_distance": 10.678822070733268,
         "x_meters": -63.99072459790706,
@@ -175,10 +173,10 @@
         "type": "house",
         "id": "76fed1d92c664",
         "next_nodes": [
-            "0620c6d80d1e4"
+            "c6a1b044667c4"
         ],
         "prev_nodes": [
-            "9b9a04ce08424"
+            "6ba825de7cec4"
         ],
         "prev_node_distance": 16.987419453635813,
         "x_meters": -63.99072459790706,
@@ -193,10 +191,10 @@
         "type": "house",
         "id": "12dedeaec01d4",
         "next_nodes": [
-            "415983fb10764"
+            "61f7e439bc374"
         ],
         "prev_nodes": [
-            "f844c6b8668b4"
+            "64724862cc534"
         ],
         "prev_node_distance": 14.234060883205128,
         "x_meters": -63.99072459790706,
@@ -211,10 +209,10 @@
         "type": "house",
         "id": "a2bb8e9c0bb44",
         "next_nodes": [
-            "7580de04d07a4"
+            "c6f7ece56a104"
         ],
         "prev_nodes": [
-            "75a9b264e03e4"
+            "8f47efb11fdd4"
         ],
         "prev_node_distance": 14.751988285674983,
         "x_meters": -63.99072459790707,
@@ -229,10 +227,10 @@
         "type": "house",
         "id": "8dfe2ab67a9c4",
         "next_nodes": [
-            "228a236f6df34"
+            "79d0566789e54"
         ],
         "prev_nodes": [
-            "00712007c4ae4"
+            "074d0cdbda734"
         ],
         "prev_node_distance": 14.989276312135624,
         "x_meters": -63.990724597907075,
@@ -247,10 +245,10 @@
         "type": "house",
         "id": "a97faf0ca6174",
         "next_nodes": [
-            "7e7fd7e32a144"
+            "11c08b310a1d4"
         ],
         "prev_nodes": [
-            "e8d4910e5e564"
+            "2c1d9fbc44fd4"
         ],
         "prev_node_distance": 20.422758153163965,
         "x_meters": -63.99072459790708,
@@ -264,11 +262,9 @@
     {
         "type": "house",
         "id": "c69880e9fe044",
-        "next_nodes": [
-            "cc9892e229c84"
-        ],
+        "next_nodes": [],
         "prev_nodes": [
-            "8e244581d0454"
+            "06c246c545894"
         ],
         "prev_node_distance": 8.00323508976696,
         "x_meters": -63.99072459790708,
@@ -283,10 +279,10 @@
         "type": "house",
         "id": "223d835bec474",
         "next_nodes": [
-            "c5786b9284944"
+            "3490ddec0bec4"
         ],
         "prev_nodes": [
-            "f8a4750876554"
+            "627dcfa74ce24"
         ],
         "prev_node_distance": 11.050524170857761,
         "x_meters": -82.24090520637017,
@@ -301,11 +297,11 @@
         "type": "house",
         "id": "e37b47d5db2e4",
         "next_nodes": [
-            "40b737c41c5c4",
-            "1d78b7901f264"
+            "1ab956495e9b4",
+            "b40a13975cd14"
         ],
         "prev_nodes": [
-            "02c189266dd64"
+            "b53e4005a8144"
         ],
         "prev_node_distance": 16.228385477781007,
         "x_meters": -37.89261165290661,
@@ -320,10 +316,10 @@
         "type": "house",
         "id": "6777d3f7ea524",
         "next_nodes": [
-            "149791e0e36b4"
+            "471fb58028074"
         ],
         "prev_nodes": [
-            "48fd6fe1e7254"
+            "93689fb0dee04"
         ],
         "prev_node_distance": 11.307603321747491,
         "x_meters": -49.20021497465409,
@@ -338,10 +334,10 @@
         "type": "house",
         "id": "b47168effc404",
         "next_nodes": [
-            "b3b861e35b964"
+            "1b73e2cc04aa4"
         ],
         "prev_nodes": [
-            "c63768e426494"
+            "a4898764ea1e4"
         ],
         "prev_node_distance": 18.639487291945855,
         "x_meters": -93.75543474767474,
@@ -356,11 +352,11 @@
         "type": "house",
         "id": "af3422484ff74",
         "next_nodes": [
-            "f226305d2fcb4",
-            "c7de9c3af5864"
+            "5e208be13c2c4",
+            "c73aa7ae49944"
         ],
         "prev_nodes": [
-            "ce46ee8fa7de4"
+            "11ae487ea05e4"
         ],
         "prev_node_distance": 11.812064668426512,
         "x_meters": -105.7160405186289,
@@ -375,10 +371,10 @@
         "type": "house",
         "id": "c7dc88c68c074",
         "next_nodes": [
-            "96ded28c4a3e4"
+            "9123ae387e2d4"
         ],
         "prev_nodes": [
-            "013bf1a1c0b54"
+            "6aaa0b8e94274"
         ],
         "prev_node_distance": 10.804109818265657,
         "x_meters": -151.08215856902194,
@@ -393,10 +389,10 @@
         "type": "house",
         "id": "d5238b57d0fa4",
         "next_nodes": [
-            "60319286b7e24"
+            "fad8903ca7b14"
         ],
         "prev_nodes": [
-            "f0bf978368494"
+            "b5059fc4fb2d4"
         ],
         "prev_node_distance": 15.013494540777666,
         "x_meters": -192.95464531619538,
@@ -411,10 +407,10 @@
         "type": "house",
         "id": "6cd85b4898974",
         "next_nodes": [
-            "06efab6f06fe4"
+            "63f630f6e9874"
         ],
         "prev_nodes": [
-            "b329739998b94"
+            "7119c2eaecf84"
         ],
         "prev_node_distance": 11.906845915455513,
         "x_meters": -240.70406538595614,
@@ -429,10 +425,10 @@
         "type": "house",
         "id": "a01326079bd34",
         "next_nodes": [
-            "be4597d617134"
+            "0125392c35284"
         ],
         "prev_nodes": [
-            "60bddde129a84"
+            "b5858e30abda4"
         ],
         "prev_node_distance": 9.911575489873185,
         "x_meters": -272.7081212558525,
@@ -447,10 +443,10 @@
         "type": "house",
         "id": "3d049d98acbd4",
         "next_nodes": [
-            "ee790f4545244"
+            "446a7c5f0a074"
         ],
         "prev_nodes": [
-            "b99e9aabc7494"
+            "f16822ea9eea4"
         ],
         "prev_node_distance": 13.756708595490176,
         "x_meters": -312.289677957128,
@@ -465,11 +461,10 @@
         "type": "house",
         "id": "5bf40955dae44",
         "next_nodes": [
-            "8e3fe44f41b74",
-            "190e416bf76d4"
+            "b27bb19952b44"
         ],
         "prev_nodes": [
-            "adb01e6a273e4"
+            "edbd8ffc9fed4"
         ],
         "prev_node_distance": 12.178155084005343,
         "x_meters": -347.99629899952055,
@@ -484,10 +479,10 @@
         "type": "house",
         "id": "e5fb2c3717a74",
         "next_nodes": [
-            "46fc6ec6214f4"
+            "716ea38d84e94"
         ],
         "prev_nodes": [
-            "cfe38d57805a4"
+            "c4d20f97cd4c4"
         ],
         "prev_node_distance": 15.033987404296903,
         "x_meters": -385.1227179633132,
@@ -502,10 +497,10 @@
         "type": "house",
         "id": "fc21d33cd55e4",
         "next_nodes": [
-            "fa8f2a06d8ce4"
+            "648697c318f14"
         ],
         "prev_nodes": [
-            "888c08d0cd494"
+            "b5944d97db404"
         ],
         "prev_node_distance": 13.68666835029086,
         "x_meters": -421.0655796424449,
@@ -520,10 +515,10 @@
         "type": "house",
         "id": "65c76e77aeec4",
         "next_nodes": [
-            "f7eefee1e3b54"
+            "8b187b854d5c4"
         ],
         "prev_nodes": [
-            "d1a4ea3bfa8c4"
+            "32cf1485a8e84"
         ],
         "prev_node_distance": 10.14703777267371,
         "x_meters": -455.532233551657,
@@ -538,10 +533,10 @@
         "type": "house",
         "id": "7265949b45c94",
         "next_nodes": [
-            "e2c2e060d9944"
+            "e485d75584304"
         ],
         "prev_nodes": [
-            "d05fe5024cb24"
+            "7e25981549604"
         ],
         "prev_node_distance": 16.432234784741038,
         "x_meters": -500.14201665311236,
@@ -556,10 +551,10 @@
         "type": "house",
         "id": "520bd20aec374",
         "next_nodes": [
-            "dea88397781e4"
+            "e24c5cf877904"
         ],
         "prev_nodes": [
-            "8237207b24324"
+            "3ce44562cafb4"
         ],
         "prev_node_distance": 7.446448587734373,
         "x_meters": -532.0937227238869,
@@ -574,10 +569,10 @@
         "type": "house",
         "id": "f3a23e0c935e4",
         "next_nodes": [
-            "a1fca53023af4"
+            "d511bb9dc5634"
         ],
         "prev_nodes": [
-            "b9694413d65a4"
+            "056cf4e00d9f4"
         ],
         "prev_node_distance": 12.403902382092136,
         "x_meters": -569.303492300452,
@@ -592,10 +587,10 @@
         "type": "house",
         "id": "ca09aa1c01874",
         "next_nodes": [
-            "7dd3033b5ed74"
+            "4ce038c826884"
         ],
         "prev_nodes": [
-            "182c27bf7a3f4"
+            "d8df1758efbd4"
         ],
         "prev_node_distance": 13.780977921457124,
         "x_meters": -609.0075808641886,
@@ -610,10 +605,10 @@
         "type": "house",
         "id": "8546dbd1f4814",
         "next_nodes": [
-            "1526a9af478e4"
+            "1b7b6fe61cf94"
         ],
         "prev_nodes": [
-            "132b8df8aac94"
+            "4d65cacebc0c4"
         ],
         "prev_node_distance": 10.387074489327727,
         "x_meters": -638.935433248735,
@@ -628,10 +623,10 @@
         "type": "house",
         "id": "edd6220773084",
         "next_nodes": [
-            "766f7c361b144"
+            "c9f648bdc43e4"
         ],
         "prev_nodes": [
-            "8bdc46e164494"
+            "e0c87d4c17104"
         ],
         "prev_node_distance": 13.21887075591827,
         "x_meters": -688.0760455410345,
@@ -646,10 +641,10 @@
         "type": "house",
         "id": "dc1df85e2dd64",
         "next_nodes": [
-            "93a3b2d0b2f04"
+            "fd0784b143744"
         ],
         "prev_nodes": [
-            "3e58c866aae74"
+            "39a93b98e0c64"
         ],
         "prev_node_distance": 13.219502498592338,
         "x_meters": -727.3587685684639,
@@ -663,11 +658,9 @@
     {
         "type": "house",
         "id": "54ac4412fe094",
-        "next_nodes": [
-            "78cb2a038e704"
-        ],
+        "next_nodes": [],
         "prev_nodes": [
-            "544ee62e2cf64"
+            "36b98314ed194"
         ],
         "prev_node_distance": 15.662711494419487,
         "x_meters": -766.1329302215722,
@@ -682,10 +675,10 @@
         "type": "house",
         "id": "6e4df81b5cd94",
         "next_nodes": [
-            "240dab35a6a94"
+            "3932c58329e34"
         ],
         "prev_nodes": [
-            "9034e231a26c4"
+            "cd5db78cc4d04"
         ],
         "prev_node_distance": 15.149443316810782,
         "x_meters": 1.56427400353226,
@@ -700,10 +693,10 @@
         "type": "house",
         "id": "da49be1a1d314",
         "next_nodes": [
-            "d90b7df00dce4"
+            "41088b1309e04"
         ],
         "prev_nodes": [
-            "8d60a49f1cf24"
+            "944275fe55f94"
         ],
         "prev_node_distance": 9.38906708604838,
         "x_meters": 30.498387675205947,
@@ -718,11 +711,11 @@
         "type": "house",
         "id": "9d8497e9a12b4",
         "next_nodes": [
-            "65fc0a0e8dec4",
-            "f179dfea2f764"
+            "6943be5a859d4",
+            "3b2d6107473f4"
         ],
         "prev_nodes": [
-            "6d249ee86fa44"
+            "d530555a862c4"
         ],
         "prev_node_distance": 16.888939950249686,
         "x_meters": 78.176059037698,
@@ -737,10 +730,10 @@
         "type": "house",
         "id": "7988b6e8228d4",
         "next_nodes": [
-            "2c7ffa6a8a4c4"
+            "0188fe075fb94"
         ],
         "prev_nodes": [
-            "2711db5df04f4"
+            "2fe7a07d96244"
         ],
         "prev_node_distance": 15.885838279184606,
         "x_meters": 78.176059037698,
@@ -755,10 +748,10 @@
         "type": "house",
         "id": "1a9dcf7972244",
         "next_nodes": [
-            "68a478eb571b4"
+            "dfa6d116ef164"
         ],
         "prev_nodes": [
-            "a3a2e8b8cac44"
+            "f2fa4e4ef1454"
         ],
         "prev_node_distance": 11.130057713454061,
         "x_meters": 78.176059037698,
@@ -773,10 +766,10 @@
         "type": "house",
         "id": "586fe506d5a64",
         "next_nodes": [
-            "67e590758b424"
+            "9ce927ffc8b54"
         ],
         "prev_nodes": [
-            "bf6b27e92c204"
+            "1e40c698b73e4"
         ],
         "prev_node_distance": 10.3498640701411,
         "x_meters": 78.176059037698,
@@ -790,11 +783,9 @@
     {
         "type": "house",
         "id": "c43738a996254",
-        "next_nodes": [
-            "b4977b6fdd7d4"
-        ],
+        "next_nodes": [],
         "prev_nodes": [
-            "c12725cdc0b74"
+            "a287b9421f484"
         ],
         "prev_node_distance": 11.955621621757786,
         "x_meters": 78.176059037698,
@@ -809,10 +800,10 @@
         "type": "house",
         "id": "f7e8d524bd8a4",
         "next_nodes": [
-            "5946897207504"
+            "ec434ba9debd4"
         ],
         "prev_nodes": [
-            "08f08f3574b14"
+            "5943569ecc724"
         ],
         "prev_node_distance": 17.942866208471635,
         "x_meters": 78.176059037698,
@@ -827,10 +818,10 @@
         "type": "house",
         "id": "c4dc7fb32b984",
         "next_nodes": [
-            "66f313ce4a7a4"
+            "0627d48e9c4c4"
         ],
         "prev_nodes": [
-            "12e2e361d1ed4"
+            "488f3598e2f24"
         ],
         "prev_node_distance": 12.051726288204357,
         "x_meters": 78.176059037698,
@@ -844,11 +835,9 @@
     {
         "type": "house",
         "id": "1d61693a7ef44",
-        "next_nodes": [
-            "ea8c7e7f83804"
-        ],
+        "next_nodes": [],
         "prev_nodes": [
-            "d3146cd62d2a4"
+            "44b4da2e4bdd4"
         ],
         "prev_node_distance": 9.648064586874334,
         "x_meters": 78.176059037698,
@@ -863,10 +852,10 @@
         "type": "house",
         "id": "e1fb74b8e13c4",
         "next_nodes": [
-            "9570bbebb45e4"
+            "4084adae64dd4"
         ],
         "prev_nodes": [
-            "eb94febc8f834"
+            "e19d5fcf449b4"
         ],
         "prev_node_distance": 16.240011732261173,
         "x_meters": -105.7160405186289,
@@ -881,10 +870,10 @@
         "type": "house",
         "id": "2a4c14c1b9544",
         "next_nodes": [
-            "b0d23300038b4"
+            "43d79fe2a4f94"
         ],
         "prev_nodes": [
-            "480dbee60f7b4"
+            "918a57b8d6014"
         ],
         "prev_node_distance": 16.599331237158697,
         "x_meters": -95.70046359918155,
@@ -899,10 +888,10 @@
         "type": "house",
         "id": "5ea068e563b64",
         "next_nodes": [
-            "c9cb0985627c4"
+            "d641afeb467d4"
         ],
         "prev_nodes": [
-            "e1af08adf0874"
+            "07b73cd039d54"
         ],
         "prev_node_distance": 13.649816417521814,
         "x_meters": -95.70046359918155,
@@ -917,10 +906,10 @@
         "type": "house",
         "id": "efb046836ed74",
         "next_nodes": [
-            "bc381ceae8514"
+            "51dcfba7805a4"
         ],
         "prev_nodes": [
-            "bb148238eff24"
+            "936ffbbc299a4"
         ],
         "prev_node_distance": 15.52968108150546,
         "x_meters": -95.70046359918155,
@@ -935,10 +924,10 @@
         "type": "house",
         "id": "814d059f0f244",
         "next_nodes": [
-            "5f12e72f801d4"
+            "c2dee41f40e44"
         ],
         "prev_nodes": [
-            "433e088a08e54"
+            "167b951043c24"
         ],
         "prev_node_distance": 12.593951354346423,
         "x_meters": -95.70046359918156,
@@ -953,10 +942,10 @@
         "type": "house",
         "id": "37057ef264784",
         "next_nodes": [
-            "834749dcb2a44"
+            "4ca848511e454"
         ],
         "prev_nodes": [
-            "74b486cf326a4"
+            "e9c9356702954"
         ],
         "prev_node_distance": 12.011644625525793,
         "x_meters": -95.70046359918156,
@@ -971,10 +960,10 @@
         "type": "house",
         "id": "288302d4fc7f4",
         "next_nodes": [
-            "5d2d3bf98aaf4"
+            "1f5c67dac1b84"
         ],
         "prev_nodes": [
-            "a9951593e97d4"
+            "ec8194474b984"
         ],
         "prev_node_distance": 14.143691686864255,
         "x_meters": -95.70046359918156,
@@ -988,11 +977,9 @@
     {
         "type": "house",
         "id": "0af7cda6f9914",
-        "next_nodes": [
-            "1b6af390bed14"
-        ],
+        "next_nodes": [],
         "prev_nodes": [
-            "91775fc3b0fc4"
+            "234b8ced4ec84"
         ],
         "prev_node_distance": 9.204548869537303,
         "x_meters": -95.70046359918156,
@@ -1020,1076 +1007,6 @@
         "house_number": null
     },
     {
-        "type": "Transformer",
-        "id": "e56a495a70a44",
-        "next_nodes": [
-            "d50174b437304"
-        ],
-        "prev_nodes": [
-            "9bc782d3a6ba4"
-        ],
-        "prev_node_distance": 38.87837770765075,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": 1
-    },
-    {
-        "type": "house",
-        "id": "d50174b437304",
-        "next_nodes": [
-            "e61e9d2b2fa24"
-        ],
-        "prev_nodes": [
-            "e56a495a70a44"
-        ],
-        "prev_node_distance": 43.14585278478074,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": true,
-        "house_number": 1
-    },
-    {
-        "type": "house",
-        "id": "e61e9d2b2fa24",
-        "next_nodes": [
-            "ac58f0d5e9274"
-        ],
-        "prev_nodes": [
-            "d50174b437304"
-        ],
-        "prev_node_distance": 28.920485444603727,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": false,
-        "house_number": 2
-    },
-    {
-        "type": "house",
-        "id": "ac58f0d5e9274",
-        "next_nodes": [
-            "a60b98b34c814"
-        ],
-        "prev_nodes": [
-            "e61e9d2b2fa24"
-        ],
-        "prev_node_distance": 38.18055169845998,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": true,
-        "house_number": 3
-    },
-    {
-        "type": "house",
-        "id": "a60b98b34c814",
-        "next_nodes": [
-            "1821c2827f3e4"
-        ],
-        "prev_nodes": [
-            "ac58f0d5e9274"
-        ],
-        "prev_node_distance": 37.708365695809555,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": false,
-        "house_number": 4
-    },
-    {
-        "type": "house",
-        "id": "1821c2827f3e4",
-        "next_nodes": [
-            "0234e780ca934"
-        ],
-        "prev_nodes": [
-            "a60b98b34c814"
-        ],
-        "prev_node_distance": 52.4987936016492,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": false,
-        "house_number": 5
-    },
-    {
-        "type": "house",
-        "id": "0234e780ca934",
-        "next_nodes": [
-            "8e24091d809c4"
-        ],
-        "prev_nodes": [
-            "1821c2827f3e4"
-        ],
-        "prev_node_distance": 43.272541331342524,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": true,
-        "house_number": 6
-    },
-    {
-        "type": "house",
-        "id": "8e24091d809c4",
-        "next_nodes": [
-            "f6264974e4ec4"
-        ],
-        "prev_nodes": [
-            "0234e780ca934"
-        ],
-        "prev_node_distance": 39.58271621344133,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": false,
-        "house_number": 7
-    },
-    {
-        "type": "house",
-        "id": "f6264974e4ec4",
-        "next_nodes": [
-            "ee122f9cdda14"
-        ],
-        "prev_nodes": [
-            "8e24091d809c4"
-        ],
-        "prev_node_distance": 37.4571296745937,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": false,
-        "house_number": 8
-    },
-    {
-        "type": "house",
-        "id": "ee122f9cdda14",
-        "next_nodes": [
-            "a500dfa13b644"
-        ],
-        "prev_nodes": [
-            "f6264974e4ec4"
-        ],
-        "prev_node_distance": 38.841422937059725,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": true,
-        "house_number": 9
-    },
-    {
-        "type": "house",
-        "id": "a500dfa13b644",
-        "next_nodes": [
-            "effccd91f6a94",
-            "8c15743c7d0f4"
-        ],
-        "prev_nodes": [
-            "ee122f9cdda14"
-        ],
-        "prev_node_distance": 42.52464205438213,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": false,
-        "house_number": 14
-    },
-    {
-        "type": "house",
-        "id": "effccd91f6a94",
-        "next_nodes": [
-            "c9cf9b92db904"
-        ],
-        "prev_nodes": [
-            "a500dfa13b644"
-        ],
-        "prev_node_distance": 36.58044652868266,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": false,
-        "house_number": 11
-    },
-    {
-        "type": "house",
-        "id": "c9cf9b92db904",
-        "next_nodes": [
-            "8b95fa5d27534"
-        ],
-        "prev_nodes": [
-            "effccd91f6a94"
-        ],
-        "prev_node_distance": 44.02937123720945,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": true,
-        "house_number": 12
-    },
-    {
-        "type": "house",
-        "id": "8b95fa5d27534",
-        "next_nodes": [
-            "7f1c524a8e7b4"
-        ],
-        "prev_nodes": [
-            "c9cf9b92db904"
-        ],
-        "prev_node_distance": 40.08071190266504,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": false,
-        "house_number": 13
-    },
-    {
-        "type": "house",
-        "id": "8c15743c7d0f4",
-        "next_nodes": [
-            "0f82630b2ace4"
-        ],
-        "prev_nodes": [
-            "a500dfa13b644"
-        ],
-        "prev_node_distance": 36.00696769697215,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": false,
-        "house_number": 15
-    },
-    {
-        "type": "house",
-        "id": "0f82630b2ace4",
-        "next_nodes": [
-            "46ff2b26d1304"
-        ],
-        "prev_nodes": [
-            "8c15743c7d0f4"
-        ],
-        "prev_node_distance": 26.77860495306131,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "BAC",
-        "solar": true,
-        "house_number": 16
-    },
-    {
-        "type": "house",
-        "id": "46ff2b26d1304",
-        "next_nodes": [
-            "de53b73eb8264"
-        ],
-        "prev_nodes": [
-            "0f82630b2ace4"
-        ],
-        "prev_node_distance": 43.894881205597734,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "ABC",
-        "solar": true,
-        "house_number": 17
-    },
-    {
-        "type": "house",
-        "id": "de53b73eb8264",
-        "next_nodes": [
-            "3e7b8fe3ca564"
-        ],
-        "prev_nodes": [
-            "46ff2b26d1304"
-        ],
-        "prev_node_distance": 45.10054455599139,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": false,
-        "house_number": 18
-    },
-    {
-        "type": "house",
-        "id": "3e7b8fe3ca564",
-        "next_nodes": [
-            "0aab365ef9054"
-        ],
-        "prev_nodes": [
-            "de53b73eb8264"
-        ],
-        "prev_node_distance": 37.39230086071409,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": false,
-        "house_number": 19
-    },
-    {
-        "type": "house",
-        "id": "0aab365ef9054",
-        "next_nodes": [
-            "823e6fb06ade4"
-        ],
-        "prev_nodes": [
-            "3e7b8fe3ca564"
-        ],
-        "prev_node_distance": 38.90214809129324,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": true,
-        "house_number": 20
-    },
-    {
-        "type": "house",
-        "id": "823e6fb06ade4",
-        "next_nodes": [
-            "00c18d8a43b64"
-        ],
-        "prev_nodes": [
-            "0aab365ef9054"
-        ],
-        "prev_node_distance": 40.22312478014271,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": true,
-        "house_number": 21
-    },
-    {
-        "type": "house",
-        "id": "00c18d8a43b64",
-        "next_nodes": [
-            "75791b84f53f4"
-        ],
-        "prev_nodes": [
-            "823e6fb06ade4"
-        ],
-        "prev_node_distance": 35.84245755225317,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": false,
-        "house_number": 22
-    },
-    {
-        "type": "house",
-        "id": "75791b84f53f4",
-        "next_nodes": [
-            "e6bd5ec23a434"
-        ],
-        "prev_nodes": [
-            "00c18d8a43b64"
-        ],
-        "prev_node_distance": 33.76686546107396,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": true,
-        "house_number": 23
-    },
-    {
-        "type": "house",
-        "id": "e6bd5ec23a434",
-        "next_nodes": [
-            "f594e6aaab3f4"
-        ],
-        "prev_nodes": [
-            "75791b84f53f4"
-        ],
-        "prev_node_distance": 33.056662605221675,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": false,
-        "house_number": 24
-    },
-    {
-        "type": "house",
-        "id": "f594e6aaab3f4",
-        "next_nodes": [
-            "47765b914cf84"
-        ],
-        "prev_nodes": [
-            "e6bd5ec23a434"
-        ],
-        "prev_node_distance": 40.178879016418,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": false,
-        "house_number": 25
-    },
-    {
-        "type": "house",
-        "id": "47765b914cf84",
-        "next_nodes": [
-            "6e9058bb07474"
-        ],
-        "prev_nodes": [
-            "f594e6aaab3f4"
-        ],
-        "prev_node_distance": 44.55525302744636,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "CBA",
-        "solar": false,
-        "house_number": 26
-    },
-    {
-        "type": "house",
-        "id": "6e9058bb07474",
-        "next_nodes": [
-            "8b2727c3430c4"
-        ],
-        "prev_nodes": [
-            "47765b914cf84"
-        ],
-        "prev_node_distance": 45.61304795544927,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "ACB",
-        "solar": true,
-        "house_number": 27
-    },
-    {
-        "type": "house",
-        "id": "8b2727c3430c4",
-        "next_nodes": [
-            "6c4837d774e34"
-        ],
-        "prev_nodes": [
-            "6e9058bb07474"
-        ],
-        "prev_node_distance": 42.850294428528485,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": true,
-        "house_number": 28
-    },
-    {
-        "type": "house",
-        "id": "6c4837d774e34",
-        "next_nodes": [
-            "5d8b0394f69e4"
-        ],
-        "prev_nodes": [
-            "8b2727c3430c4"
-        ],
-        "prev_node_distance": 45.99800589610474,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": true,
-        "house_number": 29
-    },
-    {
-        "type": "house",
-        "id": "5d8b0394f69e4",
-        "next_nodes": [
-            "8635c2612b0a4"
-        ],
-        "prev_nodes": [
-            "6c4837d774e34"
-        ],
-        "prev_node_distance": 40.04731922919704,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": false,
-        "house_number": 30
-    },
-    {
-        "type": "house",
-        "id": "8635c2612b0a4",
-        "next_nodes": [
-            "291fd6a4f4054"
-        ],
-        "prev_nodes": [
-            "5d8b0394f69e4"
-        ],
-        "prev_node_distance": 43.0797623990854,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": false,
-        "house_number": 31
-    },
-    {
-        "type": "house",
-        "id": "291fd6a4f4054",
-        "next_nodes": [
-            "cfe9c1af2d7e4"
-        ],
-        "prev_nodes": [
-            "8635c2612b0a4"
-        ],
-        "prev_node_distance": 41.56008547508816,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": false,
-        "house_number": 32
-    },
-    {
-        "type": "house",
-        "id": "cfe9c1af2d7e4",
-        "next_nodes": [
-            "957d2f86ea374"
-        ],
-        "prev_nodes": [
-            "291fd6a4f4054"
-        ],
-        "prev_node_distance": 42.24351295416709,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": true,
-        "house_number": 33
-    },
-    {
-        "type": "house",
-        "id": "957d2f86ea374",
-        "next_nodes": [
-            "fcec628ce2a24"
-        ],
-        "prev_nodes": [
-            "cfe9c1af2d7e4"
-        ],
-        "prev_node_distance": 42.96073897729662,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "CAB",
-        "solar": false,
-        "house_number": 34
-    },
-    {
-        "type": "house",
-        "id": "fcec628ce2a24",
-        "next_nodes": [
-            "e64bac1170044",
-            "b5d30dc2cec04"
-        ],
-        "prev_nodes": [
-            "957d2f86ea374"
-        ],
-        "prev_node_distance": 54.11825465016089,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": false,
-        "house_number": 53
-    },
-    {
-        "type": "house",
-        "id": "e64bac1170044",
-        "next_nodes": [
-            "638e390e0b0e4"
-        ],
-        "prev_nodes": [
-            "fcec628ce2a24"
-        ],
-        "prev_node_distance": 34.98757116087756,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": true,
-        "house_number": 36
-    },
-    {
-        "type": "house",
-        "id": "638e390e0b0e4",
-        "next_nodes": [
-            "ebaf62a00f544"
-        ],
-        "prev_nodes": [
-            "e64bac1170044"
-        ],
-        "prev_node_distance": 42.43948251411558,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": true,
-        "house_number": 37
-    },
-    {
-        "type": "house",
-        "id": "ebaf62a00f544",
-        "next_nodes": [
-            "8ee779d07bdd4"
-        ],
-        "prev_nodes": [
-            "638e390e0b0e4"
-        ],
-        "prev_node_distance": 42.709656730900434,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "ACB",
-        "solar": false,
-        "house_number": 38
-    },
-    {
-        "type": "house",
-        "id": "8ee779d07bdd4",
-        "next_nodes": [
-            "11b723855d834"
-        ],
-        "prev_nodes": [
-            "ebaf62a00f544"
-        ],
-        "prev_node_distance": 55.262857188440805,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": false,
-        "house_number": 39
-    },
-    {
-        "type": "house",
-        "id": "11b723855d834",
-        "next_nodes": [
-            "2c9adaad92844"
-        ],
-        "prev_nodes": [
-            "8ee779d07bdd4"
-        ],
-        "prev_node_distance": 40.163222171192714,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": true,
-        "house_number": 40
-    },
-    {
-        "type": "house",
-        "id": "2c9adaad92844",
-        "next_nodes": [
-            "41d2e0fb12584"
-        ],
-        "prev_nodes": [
-            "11b723855d834"
-        ],
-        "prev_node_distance": 42.867728498872296,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": false,
-        "house_number": 41
-    },
-    {
-        "type": "house",
-        "id": "41d2e0fb12584",
-        "next_nodes": [
-            "6e181d49f3204"
-        ],
-        "prev_nodes": [
-            "2c9adaad92844"
-        ],
-        "prev_node_distance": 38.97987433282676,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": false,
-        "house_number": 42
-    },
-    {
-        "type": "house",
-        "id": "6e181d49f3204",
-        "next_nodes": [
-            "59fff8edc4f64"
-        ],
-        "prev_nodes": [
-            "41d2e0fb12584"
-        ],
-        "prev_node_distance": 40.259155516075005,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": true,
-        "house_number": 43
-    },
-    {
-        "type": "house",
-        "id": "59fff8edc4f64",
-        "next_nodes": [
-            "1c06ce6b7b204"
-        ],
-        "prev_nodes": [
-            "6e181d49f3204"
-        ],
-        "prev_node_distance": 51.812498088223116,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": false,
-        "house_number": 44
-    },
-    {
-        "type": "house",
-        "id": "1c06ce6b7b204",
-        "next_nodes": [
-            "483ed44d74dc4"
-        ],
-        "prev_nodes": [
-            "59fff8edc4f64"
-        ],
-        "prev_node_distance": 32.27090820042506,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": true,
-        "house_number": 45
-    },
-    {
-        "type": "house",
-        "id": "483ed44d74dc4",
-        "next_nodes": [
-            "c77be2c5241d4"
-        ],
-        "prev_nodes": [
-            "1c06ce6b7b204"
-        ],
-        "prev_node_distance": 29.103159400680102,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": true,
-        "house_number": 46
-    },
-    {
-        "type": "house",
-        "id": "c77be2c5241d4",
-        "next_nodes": [
-            "17a6876c59884"
-        ],
-        "prev_nodes": [
-            "483ed44d74dc4"
-        ],
-        "prev_node_distance": 48.34221182589952,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": true,
-        "house_number": 47
-    },
-    {
-        "type": "house",
-        "id": "17a6876c59884",
-        "next_nodes": [
-            "cf98b961fd574"
-        ],
-        "prev_nodes": [
-            "c77be2c5241d4"
-        ],
-        "prev_node_distance": 31.065587972561573,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": false,
-        "house_number": 48
-    },
-    {
-        "type": "house",
-        "id": "cf98b961fd574",
-        "next_nodes": [
-            "3af62525506b4"
-        ],
-        "prev_nodes": [
-            "17a6876c59884"
-        ],
-        "prev_node_distance": 43.50893064555464,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": false,
-        "house_number": 49
-    },
-    {
-        "type": "house",
-        "id": "3af62525506b4",
-        "next_nodes": [
-            "d30945b785a24"
-        ],
-        "prev_nodes": [
-            "cf98b961fd574"
-        ],
-        "prev_node_distance": 36.740505316141906,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": false,
-        "house_number": 50
-    },
-    {
-        "type": "house",
-        "id": "d30945b785a24",
-        "next_nodes": [
-            "b951c82d3cfc4"
-        ],
-        "prev_nodes": [
-            "3af62525506b4"
-        ],
-        "prev_node_distance": 37.91743704908243,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": false,
-        "house_number": 51
-    },
-    {
-        "type": "house",
-        "id": "b951c82d3cfc4",
-        "next_nodes": [
-            "4dacdbfabaf24"
-        ],
-        "prev_nodes": [
-            "d30945b785a24"
-        ],
-        "prev_node_distance": 43.23070298110128,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": false,
-        "house_number": 52
-    },
-    {
-        "type": "house",
-        "id": "b5d30dc2cec04",
-        "next_nodes": [
-            "1524d03201484"
-        ],
-        "prev_nodes": [
-            "fcec628ce2a24"
-        ],
-        "prev_node_distance": 51.15160117134661,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "A",
-        "solar": true,
-        "house_number": 54
-    },
-    {
-        "type": "house",
-        "id": "1524d03201484",
-        "next_nodes": [
-            "45cf2c56e7a44"
-        ],
-        "prev_nodes": [
-            "b5d30dc2cec04"
-        ],
-        "prev_node_distance": 47.43222422613802,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": true,
-        "house_number": 55
-    },
-    {
-        "type": "house",
-        "id": "45cf2c56e7a44",
-        "next_nodes": [
-            "b2313bc432de4"
-        ],
-        "prev_nodes": [
-            "1524d03201484"
-        ],
-        "prev_node_distance": 34.34157096906402,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "CAB",
-        "solar": false,
-        "house_number": 56
-    },
-    {
-        "type": "house",
-        "id": "b2313bc432de4",
-        "next_nodes": [
-            "7fb3e331d7704"
-        ],
-        "prev_nodes": [
-            "45cf2c56e7a44"
-        ],
-        "prev_node_distance": 41.81454592350506,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": true,
-        "house_number": 57
-    },
-    {
-        "type": "house",
-        "id": "7fb3e331d7704",
-        "next_nodes": [
-            "079548a7ede04"
-        ],
-        "prev_nodes": [
-            "b2313bc432de4"
-        ],
-        "prev_node_distance": 49.01241562858679,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": false,
-        "house_number": 58
-    },
-    {
-        "type": "house",
-        "id": "079548a7ede04",
-        "next_nodes": [
-            "f3f3f76f3e1e4"
-        ],
-        "prev_nodes": [
-            "7fb3e331d7704"
-        ],
-        "prev_node_distance": 35.948307045704766,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "C",
-        "solar": true,
-        "house_number": 59
-    },
-    {
-        "type": "house",
-        "id": "f3f3f76f3e1e4",
-        "next_nodes": [],
-        "prev_nodes": [
-            "079548a7ede04"
-        ],
-        "prev_node_distance": null,
-        "x_meters": 0,
-        "y_meters": 0,
-        "transformer": null,
-        "voltage_data": [],
-        "predicted_phase": "B",
-        "solar": false,
-        "house_number": null
-    },
-    {
-        "type": "street",
-        "id": "e14b2ece83d54",
-        "net_node_id": "fba25f0162154",
-        "next_nodes": [
-            "79ef7f0a06f84"
-        ],
-        "prev_nodes": [],
-        "x_meters": 45.007091479130395,
-        "y_meters": 0.0,
-        "removed": false
-    },
-    {
         "type": "street",
         "id": "79ef7f0a06f84",
         "net_node_id": null,
@@ -2097,7 +1014,7 @@
             "c435fcbbdbd04"
         ],
         "prev_nodes": [
-            "e14b2ece83d54"
+            "fba25f0162154"
         ],
         "x_meters": 45.007091479130395,
         "y_meters": 17.10472224895823,
@@ -2108,7 +1025,7 @@
         "id": "c435fcbbdbd04",
         "net_node_id": null,
         "next_nodes": [
-            "19b729d698d24"
+            "cb622753eee44"
         ],
         "prev_nodes": [
             "79ef7f0a06f84"
@@ -2119,27 +1036,13 @@
     },
     {
         "type": "street",
-        "id": "19b729d698d24",
-        "net_node_id": "cb622753eee44",
-        "next_nodes": [
-            "a3973b0979044"
-        ],
-        "prev_nodes": [
-            "c435fcbbdbd04"
-        ],
-        "x_meters": 45.007091479130395,
-        "y_meters": 46.851788378098405,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "a3973b0979044",
         "net_node_id": null,
         "next_nodes": [
             "b1d6ae06b68b4"
         ],
         "prev_nodes": [
-            "19b729d698d24"
+            "cb622753eee44"
         ],
         "x_meters": 45.007091479130395,
         "y_meters": 59.515734296347006,
@@ -2150,7 +1053,7 @@
         "id": "b1d6ae06b68b4",
         "net_node_id": null,
         "next_nodes": [
-            "caaf04a763dc4"
+            "ccb4a85f12134"
         ],
         "prev_nodes": [
             "a3973b0979044"
@@ -2161,27 +1064,13 @@
     },
     {
         "type": "street",
-        "id": "caaf04a763dc4",
-        "net_node_id": "ccb4a85f12134",
-        "next_nodes": [
-            "a528ee00b5674"
-        ],
-        "prev_nodes": [
-            "b1d6ae06b68b4"
-        ],
-        "x_meters": 45.007091479130395,
-        "y_meters": 86.34024972212342,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "a528ee00b5674",
         "net_node_id": null,
         "next_nodes": [
             "0c39e9ed2f644"
         ],
         "prev_nodes": [
-            "caaf04a763dc4"
+            "ccb4a85f12134"
         ],
         "x_meters": 45.007091479130395,
         "y_meters": 101.92773672012603,
@@ -2192,26 +1081,12 @@
         "id": "0c39e9ed2f644",
         "net_node_id": null,
         "next_nodes": [
-            "6b0767bbda1e4"
+            "8042fef1f0984"
         ],
         "prev_nodes": [
             "a528ee00b5674"
         ],
         "x_meters": 30.36278004329838,
-        "y_meters": 101.92773672012603,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "6b0767bbda1e4",
-        "net_node_id": "8042fef1f0984",
-        "next_nodes": [
-            "c630fb4321db4"
-        ],
-        "prev_nodes": [
-            "0c39e9ed2f644"
-        ],
-        "x_meters": 17.939189418495353,
         "y_meters": 101.92773672012603,
         "removed": false
     },
@@ -2223,7 +1098,7 @@
             "6531d66a40b44"
         ],
         "prev_nodes": [
-            "6b0767bbda1e4"
+            "8042fef1f0984"
         ],
         "x_meters": 3.2917177760910032,
         "y_meters": 101.92773672012603,
@@ -2234,26 +1109,12 @@
         "id": "6531d66a40b44",
         "net_node_id": null,
         "next_nodes": [
-            "9e97fed332f74"
+            "9804c40287be4"
         ],
         "prev_nodes": [
             "c630fb4321db4"
         ],
         "x_meters": -10.341050417632292,
-        "y_meters": 101.92773672012603,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "9e97fed332f74",
-        "net_node_id": "9804c40287be4",
-        "next_nodes": [
-            "1fffb0c496044"
-        ],
-        "prev_nodes": [
-            "6531d66a40b44"
-        ],
-        "x_meters": -29.054098832992107,
         "y_meters": 101.92773672012603,
         "removed": false
     },
@@ -2265,7 +1126,7 @@
             "185598abbe534"
         ],
         "prev_nodes": [
-            "9e97fed332f74"
+            "9804c40287be4"
         ],
         "x_meters": -40.70273002570983,
         "y_meters": 101.92773672012603,
@@ -2276,27 +1137,12 @@
         "id": "185598abbe534",
         "net_node_id": null,
         "next_nodes": [
-            "24ae96cf62564"
+            "c21699d88bec4"
         ],
         "prev_nodes": [
             "1fffb0c496044"
         ],
         "x_meters": -55.38975758241412,
-        "y_meters": 101.92773672012603,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "24ae96cf62564",
-        "net_node_id": "c21699d88bec4",
-        "next_nodes": [
-            "c238607336a44",
-            "d821ad61bf5e4"
-        ],
-        "prev_nodes": [
-            "185598abbe534"
-        ],
-        "x_meters": -63.99072459790706,
         "y_meters": 101.92773672012603,
         "removed": false
     },
@@ -2308,7 +1154,7 @@
             "627dcfa74ce24"
         ],
         "prev_nodes": [
-            "24ae96cf62564"
+            "c21699d88bec4"
         ],
         "x_meters": -82.24090520637017,
         "y_meters": 101.92773672012603,
@@ -2322,7 +1168,7 @@
             "fc1443e3d54e4"
         ],
         "prev_nodes": [
-            "24ae96cf62564"
+            "c21699d88bec4"
         ],
         "x_meters": -63.99072459790706,
         "y_meters": 86.64960373628111,
@@ -2333,7 +1179,7 @@
         "id": "627dcfa74ce24",
         "net_node_id": null,
         "next_nodes": [
-            "51feb2c8c8084"
+            "223d835bec474"
         ],
         "prev_nodes": [
             "c238607336a44"
@@ -2347,7 +1193,7 @@
         "id": "fc1443e3d54e4",
         "net_node_id": null,
         "next_nodes": [
-            "02f900510f054"
+            "48f12be2fdf84"
         ],
         "prev_nodes": [
             "d821ad61bf5e4"
@@ -2358,41 +1204,13 @@
     },
     {
         "type": "street",
-        "id": "51feb2c8c8084",
-        "net_node_id": "223d835bec474",
-        "next_nodes": [
-            "3490ddec0bec4"
-        ],
-        "prev_nodes": [
-            "627dcfa74ce24"
-        ],
-        "x_meters": -82.24090520637017,
-        "y_meters": 125.5193772751565,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "02f900510f054",
-        "net_node_id": "48f12be2fdf84",
-        "next_nodes": [
-            "89427d145f8d4"
-        ],
-        "prev_nodes": [
-            "fc1443e3d54e4"
-        ],
-        "x_meters": -63.99072459790706,
-        "y_meters": 61.73006194618261,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "3490ddec0bec4",
         "net_node_id": null,
         "next_nodes": [
             "b53e4005a8144"
         ],
         "prev_nodes": [
-            "51feb2c8c8084"
+            "223d835bec474"
         ],
         "x_meters": -68.88931643948203,
         "y_meters": 125.5193772751565,
@@ -2406,7 +1224,7 @@
             "aae79ef016934"
         ],
         "prev_nodes": [
-            "02f900510f054"
+            "48f12be2fdf84"
         ],
         "x_meters": -63.99072459790706,
         "y_meters": 52.86505621336481,
@@ -2417,7 +1235,7 @@
         "id": "b53e4005a8144",
         "net_node_id": null,
         "next_nodes": [
-            "dc453bad168b4"
+            "e37b47d5db2e4"
         ],
         "prev_nodes": [
             "3490ddec0bec4"
@@ -2431,7 +1249,7 @@
         "id": "aae79ef016934",
         "net_node_id": null,
         "next_nodes": [
-            "1eddea89f5fa4"
+            "0359710041f74"
         ],
         "prev_nodes": [
             "89427d145f8d4"
@@ -2442,45 +1260,16 @@
     },
     {
         "type": "street",
-        "id": "dc453bad168b4",
-        "net_node_id": "e37b47d5db2e4",
-        "next_nodes": [
-            "1ab956495e9b4",
-            "b40a13975cd14"
-        ],
-        "prev_nodes": [
-            "b53e4005a8144"
-        ],
-        "x_meters": -37.89261165290661,
-        "y_meters": 125.51937727515647,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "1ab956495e9b4",
         "net_node_id": null,
         "next_nodes": [
             "cd5db78cc4d04"
         ],
         "prev_nodes": [
-            "dc453bad168b4"
+            "e37b47d5db2e4"
         ],
         "x_meters": -23.936528827703665,
         "y_meters": 125.51937727515647,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "1eddea89f5fa4",
-        "net_node_id": "0359710041f74",
-        "next_nodes": [
-            "8ac1eece05004"
-        ],
-        "prev_nodes": [
-            "aae79ef016934"
-        ],
-        "x_meters": -63.99072459790706,
-        "y_meters": 23.73171127648888,
         "removed": false
     },
     {
@@ -2491,7 +1280,7 @@
             "93689fb0dee04"
         ],
         "prev_nodes": [
-            "dc453bad168b4"
+            "e37b47d5db2e4"
         ],
         "x_meters": -37.8926116529066,
         "y_meters": 139.99107730430026,
@@ -2502,7 +1291,7 @@
         "id": "cd5db78cc4d04",
         "net_node_id": null,
         "next_nodes": [
-            "cb4500a86dbb4"
+            "6e4df81b5cd94"
         ],
         "prev_nodes": [
             "1ab956495e9b4"
@@ -2519,7 +1308,7 @@
             "00634f4daa0b4"
         ],
         "prev_nodes": [
-            "1eddea89f5fa4"
+            "0359710041f74"
         ],
         "x_meters": -63.99072459790706,
         "y_meters": 6.6927201938051155,
@@ -2530,7 +1319,7 @@
         "id": "93689fb0dee04",
         "net_node_id": null,
         "next_nodes": [
-            "d7d6a26fe1354"
+            "6777d3f7ea524"
         ],
         "prev_nodes": [
             "b40a13975cd14"
@@ -2541,24 +1330,10 @@
     },
     {
         "type": "street",
-        "id": "cb4500a86dbb4",
-        "net_node_id": "6e4df81b5cd94",
-        "next_nodes": [
-            "3932c58329e34"
-        ],
-        "prev_nodes": [
-            "cd5db78cc4d04"
-        ],
-        "x_meters": 1.56427400353226,
-        "y_meters": 125.51937727515647,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "00634f4daa0b4",
         "net_node_id": null,
         "next_nodes": [
-            "502bb6ee965d4"
+            "bff1d1c372554"
         ],
         "prev_nodes": [
             "8ac1eece05004"
@@ -2569,44 +1344,16 @@
     },
     {
         "type": "street",
-        "id": "d7d6a26fe1354",
-        "net_node_id": "6777d3f7ea524",
-        "next_nodes": [
-            "471fb58028074"
-        ],
-        "prev_nodes": [
-            "93689fb0dee04"
-        ],
-        "x_meters": -49.20021497465409,
-        "y_meters": 154.21509199230115,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "3932c58329e34",
         "net_node_id": null,
         "next_nodes": [
             "944275fe55f94"
         ],
         "prev_nodes": [
-            "cb4500a86dbb4"
+            "6e4df81b5cd94"
         ],
         "x_meters": 10.20112205112747,
         "y_meters": 125.51937727515647,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "502bb6ee965d4",
-        "net_node_id": "bff1d1c372554",
-        "next_nodes": [
-            "e200b6888a2c4"
-        ],
-        "prev_nodes": [
-            "00634f4daa0b4"
-        ],
-        "x_meters": -63.99072459790706,
-        "y_meters": -16.2384992052436,
         "removed": false
     },
     {
@@ -2617,7 +1364,7 @@
             "a4898764ea1e4"
         ],
         "prev_nodes": [
-            "d7d6a26fe1354"
+            "6777d3f7ea524"
         ],
         "x_meters": -58.60323632009042,
         "y_meters": 154.21509199230115,
@@ -2628,7 +1375,7 @@
         "id": "944275fe55f94",
         "net_node_id": null,
         "next_nodes": [
-            "eaaa682115b24"
+            "da49be1a1d314"
         ],
         "prev_nodes": [
             "3932c58329e34"
@@ -2645,7 +1392,7 @@
             "6ba825de7cec4"
         ],
         "prev_nodes": [
-            "502bb6ee965d4"
+            "bff1d1c372554"
         ],
         "x_meters": -63.99072459790706,
         "y_meters": -27.984579332481346,
@@ -2656,7 +1403,7 @@
         "id": "a4898764ea1e4",
         "net_node_id": null,
         "next_nodes": [
-            "19c6f59c3f854"
+            "b47168effc404"
         ],
         "prev_nodes": [
             "471fb58028074"
@@ -2667,24 +1414,10 @@
     },
     {
         "type": "street",
-        "id": "eaaa682115b24",
-        "net_node_id": "da49be1a1d314",
-        "next_nodes": [
-            "41088b1309e04"
-        ],
-        "prev_nodes": [
-            "944275fe55f94"
-        ],
-        "x_meters": 30.498387675205947,
-        "y_meters": 125.51937727515647,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "6ba825de7cec4",
         "net_node_id": null,
         "next_nodes": [
-            "238444bd36274"
+            "76fed1d92c664"
         ],
         "prev_nodes": [
             "e200b6888a2c4"
@@ -2695,44 +1428,16 @@
     },
     {
         "type": "street",
-        "id": "19c6f59c3f854",
-        "net_node_id": "b47168effc404",
-        "next_nodes": [
-            "1b73e2cc04aa4"
-        ],
-        "prev_nodes": [
-            "a4898764ea1e4"
-        ],
-        "x_meters": -93.75543474767474,
-        "y_meters": 154.21509199230115,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "41088b1309e04",
         "net_node_id": null,
         "next_nodes": [
             "d530555a862c4"
         ],
         "prev_nodes": [
-            "eaaa682115b24"
+            "da49be1a1d314"
         ],
         "x_meters": 45.20587088541208,
         "y_meters": 125.51937727515647,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "238444bd36274",
-        "net_node_id": "76fed1d92c664",
-        "next_nodes": [
-            "c6a1b044667c4"
-        ],
-        "prev_nodes": [
-            "6ba825de7cec4"
-        ],
-        "x_meters": -63.99072459790706,
-        "y_meters": -57.46917894265219,
         "removed": false
     },
     {
@@ -2743,7 +1448,7 @@
             "11ae487ea05e4"
         ],
         "prev_nodes": [
-            "19c6f59c3f854"
+            "b47168effc404"
         ],
         "x_meters": -93.75543474767477,
         "y_meters": 141.42910241217854,
@@ -2754,7 +1459,7 @@
         "id": "d530555a862c4",
         "net_node_id": null,
         "next_nodes": [
-            "140980e24a974"
+            "9d8497e9a12b4"
         ],
         "prev_nodes": [
             "41088b1309e04"
@@ -2771,7 +1476,7 @@
             "64724862cc534"
         ],
         "prev_nodes": [
-            "238444bd36274"
+            "76fed1d92c664"
         ],
         "x_meters": -63.99072459790706,
         "y_meters": -74.52704674997737,
@@ -2782,7 +1487,7 @@
         "id": "11ae487ea05e4",
         "net_node_id": null,
         "next_nodes": [
-            "4a49cce441394"
+            "af3422484ff74"
         ],
         "prev_nodes": [
             "1b73e2cc04aa4"
@@ -2793,28 +1498,13 @@
     },
     {
         "type": "street",
-        "id": "140980e24a974",
-        "net_node_id": "9d8497e9a12b4",
-        "next_nodes": [
-            "6943be5a859d4",
-            "3b2d6107473f4"
-        ],
-        "prev_nodes": [
-            "d530555a862c4"
-        ],
-        "x_meters": 78.176059037698,
-        "y_meters": 125.51937727515647,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "6943be5a859d4",
         "net_node_id": null,
         "next_nodes": [
             "5943569ecc724"
         ],
         "prev_nodes": [
-            "140980e24a974"
+            "9d8497e9a12b4"
         ],
         "x_meters": 78.176059037698,
         "y_meters": 104.37235188467263,
@@ -2825,7 +1515,7 @@
         "id": "64724862cc534",
         "net_node_id": null,
         "next_nodes": [
-            "1fac8eaa6fc54"
+            "12dedeaec01d4"
         ],
         "prev_nodes": [
             "c6a1b044667c4"
@@ -2836,28 +1526,13 @@
     },
     {
         "type": "street",
-        "id": "4a49cce441394",
-        "net_node_id": "af3422484ff74",
-        "next_nodes": [
-            "5e208be13c2c4",
-            "c73aa7ae49944"
-        ],
-        "prev_nodes": [
-            "11ae487ea05e4"
-        ],
-        "x_meters": -105.7160405186289,
-        "y_meters": 129.6170377437521,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "3b2d6107473f4",
         "net_node_id": null,
         "next_nodes": [
             "2fe7a07d96244"
         ],
         "prev_nodes": [
-            "140980e24a974"
+            "9d8497e9a12b4"
         ],
         "x_meters": 78.176059037698,
         "y_meters": 137.8052082485198,
@@ -2868,7 +1543,7 @@
         "id": "5943569ecc724",
         "net_node_id": null,
         "next_nodes": [
-            "215956324f164"
+            "f7e8d524bd8a4"
         ],
         "prev_nodes": [
             "6943be5a859d4"
@@ -2885,24 +1560,10 @@
             "e19d5fcf449b4"
         ],
         "prev_nodes": [
-            "4a49cce441394"
+            "af3422484ff74"
         ],
         "x_meters": -105.7160405186289,
         "y_meters": 113.43055523195815,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "1fac8eaa6fc54",
-        "net_node_id": "12dedeaec01d4",
-        "next_nodes": [
-            "61f7e439bc374"
-        ],
-        "prev_nodes": [
-            "64724862cc534"
-        ],
-        "x_meters": -63.99072459790706,
-        "y_meters": -101.72368872120542,
         "removed": false
     },
     {
@@ -2913,7 +1574,7 @@
             "6aaa0b8e94274"
         ],
         "prev_nodes": [
-            "4a49cce441394"
+            "af3422484ff74"
         ],
         "x_meters": -121.59356286332063,
         "y_meters": 129.61703774375218,
@@ -2924,7 +1585,7 @@
         "id": "2fe7a07d96244",
         "net_node_id": null,
         "next_nodes": [
-            "05901ac0dbd84"
+            "7988b6e8228d4"
         ],
         "prev_nodes": [
             "3b2d6107473f4"
@@ -2935,24 +1596,10 @@
     },
     {
         "type": "street",
-        "id": "215956324f164",
-        "net_node_id": "f7e8d524bd8a4",
-        "next_nodes": [
-            "ec434ba9debd4"
-        ],
-        "prev_nodes": [
-            "5943569ecc724"
-        ],
-        "x_meters": 78.176059037698,
-        "y_meters": 78.0852965774919,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "e19d5fcf449b4",
         "net_node_id": null,
         "next_nodes": [
-            "c9fb087e76304"
+            "e1fb74b8e13c4"
         ],
         "prev_nodes": [
             "5e208be13c2c4"
@@ -2969,7 +1616,7 @@
             "8f47efb11fdd4"
         ],
         "prev_nodes": [
-            "1fac8eaa6fc54"
+            "12dedeaec01d4"
         ],
         "x_meters": -63.99072459790706,
         "y_meters": -103.23558463387175,
@@ -2980,7 +1627,7 @@
         "id": "6aaa0b8e94274",
         "net_node_id": null,
         "next_nodes": [
-            "ed585cb01f034"
+            "c7dc88c68c074"
         ],
         "prev_nodes": [
             "c73aa7ae49944"
@@ -2991,27 +1638,13 @@
     },
     {
         "type": "street",
-        "id": "05901ac0dbd84",
-        "net_node_id": "7988b6e8228d4",
-        "next_nodes": [
-            "0188fe075fb94"
-        ],
-        "prev_nodes": [
-            "2fe7a07d96244"
-        ],
-        "x_meters": 78.176059037698,
-        "y_meters": 169.14921572451917,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "ec434ba9debd4",
         "net_node_id": null,
         "next_nodes": [
             "488f3598e2f24"
         ],
         "prev_nodes": [
-            "215956324f164"
+            "f7e8d524bd8a4"
         ],
         "x_meters": 78.176059037698,
         "y_meters": 71.01507726152458,
@@ -3019,24 +1652,10 @@
     },
     {
         "type": "street",
-        "id": "c9fb087e76304",
-        "net_node_id": "e1fb74b8e13c4",
-        "next_nodes": [
-            "4084adae64dd4"
-        ],
-        "prev_nodes": [
-            "e19d5fcf449b4"
-        ],
-        "x_meters": -105.7160405186289,
-        "y_meters": 86.30659074063809,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "8f47efb11fdd4",
         "net_node_id": null,
         "next_nodes": [
-            "60a46172eba34"
+            "a2bb8e9c0bb44"
         ],
         "prev_nodes": [
             "61f7e439bc374"
@@ -3047,27 +1666,13 @@
     },
     {
         "type": "street",
-        "id": "ed585cb01f034",
-        "net_node_id": "c7dc88c68c074",
-        "next_nodes": [
-            "9123ae387e2d4"
-        ],
-        "prev_nodes": [
-            "6aaa0b8e94274"
-        ],
-        "x_meters": -151.08215856902194,
-        "y_meters": 129.61703774375232,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "0188fe075fb94",
         "net_node_id": null,
         "next_nodes": [
             "f2fa4e4ef1454"
         ],
         "prev_nodes": [
-            "05901ac0dbd84"
+            "7988b6e8228d4"
         ],
         "x_meters": 78.176059037698,
         "y_meters": 183.27508512271785,
@@ -3078,7 +1683,7 @@
         "id": "488f3598e2f24",
         "net_node_id": null,
         "next_nodes": [
-            "79f3e52e82414"
+            "c4dc7fb32b984"
         ],
         "prev_nodes": [
             "ec434ba9debd4"
@@ -3095,24 +1700,10 @@
             "918a57b8d6014"
         ],
         "prev_nodes": [
-            "c9fb087e76304"
+            "e1fb74b8e13c4"
         ],
         "x_meters": -105.7160405186289,
         "y_meters": 71.84125616863109,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "60a46172eba34",
-        "net_node_id": "a2bb8e9c0bb44",
-        "next_nodes": [
-            "c6f7ece56a104"
-        ],
-        "prev_nodes": [
-            "8f47efb11fdd4"
-        ],
-        "x_meters": -63.99072459790707,
-        "y_meters": -144.91580812725863,
         "removed": false
     },
     {
@@ -3123,7 +1714,7 @@
             "b5059fc4fb2d4"
         ],
         "prev_nodes": [
-            "ed585cb01f034"
+            "c7dc88c68c074"
         ],
         "x_meters": -165.3265377683819,
         "y_meters": 129.61703774375238,
@@ -3134,7 +1725,7 @@
         "id": "f2fa4e4ef1454",
         "net_node_id": null,
         "next_nodes": [
-            "89cf2453a2ed4"
+            "1a9dcf7972244"
         ],
         "prev_nodes": [
             "0188fe075fb94"
@@ -3145,24 +1736,10 @@
     },
     {
         "type": "street",
-        "id": "79f3e52e82414",
-        "net_node_id": "c4dc7fb32b984",
-        "next_nodes": [
-            "0627d48e9c4c4"
-        ],
-        "prev_nodes": [
-            "488f3598e2f24"
-        ],
-        "x_meters": 78.176059037698,
-        "y_meters": 44.904527041720556,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "918a57b8d6014",
         "net_node_id": null,
         "next_nodes": [
-            "c9f5ceec0dfe4"
+            "2a4c14c1b9544"
         ],
         "prev_nodes": [
             "4084adae64dd4"
@@ -3179,7 +1756,7 @@
             "074d0cdbda734"
         ],
         "prev_nodes": [
-            "60a46172eba34"
+            "a2bb8e9c0bb44"
         ],
         "x_meters": -63.99072459790707,
         "y_meters": -152.53271479837247,
@@ -3190,7 +1767,7 @@
         "id": "b5059fc4fb2d4",
         "net_node_id": null,
         "next_nodes": [
-            "9f11ada0f1664"
+            "d5238b57d0fa4"
         ],
         "prev_nodes": [
             "9123ae387e2d4"
@@ -3201,27 +1778,13 @@
     },
     {
         "type": "street",
-        "id": "89cf2453a2ed4",
-        "net_node_id": "1a9dcf7972244",
-        "next_nodes": [
-            "dfa6d116ef164"
-        ],
-        "prev_nodes": [
-            "f2fa4e4ef1454"
-        ],
-        "x_meters": 78.176059037698,
-        "y_meters": 208.90397949323958,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "0627d48e9c4c4",
         "net_node_id": null,
         "next_nodes": [
             "44b4da2e4bdd4"
         ],
         "prev_nodes": [
-            "79f3e52e82414"
+            "c4dc7fb32b984"
         ],
         "x_meters": 78.176059037698,
         "y_meters": 30.43622665900702,
@@ -3229,24 +1792,10 @@
     },
     {
         "type": "street",
-        "id": "c9f5ceec0dfe4",
-        "net_node_id": "2a4c14c1b9544",
-        "next_nodes": [
-            "43d79fe2a4f94"
-        ],
-        "prev_nodes": [
-            "918a57b8d6014"
-        ],
-        "x_meters": -95.70046359918155,
-        "y_meters": 55.2419249314724,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "074d0cdbda734",
         "net_node_id": null,
         "next_nodes": [
-            "1eafa08a9ec94"
+            "8dfe2ab67a9c4"
         ],
         "prev_nodes": [
             "c6f7ece56a104"
@@ -3257,27 +1806,13 @@
     },
     {
         "type": "street",
-        "id": "9f11ada0f1664",
-        "net_node_id": "d5238b57d0fa4",
-        "next_nodes": [
-            "fad8903ca7b14"
-        ],
-        "prev_nodes": [
-            "b5059fc4fb2d4"
-        ],
-        "x_meters": -192.95464531619538,
-        "y_meters": 129.6170377437525,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "dfa6d116ef164",
         "net_node_id": null,
         "next_nodes": [
             "1e40c698b73e4"
         ],
         "prev_nodes": [
-            "89cf2453a2ed4"
+            "1a9dcf7972244"
         ],
         "x_meters": 78.176059037698,
         "y_meters": 221.4801615136363,
@@ -3288,7 +1823,7 @@
         "id": "44b4da2e4bdd4",
         "net_node_id": null,
         "next_nodes": [
-            "efef0d322c954"
+            "1d61693a7ef44"
         ],
         "prev_nodes": [
             "0627d48e9c4c4"
@@ -3305,24 +1840,10 @@
             "07b73cd039d54"
         ],
         "prev_nodes": [
-            "c9f5ceec0dfe4"
+            "2a4c14c1b9544"
         ],
         "x_meters": -95.70046359918155,
         "y_meters": 46.629401950813474,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "1eafa08a9ec94",
-        "net_node_id": "8dfe2ab67a9c4",
-        "next_nodes": [
-            "79d0566789e54"
-        ],
-        "prev_nodes": [
-            "074d0cdbda734"
-        ],
-        "x_meters": -63.990724597907075,
-        "y_meters": -192.0028174729552,
         "removed": false
     },
     {
@@ -3333,7 +1854,7 @@
             "7119c2eaecf84"
         ],
         "prev_nodes": [
-            "9f11ada0f1664"
+            "d5238b57d0fa4"
         ],
         "x_meters": -215.64896973479844,
         "y_meters": 129.6170377437526,
@@ -3344,7 +1865,7 @@
         "id": "1e40c698b73e4",
         "net_node_id": null,
         "next_nodes": [
-            "e739229aa39e4"
+            "586fe506d5a64"
         ],
         "prev_nodes": [
             "dfa6d116ef164"
@@ -3355,22 +1876,10 @@
     },
     {
         "type": "street",
-        "id": "efef0d322c954",
-        "net_node_id": "1d61693a7ef44",
-        "next_nodes": [],
-        "prev_nodes": [
-            "44b4da2e4bdd4"
-        ],
-        "x_meters": 78.176059037698,
-        "y_meters": 7.033412127032406,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "07b73cd039d54",
         "net_node_id": null,
         "next_nodes": [
-            "2aa4b3d790944"
+            "5ea068e563b64"
         ],
         "prev_nodes": [
             "43d79fe2a4f94"
@@ -3387,7 +1896,7 @@
             "2c1d9fbc44fd4"
         ],
         "prev_nodes": [
-            "1eafa08a9ec94"
+            "8dfe2ab67a9c4"
         ],
         "x_meters": -63.990724597907075,
         "y_meters": -205.0176185379466,
@@ -3398,7 +1907,7 @@
         "id": "7119c2eaecf84",
         "net_node_id": null,
         "next_nodes": [
-            "36931c282cfb4"
+            "6cd85b4898974"
         ],
         "prev_nodes": [
             "fad8903ca7b14"
@@ -3409,38 +1918,10 @@
     },
     {
         "type": "street",
-        "id": "e739229aa39e4",
-        "net_node_id": "586fe506d5a64",
-        "next_nodes": [
-            "9ce927ffc8b54"
-        ],
-        "prev_nodes": [
-            "1e40c698b73e4"
-        ],
-        "x_meters": 78.176059037698,
-        "y_meters": 250.76559875790514,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "2aa4b3d790944",
-        "net_node_id": "5ea068e563b64",
-        "next_nodes": [
-            "d641afeb467d4"
-        ],
-        "prev_nodes": [
-            "07b73cd039d54"
-        ],
-        "x_meters": -95.70046359918155,
-        "y_meters": 17.46027969504852,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "2c1d9fbc44fd4",
         "net_node_id": null,
         "next_nodes": [
-            "c95f80a9f1d34"
+            "a97faf0ca6174"
         ],
         "prev_nodes": [
             "79d0566789e54"
@@ -3451,27 +1932,13 @@
     },
     {
         "type": "street",
-        "id": "36931c282cfb4",
-        "net_node_id": "6cd85b4898974",
-        "next_nodes": [
-            "63f630f6e9874"
-        ],
-        "prev_nodes": [
-            "7119c2eaecf84"
-        ],
-        "x_meters": -240.70406538595614,
-        "y_meters": 129.61703774375272,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "9ce927ffc8b54",
         "net_node_id": null,
         "next_nodes": [
             "a287b9421f484"
         ],
         "prev_nodes": [
-            "e739229aa39e4"
+            "586fe506d5a64"
         ],
         "x_meters": 78.176059037698,
         "y_meters": 258.7122812085463,
@@ -3485,24 +1952,10 @@
             "936ffbbc299a4"
         ],
         "prev_nodes": [
-            "2aa4b3d790944"
+            "5ea068e563b64"
         ],
         "x_meters": -95.70046359918155,
         "y_meters": 3.356560277715829,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "c95f80a9f1d34",
-        "net_node_id": "a97faf0ca6174",
-        "next_nodes": [
-            "11c08b310a1d4"
-        ],
-        "prev_nodes": [
-            "2c1d9fbc44fd4"
-        ],
-        "x_meters": -63.99072459790708,
-        "y_meters": -232.44029856646603,
         "removed": false
     },
     {
@@ -3513,7 +1966,7 @@
             "b5858e30abda4"
         ],
         "prev_nodes": [
-            "36931c282cfb4"
+            "6cd85b4898974"
         ],
         "x_meters": -252.02612234864023,
         "y_meters": 129.61703774375277,
@@ -3524,7 +1977,7 @@
         "id": "a287b9421f484",
         "net_node_id": null,
         "next_nodes": [
-            "97385d2fb2964"
+            "c43738a996254"
         ],
         "prev_nodes": [
             "9ce927ffc8b54"
@@ -3538,7 +1991,7 @@
         "id": "936ffbbc299a4",
         "net_node_id": null,
         "next_nodes": [
-            "d1060f2130d54"
+            "efb046836ed74"
         ],
         "prev_nodes": [
             "d641afeb467d4"
@@ -3555,7 +2008,7 @@
             "06c246c545894"
         ],
         "prev_nodes": [
-            "c95f80a9f1d34"
+            "a97faf0ca6174"
         ],
         "x_meters": -63.99072459790708,
         "y_meters": -245.45731010298735,
@@ -3566,7 +2019,7 @@
         "id": "b5858e30abda4",
         "net_node_id": null,
         "next_nodes": [
-            "2757c6c9e1454"
+            "a01326079bd34"
         ],
         "prev_nodes": [
             "63f630f6e9874"
@@ -3577,36 +2030,10 @@
     },
     {
         "type": "street",
-        "id": "97385d2fb2964",
-        "net_node_id": "c43738a996254",
-        "next_nodes": [],
-        "prev_nodes": [
-            "a287b9421f484"
-        ],
-        "x_meters": 78.176059037698,
-        "y_meters": 286.2019780056287,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "d1060f2130d54",
-        "net_node_id": "efb046836ed74",
-        "next_nodes": [
-            "51dcfba7805a4"
-        ],
-        "prev_nodes": [
-            "936ffbbc299a4"
-        ],
-        "x_meters": -95.70046359918155,
-        "y_meters": -23.01747224348261,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "06c246c545894",
         "net_node_id": null,
         "next_nodes": [
-            "5dfdcf210c2d4"
+            "c69880e9fe044"
         ],
         "prev_nodes": [
             "11c08b310a1d4"
@@ -3617,42 +2044,16 @@
     },
     {
         "type": "street",
-        "id": "2757c6c9e1454",
-        "net_node_id": "a01326079bd34",
-        "next_nodes": [
-            "0125392c35284"
-        ],
-        "prev_nodes": [
-            "b5858e30abda4"
-        ],
-        "x_meters": -272.7081212558525,
-        "y_meters": 129.6170377437529,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "51dcfba7805a4",
         "net_node_id": null,
         "next_nodes": [
             "167b951043c24"
         ],
         "prev_nodes": [
-            "d1060f2130d54"
+            "efb046836ed74"
         ],
         "x_meters": -95.70046359918156,
         "y_meters": -39.771486755620764,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "5dfdcf210c2d4",
-        "net_node_id": "c69880e9fe044",
-        "next_nodes": [],
-        "prev_nodes": [
-            "06c246c545894"
-        ],
-        "x_meters": -63.99072459790708,
-        "y_meters": -265.8405323901283,
         "removed": false
     },
     {
@@ -3663,7 +2064,7 @@
             "f16822ea9eea4"
         ],
         "prev_nodes": [
-            "2757c6c9e1454"
+            "a01326079bd34"
         ],
         "x_meters": -286.30355229229485,
         "y_meters": 129.61703774375295,
@@ -3674,7 +2075,7 @@
         "id": "167b951043c24",
         "net_node_id": null,
         "next_nodes": [
-            "6c02acc9266c4"
+            "814d059f0f244"
         ],
         "prev_nodes": [
             "51dcfba7805a4"
@@ -3688,7 +2089,7 @@
         "id": "f16822ea9eea4",
         "net_node_id": null,
         "next_nodes": [
-            "95c4a44e50f74"
+            "3d049d98acbd4"
         ],
         "prev_nodes": [
             "0125392c35284"
@@ -3699,41 +2100,13 @@
     },
     {
         "type": "street",
-        "id": "6c02acc9266c4",
-        "net_node_id": "814d059f0f244",
-        "next_nodes": [
-            "c2dee41f40e44"
-        ],
-        "prev_nodes": [
-            "167b951043c24"
-        ],
-        "x_meters": -95.70046359918156,
-        "y_meters": -65.03336004109622,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "95c4a44e50f74",
-        "net_node_id": "3d049d98acbd4",
-        "next_nodes": [
-            "446a7c5f0a074"
-        ],
-        "prev_nodes": [
-            "f16822ea9eea4"
-        ],
-        "x_meters": -312.289677957128,
-        "y_meters": 129.61703774375306,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "c2dee41f40e44",
         "net_node_id": null,
         "next_nodes": [
             "e9c9356702954"
         ],
         "prev_nodes": [
-            "6c02acc9266c4"
+            "814d059f0f244"
         ],
         "x_meters": -95.70046359918156,
         "y_meters": -76.34534590583203,
@@ -3747,7 +2120,7 @@
             "edbd8ffc9fed4"
         ],
         "prev_nodes": [
-            "95c4a44e50f74"
+            "3d049d98acbd4"
         ],
         "x_meters": -322.40368352040224,
         "y_meters": 129.61703774375312,
@@ -3758,7 +2131,7 @@
         "id": "e9c9356702954",
         "net_node_id": null,
         "next_nodes": [
-            "3dd063b086db4"
+            "37057ef264784"
         ],
         "prev_nodes": [
             "c2dee41f40e44"
@@ -3772,7 +2145,7 @@
         "id": "edbd8ffc9fed4",
         "net_node_id": null,
         "next_nodes": [
-            "99805905440a4"
+            "5bf40955dae44"
         ],
         "prev_nodes": [
             "446a7c5f0a074"
@@ -3783,41 +2156,13 @@
     },
     {
         "type": "street",
-        "id": "3dd063b086db4",
-        "net_node_id": "37057ef264784",
-        "next_nodes": [
-            "4ca848511e454"
-        ],
-        "prev_nodes": [
-            "e9c9356702954"
-        ],
-        "x_meters": -95.70046359918156,
-        "y_meters": -103.66558874874967,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "99805905440a4",
-        "net_node_id": "5bf40955dae44",
-        "next_nodes": [
-            "b27bb19952b44"
-        ],
-        "prev_nodes": [
-            "edbd8ffc9fed4"
-        ],
-        "x_meters": -347.99629899952055,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
         "id": "4ca848511e454",
         "net_node_id": null,
         "next_nodes": [
             "ec8194474b984"
         ],
         "prev_nodes": [
-            "3dd063b086db4"
+            "37057ef264784"
         ],
         "x_meters": -95.70046359918156,
         "y_meters": -116.94385899078412,
@@ -3831,7 +2176,7 @@
             "c4d20f97cd4c4"
         ],
         "prev_nodes": [
-            "99805905440a4"
+            "5bf40955dae44"
         ],
         "x_meters": -358.9212856265802,
         "y_meters": 129.61703774375323,
@@ -3842,7 +2187,7 @@
         "id": "ec8194474b984",
         "net_node_id": null,
         "next_nodes": [
-            "9d6056979d7e4"
+            "288302d4fc7f4"
         ],
         "prev_nodes": [
             "4ca848511e454"
@@ -3856,40 +2201,12 @@
         "id": "c4d20f97cd4c4",
         "net_node_id": null,
         "next_nodes": [
-            "d6ceae114bf04"
+            "e5fb2c3717a74"
         ],
         "prev_nodes": [
             "b27bb19952b44"
         ],
         "x_meters": -370.0887305590163,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "9d6056979d7e4",
-        "net_node_id": "288302d4fc7f4",
-        "next_nodes": [
-            "1f5c67dac1b84"
-        ],
-        "prev_nodes": [
-            "ec8194474b984"
-        ],
-        "x_meters": -95.70046359918156,
-        "y_meters": -143.74556331209956,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "d6ceae114bf04",
-        "net_node_id": "e5fb2c3717a74",
-        "next_nodes": [
-            "716ea38d84e94"
-        ],
-        "prev_nodes": [
-            "c4d20f97cd4c4"
-        ],
-        "x_meters": -385.1227179633132,
         "y_meters": 129.61703774375323,
         "removed": false
     },
@@ -3901,7 +2218,7 @@
             "234b8ced4ec84"
         ],
         "prev_nodes": [
-            "9d6056979d7e4"
+            "288302d4fc7f4"
         ],
         "x_meters": -95.70046359918156,
         "y_meters": -158.33122868560292,
@@ -3915,7 +2232,7 @@
             "b5944d97db404"
         ],
         "prev_nodes": [
-            "d6ceae114bf04"
+            "e5fb2c3717a74"
         ],
         "x_meters": -395.13545395395283,
         "y_meters": 129.61703774375323,
@@ -3926,7 +2243,7 @@
         "id": "234b8ced4ec84",
         "net_node_id": null,
         "next_nodes": [
-            "4d26ae8e96b74"
+            "0af7cda6f9914"
         ],
         "prev_nodes": [
             "1f5c67dac1b84"
@@ -3940,38 +2257,12 @@
         "id": "b5944d97db404",
         "net_node_id": null,
         "next_nodes": [
-            "3535ec6a58244"
+            "fc21d33cd55e4"
         ],
         "prev_nodes": [
             "716ea38d84e94"
         ],
         "x_meters": -407.37891129215404,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "4d26ae8e96b74",
-        "net_node_id": "0af7cda6f9914",
-        "next_nodes": [],
-        "prev_nodes": [
-            "234b8ced4ec84"
-        ],
-        "x_meters": -95.70046359918156,
-        "y_meters": -181.17669962238955,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "3535ec6a58244",
-        "net_node_id": "fc21d33cd55e4",
-        "next_nodes": [
-            "648697c318f14"
-        ],
-        "prev_nodes": [
-            "b5944d97db404"
-        ],
-        "x_meters": -421.0655796424449,
         "y_meters": 129.61703774375323,
         "removed": false
     },
@@ -3983,7 +2274,7 @@
             "32cf1485a8e84"
         ],
         "prev_nodes": [
-            "3535ec6a58244"
+            "fc21d33cd55e4"
         ],
         "x_meters": -433.1570120358893,
         "y_meters": 129.61703774375323,
@@ -3994,26 +2285,12 @@
         "id": "32cf1485a8e84",
         "net_node_id": null,
         "next_nodes": [
-            "19b1c56d0c244"
+            "65c76e77aeec4"
         ],
         "prev_nodes": [
             "648697c318f14"
         ],
         "x_meters": -445.3851957789833,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "19b1c56d0c244",
-        "net_node_id": "65c76e77aeec4",
-        "next_nodes": [
-            "8b187b854d5c4"
-        ],
-        "prev_nodes": [
-            "32cf1485a8e84"
-        ],
-        "x_meters": -455.532233551657,
         "y_meters": 129.61703774375323,
         "removed": false
     },
@@ -4025,7 +2302,7 @@
             "7e25981549604"
         ],
         "prev_nodes": [
-            "19b1c56d0c244"
+            "65c76e77aeec4"
         ],
         "x_meters": -474.36211225621093,
         "y_meters": 129.61703774375323,
@@ -4036,26 +2313,12 @@
         "id": "7e25981549604",
         "net_node_id": null,
         "next_nodes": [
-            "1ce6ec81e2344"
+            "7265949b45c94"
         ],
         "prev_nodes": [
             "8b187b854d5c4"
         ],
         "x_meters": -483.70978186837135,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "1ce6ec81e2344",
-        "net_node_id": "7265949b45c94",
-        "next_nodes": [
-            "e485d75584304"
-        ],
-        "prev_nodes": [
-            "7e25981549604"
-        ],
-        "x_meters": -500.14201665311236,
         "y_meters": 129.61703774375323,
         "removed": false
     },
@@ -4067,7 +2330,7 @@
             "3ce44562cafb4"
         ],
         "prev_nodes": [
-            "1ce6ec81e2344"
+            "7265949b45c94"
         ],
         "x_meters": -511.271868756712,
         "y_meters": 129.61703774375323,
@@ -4078,26 +2341,12 @@
         "id": "3ce44562cafb4",
         "net_node_id": null,
         "next_nodes": [
-            "e24f9541fd3c4"
+            "520bd20aec374"
         ],
         "prev_nodes": [
             "e485d75584304"
         ],
         "x_meters": -524.6472741361525,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "e24f9541fd3c4",
-        "net_node_id": "520bd20aec374",
-        "next_nodes": [
-            "e24c5cf877904"
-        ],
-        "prev_nodes": [
-            "3ce44562cafb4"
-        ],
-        "x_meters": -532.0937227238869,
         "y_meters": 129.61703774375323,
         "removed": false
     },
@@ -4109,7 +2358,7 @@
             "056cf4e00d9f4"
         ],
         "prev_nodes": [
-            "e24f9541fd3c4"
+            "520bd20aec374"
         ],
         "x_meters": -546.6466503036391,
         "y_meters": 129.61703774375323,
@@ -4120,26 +2369,12 @@
         "id": "056cf4e00d9f4",
         "net_node_id": null,
         "next_nodes": [
-            "a25bbcbf21ba4"
+            "f3a23e0c935e4"
         ],
         "prev_nodes": [
             "e24c5cf877904"
         ],
         "x_meters": -556.8995899183599,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "a25bbcbf21ba4",
-        "net_node_id": "f3a23e0c935e4",
-        "next_nodes": [
-            "d511bb9dc5634"
-        ],
-        "prev_nodes": [
-            "056cf4e00d9f4"
-        ],
-        "x_meters": -569.303492300452,
         "y_meters": 129.61703774375323,
         "removed": false
     },
@@ -4151,7 +2386,7 @@
             "d8df1758efbd4"
         ],
         "prev_nodes": [
-            "a25bbcbf21ba4"
+            "f3a23e0c935e4"
         ],
         "x_meters": -586.8604355552729,
         "y_meters": 129.61703774375323,
@@ -4162,26 +2397,12 @@
         "id": "d8df1758efbd4",
         "net_node_id": null,
         "next_nodes": [
-            "6a96ea0b76054"
+            "ca09aa1c01874"
         ],
         "prev_nodes": [
             "d511bb9dc5634"
         ],
         "x_meters": -595.2266029427315,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "6a96ea0b76054",
-        "net_node_id": "ca09aa1c01874",
-        "next_nodes": [
-            "4ce038c826884"
-        ],
-        "prev_nodes": [
-            "d8df1758efbd4"
-        ],
-        "x_meters": -609.0075808641886,
         "y_meters": 129.61703774375323,
         "removed": false
     },
@@ -4193,7 +2414,7 @@
             "4d65cacebc0c4"
         ],
         "prev_nodes": [
-            "6a96ea0b76054"
+            "ca09aa1c01874"
         ],
         "x_meters": -619.0884400705133,
         "y_meters": 129.61703774375323,
@@ -4204,26 +2425,12 @@
         "id": "4d65cacebc0c4",
         "net_node_id": null,
         "next_nodes": [
-            "12591303d2294"
+            "8546dbd1f4814"
         ],
         "prev_nodes": [
             "4ce038c826884"
         ],
         "x_meters": -628.5483587594073,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "12591303d2294",
-        "net_node_id": "8546dbd1f4814",
-        "next_nodes": [
-            "1b7b6fe61cf94"
-        ],
-        "prev_nodes": [
-            "4d65cacebc0c4"
-        ],
-        "x_meters": -638.935433248735,
         "y_meters": 129.61703774375323,
         "removed": false
     },
@@ -4235,7 +2442,7 @@
             "e0c87d4c17104"
         ],
         "prev_nodes": [
-            "12591303d2294"
+            "8546dbd1f4814"
         ],
         "x_meters": -659.0959177199228,
         "y_meters": 129.61703774375323,
@@ -4246,26 +2453,12 @@
         "id": "e0c87d4c17104",
         "net_node_id": null,
         "next_nodes": [
-            "f9c9e791631d4"
+            "edd6220773084"
         ],
         "prev_nodes": [
             "1b7b6fe61cf94"
         ],
         "x_meters": -674.8571747851163,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "f9c9e791631d4",
-        "net_node_id": "edd6220773084",
-        "next_nodes": [
-            "c9f648bdc43e4"
-        ],
-        "prev_nodes": [
-            "e0c87d4c17104"
-        ],
-        "x_meters": -688.0760455410345,
         "y_meters": 129.61703774375323,
         "removed": false
     },
@@ -4277,7 +2470,7 @@
             "39a93b98e0c64"
         ],
         "prev_nodes": [
-            "f9c9e791631d4"
+            "edd6220773084"
         ],
         "x_meters": -700.8691598329361,
         "y_meters": 129.61703774375323,
@@ -4288,26 +2481,12 @@
         "id": "39a93b98e0c64",
         "net_node_id": null,
         "next_nodes": [
-            "13df7fbb06a44"
+            "dc1df85e2dd64"
         ],
         "prev_nodes": [
             "c9f648bdc43e4"
         ],
         "x_meters": -714.1392660698716,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "13df7fbb06a44",
-        "net_node_id": "dc1df85e2dd64",
-        "next_nodes": [
-            "fd0784b143744"
-        ],
-        "prev_nodes": [
-            "39a93b98e0c64"
-        ],
-        "x_meters": -727.3587685684639,
         "y_meters": 129.61703774375323,
         "removed": false
     },
@@ -4319,7 +2498,7 @@
             "36b98314ed194"
         ],
         "prev_nodes": [
-            "13df7fbb06a44"
+            "dc1df85e2dd64"
         ],
         "x_meters": -739.6388831129701,
         "y_meters": 129.61703774375323,
@@ -4330,24 +2509,12 @@
         "id": "36b98314ed194",
         "net_node_id": null,
         "next_nodes": [
-            "01448c49f8034"
+            "54ac4412fe094"
         ],
         "prev_nodes": [
             "fd0784b143744"
         ],
         "x_meters": -750.4702187271528,
-        "y_meters": 129.61703774375323,
-        "removed": false
-    },
-    {
-        "type": "street",
-        "id": "01448c49f8034",
-        "net_node_id": "54ac4412fe094",
-        "next_nodes": [],
-        "prev_nodes": [
-            "36b98314ed194"
-        ],
-        "x_meters": -766.1329302215722,
         "y_meters": 129.61703774375323,
         "removed": false
     }

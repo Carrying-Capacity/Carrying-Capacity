@@ -13,6 +13,17 @@ export const SearchDropdown = ({ nodes, onSelect }) => {
         const isInComparison = comparisonIdSet.has(node.id);
         const isHouse = node.type === "house";
         const NodeIcon = getNodeIcon(node.type);
+        const transformerNumber = node.transformer_number || node.transformer;
+        const displayName = node.type === 'transformer'
+          ? `Transformer ${transformerNumber ?? ''}`.trim()
+          : node.type === 'feeder'
+            ? 'Feeder'
+            : (node.label || `House ${node.HouseID || node.house_number || ''}`.trim());
+        
+        // Get phase information for houses
+        const phaseInfo = node.type === 'house' && node.predicted_phase 
+          ? (Array.isArray(node.predicted_phase) ? node.predicted_phase.join('') : node.predicted_phase)
+          : null;
         
         return (
           <div
@@ -24,11 +35,14 @@ export const SearchDropdown = ({ nodes, onSelect }) => {
               <NodeIcon size={18} />
             </div>
             <div className="search-item-info">
-              <div className="search-item-name">{node.label || node.id}</div>
+              <div className="search-item-name">{displayName}</div>
               <div className="search-item-meta">
-                <span className="search-item-type">{node.type}</span>
-                <span className="search-item-divider">•</span>
-                <span className="search-item-id">ID: {node.id}</span>
+                
+                {node.type === 'house' && phaseInfo && (
+                  <>
+                    <span className="search-item-type">Phase {phaseInfo}</span>
+                  </>
+                )}
               </div>
             </div>
             

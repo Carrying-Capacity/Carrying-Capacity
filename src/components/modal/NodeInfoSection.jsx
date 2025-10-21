@@ -5,6 +5,7 @@ import { getPhaseColor, PHASE_COLORS } from "../../constants/index.js";
 
 export const NodeInfoSection = memo(({ node }) => {
   const isHouse = isHouseNode(node);
+  const isTransformer = node?.type === 'transformer';
 
   const NodeTypeIcon = node?.type === 'house' ? Home : node?.type === 'transformer' ? Zap : NetworkIcon;
 
@@ -21,6 +22,18 @@ export const NodeInfoSection = memo(({ node }) => {
           </span>
         </div>
       </div>
+      
+      {isTransformer && node?.transformer_number && (
+        <div className="mb-4">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+              <Zap size={16} className="flex-shrink-0" />
+              <span>Transformer Number</span>
+            </div>
+            <div className="text-base font-semibold text-slate-900 pl-6">{node.transformer_number}</div>
+          </div>
+        </div>
+      )}
       
       {isHouse && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -101,7 +114,7 @@ export const NodeInfoSection = memo(({ node }) => {
             </div>
             <div className="pl-6">
               <span className="inline-block px-3 py-1.5 bg-slate-500/5 border border-slate-500/15 rounded-md font-mono text-sm font-semibold text-slate-900">
-                {node?.parent ?? "—"}
+                {node?.parent_transformer ? `Transformer ${node.parent_transformer}` : node?.parent ?? "—"}
               </span>
             </div>
           </div>

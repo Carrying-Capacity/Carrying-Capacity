@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, lazy, Suspense } from "react";
 import { useModalPosition } from "../hooks/useControlPanelHeight.js";
 import { useComparison } from "../context/ComparisonContext.jsx";
 import { MODAL_STYLES } from "../constants/index.js";
@@ -6,8 +6,8 @@ import { isHouse, isTransformer } from "../utils/nodeUtils.js";
 import { ModalHeader } from "./modal/ModalHeader.jsx";
 import { NodeInfoSection } from "./modal/NodeInfoSection.jsx";
 import { ComparisonSection } from "./modal/ComparisonSection.jsx";
-import { HouseEnergyViz } from "./modal/HouseEnergyViz.jsx";
-import { TransformerViz } from "./modal/TransformerViz.jsx";
+const HouseEnergyViz = lazy(() => import('./modal/HouseEnergyViz.jsx').then(m => ({ default: m.HouseEnergyViz })));
+const TransformerViz = lazy(() => import('./modal/TransformerViz.jsx').then(m => ({ default: m.TransformerViz })));
 import { ComparisonTimeSeriesViz } from "./modal/ComparisonTimeSeriesViz.jsx";
 import "./InfoModal.css";
 
@@ -119,8 +119,10 @@ const InfoModal = memo(({ node, onClose, isComparison = false, onFullscreenChang
                 {!isComparison && node && (
                 <div>
                     <NodeInfoSection node={node} />
-                    {nodeIsTransformer && <TransformerViz node={node} />}
-                    {nodeIsHouse && <HouseEnergyViz node={node} />}
+                    <Suspense fallback={<div>Loading visualizations…</div>}>
+                        {nodeIsTransformer && <TransformerViz node={node} />}
+                        {nodeIsHouse && <HouseEnergyViz node={node} />}
+                    </Suspense>
                 </div>
                 )}
             </div>

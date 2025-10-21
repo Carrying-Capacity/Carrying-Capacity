@@ -20,7 +20,8 @@
         "prev_nodes": [],
         "prev_node_distance": 44.476408385497216,
         "x_meters": 44.476408385497216,
-        "y_meters": 0.0
+        "y_meters": 0.0,
+        "transformer_number": 1
     },
     {
         "type": "house",
@@ -40,6 +41,7 @@
             "B"
         ],
         "solar": false,
+        "parent_transformer": 1,
         "house_number": 1
     },
     {
@@ -706,7 +708,8 @@
             "A"
         ],
         "solar": false,
-        "house_number": 36
+        "house_number": 36,
+        "parent_transformer": 1
     },
     {
         "type": "house",

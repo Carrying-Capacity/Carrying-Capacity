@@ -87,6 +87,9 @@ const TransformerGraphWrapperContent = () => {
         const lowerTerm = searchTerm.toLowerCase();
         return nodes
             .filter(n => {
+                // Exclude streets from search results
+                if (n.type === 'street') return false;
+                
                 const label = String(n.label || n.id).toLowerCase();
                 return label.includes(lowerTerm) || (n.type || '').toLowerCase().includes(lowerTerm);
             })
@@ -129,6 +132,10 @@ const TransformerGraphWrapperContent = () => {
     useClickOutside([searchContainerRef], handleSearchClickOutside);
     useClickOutside([comparisonDropdownRef], handleComparisonClickOutside);
 
+    const modalOpen = Boolean(selectedNode) || showComparison;
+    // Reserve space for the right-side modal so the graph doesn't render under it
+    const rightInset = (!isMobile && modalOpen && !isModalFullscreen) ? 520 : 0; // ~480px modal + 20px gutters
+
     return (
         <div className="transformer-wrapper-modern">
             <div className="modern-control-panel">
@@ -148,19 +155,24 @@ const TransformerGraphWrapperContent = () => {
                             >
                                 <option value="">Navigate to node...</option>
                                 <optgroup label="Feeders">
-                                    {feederNodes.map((t) => (
-                                        <option key={t.id} value={t.id}>
-                                            {t.name || `Feeder ${t.id}`}
-                                        </option>
-                                    ))}
+                                    {feederNodes.map((t) => {
+                                        const feederLabel = t.name || t.label || t.feeder_number || t.id;
+                                        return (
+                                            <option key={t.id} value={t.id}>
+                                                {`Feeder - ${feederLabel}`}
+                                            </option>
+                                        );
+                                    })}
                                 </optgroup>
                                 <optgroup label="Transformers">
-                                    {transformerNodes.map((t) => (
-                                        <option key={t.id} value={t.id}>
-                                            {t.name || `Transformer ${t.id}`}
-                                        </option>
-                                    ))}
-                                </optgroup>
+                                    {transformerNodes.map((t) => {
+                                        const transformerNumber = t.transformer_number || t.transformer || t.id;
+                                        return (
+                                            <option key={t.id} value={t.id}>
+                                                Transformer {transformerNumber}
+                                            </option>
+                                        );
+                                    })}                                </optgroup>
                             </select>
                         </div>
 
@@ -265,7 +277,7 @@ const TransformerGraphWrapperContent = () => {
                 position: 'fixed',
                 top: `${graphTopOffset}px`,
                 left: 0,
-                right: 0,
+                right: `${rightInset}px`,
                 bottom: 0,
                 overflow: 'hidden',
                 background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)'
@@ -274,6 +286,7 @@ const TransformerGraphWrapperContent = () => {
                     data={data}
                     focusNode={focusNode}
                     onNodeClick={handleNodeClick}
+                    isMobile={isMobile}
                 />
                 <Suspense fallback={null}>
                     <InfoModal 

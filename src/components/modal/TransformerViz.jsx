@@ -1,10 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { PhasePieChart, MonthlyPhaseBarChart } from "../EnergyCharts";
 import { useTransformerData } from "../../hooks/useTransformerData.js";
 import { collectDownstreamNodes } from "../../utils/graphUtils.js";
 import { MONTH_OPTIONS } from "../../constants/index.js";
 import { fetchMultipleHousesData } from "../../utils/dataFetching.js";
 import { DataStateWrapper } from "../shared/StateComponents.jsx";
+import { normalizePhase } from "../../utils/stringUtils.js";
+
+// Determine which phases a house belongs to. Supports single-phase and three-phase encodings.
+const getHousePhases = (predictedPhase) => {
+    if (!predictedPhase) return [];
+    // Array format: treat length > 1 as three-phase; otherwise use first normalized
+    if (Array.isArray(predictedPhase)) {
+        if (predictedPhase.length > 1) return ['A', 'B', 'C'];
+        const p = normalizePhase(predictedPhase);
+        return p ? [p] : [];
+    }
+    // String format: multi-character like "BAC" implies three-phase.
+    const s = predictedPhase.toString().trim().toUpperCase();
+    if (!s) return [];
+    if (s.length === 1) {
+        const p = normalizePhase(s);
+        return p ? [p] : [];
+    }
+    // Deduplicate to phases present; if it contains multiple unique A/B/C, treat as all three
+    const set = new Set([...s].filter(ch => ch === 'A' || ch === 'B' || ch === 'C'));
+    if (set.size > 1) return ['A', 'B', 'C'];
+    const only = [...set][0];
+    return only ? [only] : [];
+};
 
 export const TransformerViz = ({ node }) => {
     const [transformerChartMode, setTransformerChartMode] = useState('houses');
@@ -23,25 +47,60 @@ export const TransformerViz = ({ node }) => {
             return;
         }
         
-        const start = graphData.nodes.find(n => n.id === node.id);
-        if (!start) return;
+        let cancelled = false;
         
-        const dsNodes = collectDownstreamNodes(graphData, start);
-        const houses = dsNodes
-            .filter(n => n.type === 'house')
-            .sort((a, b) => String(a.HouseID).localeCompare(String(b.HouseID)));
+        const loadHouses = async () => {
+            // If node has transformer_number, find houses by matching transformer number locally
+            if (node.transformer_number) {
+                const txNum = String(node.transformer_number);
+                const houses = graphData.nodes
+                    .filter(n => n.type === 'house' && (
+                        String(n.transformer_number ?? n.transformer ?? n.parent) === txNum
+                    ))
+                    .sort((a, b) => String(a.HouseID).localeCompare(String(b.HouseID)));
 
-        setDownstreamHouses(houses);
+                if (cancelled) return;
+                setDownstreamHouses(houses);
 
-        const counts = houses.reduce((acc, h) => {
-            const phase = h.predicted_phase;
-            if (phase === 'A' || phase === 'B' || phase === 'C') {
-                acc[phase] = (acc[phase] || 0) + 1;
+                const counts = houses.reduce((acc, h) => {
+                    const phases = getHousePhases(h.predicted_phase);
+                    phases.forEach(p => {
+                        if (p === 'A' || p === 'B' || p === 'C') {
+                            acc[p] = (acc[p] || 0) + 1;
+                        }
+                    });
+                    return acc;
+                }, { A: 0, B: 0, C: 0 });
+
+                setPhaseHouseCounts(counts);
+            } else {
+                // Fallback to graph-based downstream collection
+                const start = graphData.nodes.find(n => n.id === node.id);
+                if (!start) return;
+                
+                const dsNodes = collectDownstreamNodes(graphData, start);
+                const houses = dsNodes
+                    .filter(n => n.type === 'house')
+                    .sort((a, b) => String(a.HouseID).localeCompare(String(b.HouseID)));
+
+                setDownstreamHouses(houses);
+
+                const counts = houses.reduce((acc, h) => {
+                    const phases = getHousePhases(h.predicted_phase);
+                    phases.forEach(p => {
+                        if (p === 'A' || p === 'B' || p === 'C') {
+                            acc[p] = (acc[p] || 0) + 1;
+                        }
+                    });
+                    return acc;
+                }, { A: 0, B: 0, C: 0 });
+                
+                setPhaseHouseCounts(counts);
             }
-            return acc;
-        }, { A: 0, B: 0, C: 0 });
+        };
         
-        setPhaseHouseCounts(counts);
+        loadHouses();
+        return () => { cancelled = true; };
     }, [graphData, node]);
 
     useEffect(() => {
@@ -53,7 +112,10 @@ export const TransformerViz = ({ node }) => {
         let cancelled = false;
         
         const fetchPower = async () => {
-            const houseIds = downstreamHouses.map(h => h.HouseID).filter(Boolean);
+            const houseIds = downstreamHouses
+                .map(h => h.HouseID)
+                .filter(Boolean)
+                .map(id => Number(id) || id); // ensure numeric where possible
             if (!houseIds.length) return;
             
             setPowerLoading(true);
@@ -74,9 +136,12 @@ export const TransformerViz = ({ node }) => {
             }
             
             if (!cancelled) {
-                const phaseByHouse = {};
+                const phasesByHouse = {};
                 downstreamHouses.forEach(h => {
-                    phaseByHouse[h.HouseID] = h.predicted_phase || 'default';
+                    const phases = getHousePhases(h.predicted_phase);
+                    if (phases.length) {
+                        phasesByHouse[String(h.HouseID)] = phases;
+                    }
                 });
                 
                 const monthlyData = MONTH_OPTIONS.map((monthOption, index) => {
@@ -84,10 +149,16 @@ export const TransformerViz = ({ node }) => {
                     const totals = { A: 0, B: 0, C: 0 };
                     
                     data?.forEach(row => {
-                        const phase = phaseByHouse[row.house_id];
-                        if (phase === 'A' || phase === 'B' || phase === 'C') {
-                            totals[phase] += Number(row[monthCol]) || 0;
-                        }
+                        const houseKey = String(row.house_id ?? row.House_id ?? row.HouseID);
+                        const phases = phasesByHouse[houseKey] || [];
+                        const value = Number(row[monthCol]) || 0;
+                        if (!phases.length) return;
+                        const share = value / phases.length;
+                        phases.forEach(p => {
+                            if (p === 'A' || p === 'B' || p === 'C') {
+                                totals[p] += share;
+                            }
+                        });
                     });
                     
                     return {
@@ -106,11 +177,11 @@ export const TransformerViz = ({ node }) => {
         return () => { cancelled = true; };
     }, [transformerChartMode, downstreamHouses]);
 
-    const housesPieData = [
+    const housesPieData = useMemo(() => ([
         { name: 'Phase A', phase: 'A', value: phaseHouseCounts.A || 0 },
         { name: 'Phase B', phase: 'B', value: phaseHouseCounts.B || 0 },
         { name: 'Phase C', phase: 'C', value: phaseHouseCounts.C || 0 },
-    ];
+    ]), [phaseHouseCounts]);
 
     return (
         <div className="mb-4 border-2 border-gray-200 rounded-lg p-4">

@@ -10,11 +10,10 @@ const TECHNOLOGIES = [
     description: "Modern JavaScript library for building user interfaces",
     features: [
       "Component-based architecture for reusable UI elements",
-      "Virtual DOM for optimal rendering performance",
       "Hooks for state management and side effects",
       "React Router for seamless navigation"
     ],
-    justification: "React's component-based architecture allows us to build a modular, maintainable codebase. The virtual DOM ensures smooth interactions even with complex network visualizations. Hooks like useState and useEffect provide elegant state management without class components.",
+    justification: "React's component-based architecture allows us to build a modular, maintainable codebase. Hooks like useState and useEffect provide elegant state management without class components.",
     useCases: [
       "Navigation component with responsive design",
       "Interactive transformer graph with real-time updates",
@@ -29,14 +28,11 @@ const TECHNOLOGIES = [
     description: "Utility-first CSS framework for rapid UI development",
     features: [
       "Utility classes for rapid prototyping",
-      "Responsive design with mobile-first approach",
-      "Custom design system with consistent spacing",
-      "JIT compiler for optimized bundle size"
+      "Responsive design with mobile support",
     ],
-    justification: "Tailwind enables rapid development with utility classes while maintaining design consistency. The JIT compiler ensures we only ship CSS that's actually used. Custom configurations allow us to maintain our brand colors and spacing system throughout the application.",
+    justification: "Tailwind enables rapid development with utility classes while maintaining design consistency.",
     useCases: [
       "Responsive grid layouts for feature cards",
-      "Glassmorphism effects with backdrop-blur utilities",
       "Consistent spacing and typography system",
       "Custom color palette for network phases"
     ]
@@ -44,20 +40,18 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg",
     name: "Supabase",
-    version: "2.x",
+    version: "2.76.1",
     description: "Open-source Firebase alternative with PostgreSQL",
     features: [
       "Real-time database subscriptions",
       "Row-level security for data protection",
-      "RESTful API with automatic generation",
       "PostgreSQL for complex queries and relationships"
     ],
     justification: "Supabase provides a robust backend infrastructure without managing servers. Real-time subscriptions enable live updates when network data changes. PostgreSQL's powerful query capabilities handle complex network topology queries efficiently.",
     useCases: [
       "Storing transformer and house network data",
       "Real-time updates for collaborative viewing",
-      "Complex queries for phase estimation",
-      "Secure data access with row-level policies"
+      "Complex queries for phase estimation"
     ]
   },
   {
@@ -82,7 +76,7 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
     name: "Recharts",
-    version: "2.x",
+    version: "3.3.0",
     description: "Composable charting library built on React components",
     features: [
       "Declarative chart composition",
@@ -107,13 +101,8 @@ export default function FrontEnd() {
         {/* Hero Section */}
         <div className="frontend-hero">
           <div className="frontend-hero-content">
-            <div className="frontend-badge">
-              <span className="frontend-badge-icon">💻</span>
-              <span>Technology Stack</span>
-            </div>
             <h1 className="frontend-title">
-              Built with Modern
-              <span className="frontend-title-gradient"> Web Technologies</span>
+              Built with Modern Web Technologies
             </h1>
             <p className="frontend-description">
               Our application leverages cutting-edge frameworks and libraries to deliver 
@@ -176,47 +165,6 @@ export default function FrontEnd() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-
-        {/* Architecture Overview */}
-        <div className="frontend-section">
-          <div className="architecture-card">
-            <h2 className="architecture-title">Architecture Overview</h2>
-            <p className="architecture-description">
-              Our application follows a modern React architecture with clear separation of concerns:
-            </p>
-            
-            <div className="architecture-layers">
-              <div className="architecture-layer">
-                <div className="layer-badge">Presentation Layer</div>
-                <p className="layer-description">
-                  React components with Tailwind CSS for styling. Responsive layouts adapt to all screen sizes.
-                </p>
-              </div>
-              
-              <div className="architecture-layer">
-                <div className="layer-badge">State Management</div>
-                <p className="layer-description">
-                  React hooks (useState, useEffect, useCallback) manage local and global state efficiently.
-                </p>
-              </div>
-              
-              <div className="architecture-layer">
-                <div className="layer-badge">Data Visualization</div>
-                <p className="layer-description">
-                  React Force Graph and Recharts render complex network topologies and time-series data.
-                </p>
-              </div>
-              
-              <div className="architecture-layer">
-                <div className="layer-badge">Backend Integration</div>
-                <p className="layer-description">
-                  Supabase client handles all database operations with real-time subscriptions.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

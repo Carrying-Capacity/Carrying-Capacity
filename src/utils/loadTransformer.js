@@ -1,6 +1,6 @@
-import example2 from "../data/example2.json";
+import example from "../data/example.json";
 
-const datasets = [example2];
+const datasets = [example];
 const normalizeType = (t) => (t ? t.toLowerCase() : t);
 
 // Helper function to generate appropriate labels for nodes
@@ -9,9 +9,9 @@ const getNodeLabel = (node) => {
         case "feeder":
             return node.name || "Main Feeder";
         case "transformer":
-            return node.name || "Transformer";
+            return node.name || `Transformer ${node.transformer_number || node.transformer || 'Unknown'}`;
         case "house":
-            return `House ${node.HouseID || node.id}`;
+            return `House ${node.HouseID || node.house_number || node.id}`;
         case "street":
             return `Street ${node.id}`;
         default:
@@ -40,7 +40,7 @@ export function loadTransformerData() {
     
     // First pass: assign house IDs to houses that don't have them
     network.forEach((node) => {
-        if (normalizeType(node.type) === "house" && !node.HouseID) {
+        if (normalizeType(node.type) === "house" && !node.HouseID && !node.house_number) {
             houseIdMap.set(node.id, nextHouseId++);
         }
     });
@@ -57,19 +57,21 @@ export function loadTransformerData() {
         const cleanNextNodes = node.next_nodes ? node.next_nodes.filter(id => validNodeIds.has(id)) : [];
         
         // Create node with JSON-defined position and auto-assigned house ID if needed
-        const assignedHouseId = houseIdMap.get(node.id) || node.HouseID;
+        const assignedHouseId = node.HouseID || node.house_number || houseIdMap.get(node.id);
         const processedNode = {
             ...node,
             type: normalizeType(node.type),
             x: (node.x_meters || 0) * scale,
             y: (node.y_meters || 0) * scale,
-            label: getNodeLabel({ ...node, HouseID: assignedHouseId }),
+            label: getNodeLabel({ ...node, HouseID: assignedHouseId, transformer_number: node.transformer_number || node.transformer }),
             prev_nodes: cleanPrevNodes,
             next_nodes: cleanNextNodes,
             prev_node: cleanPrevNodes.length > 0 ? cleanPrevNodes[0] : null,
             current_node: node.id,
-            name: node.name || (node.type === "transformer" ? "Transformer" : node.type === "feeder" ? "Feeder" : null),
-            HouseID: assignedHouseId // Ensure HouseID is always present for houses
+            name: node.name || (node.type === "transformer" ? `Transformer ${node.transformer_number || node.transformer || 'Unknown'}` : node.type === "feeder" ? "Feeder" : null),
+            HouseID: assignedHouseId, // Ensure HouseID is always present for houses
+            parent: node.parent_transformer || node.parent || node.transformer, // Support multiple parent field formats
+            transformer_number: node.transformer_number || node.transformer // Preserve transformer number
         };
 
         nodes.push(processedNode);

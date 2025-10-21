@@ -3,7 +3,6 @@
 .home-modern {
   min-height: 100vh;
   background: linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%);
-  padding-top: 72px;
 }
 
 /* Hero Section */
@@ -15,7 +14,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
   align-items: center;
-  min-height: calc(100vh - 72px);
+  min-height: 100vh;
 }
 
 .hero-content {
@@ -49,7 +48,7 @@
 .hero-title {
   font-size: 3.5rem;
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.15;
   color: #0f172a;
   letter-spacing: -0.02em;
   display: flex;
@@ -62,6 +61,8 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  display: inline-block;
+  padding-bottom: 0.1em;
 }
 
 .hero-description {

@@ -25,3 +25,38 @@ export const formatCount = (count, singular, plural) => {
   const word = numericCount === 1 ? singular : (plural || `${singular}s`);
   return `${numericCount} ${word}`;
 };
+
+/**
+ * Normalize a phase string value to 'A' | 'B' | 'C' or null
+ * Handles both old array format ["A"] and new string format "A", "BAC", etc.
+ * @param {string|string[]} value
+ * @returns {'A'|'B'|'C'|null}
+ */
+export const normalizePhase = (value) => {
+  if (!value) return null;
+  
+  // Handle array format (old format)
+  if (Array.isArray(value)) {
+    const raw = value.length > 0 ? value[0] : null;
+    const normalized = (raw || '').toString().trim().toUpperCase();
+    return normalized === 'A' || normalized === 'B' || normalized === 'C' ? normalized : null;
+  }
+  
+  // Handle string format (new format)
+  const normalized = value.toString().trim().toUpperCase();
+  
+  // For single character phases (A, B, C)
+  if (normalized === 'A' || normalized === 'B' || normalized === 'C') {
+    return normalized;
+  }
+  
+  // For multi-character phases (BAC, BCA, ACB, etc.), return the first character
+  if (normalized.length > 0) {
+    const firstChar = normalized[0];
+    if (firstChar === 'A' || firstChar === 'B' || firstChar === 'C') {
+      return firstChar;
+    }
+  }
+  
+  return null;
+};
