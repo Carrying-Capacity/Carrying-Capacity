@@ -60,7 +60,6 @@ export default function ReferencesCitations() {
       {/* AI usage section */}
       <h1>AI usage</h1>
       <p>Chatbots and AI was used in the production and development of this project, and the primary chat bot used was ChatGPT. 
-        The prompts and their responses that we have used were placed here.
       </p>
       {/* Sam said this was unneccesary but i have it here for legacy */}
       {/* <ReadTenPrompter conversations={conversationData}/> */}
