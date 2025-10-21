@@ -53,6 +53,13 @@ const TransformerGraphWrapperContent = () => {
             else if (n.type === "house") houses++;
         });
         
+        // Sort transformers by transformer_number
+        transformers.sort((a, b) => {
+            const numA = a.transformer_number || a.transformer || 0;
+            const numB = b.transformer_number || b.transformer || 0;
+            return numA - numB;
+        });
+        
         return {
             feederNodes: feeders,
             transformerNodes: transformers,

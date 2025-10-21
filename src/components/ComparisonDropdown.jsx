@@ -8,6 +8,13 @@ export const ComparisonDropdown = ({ onClearAll }) => {
     return null;
   }
 
+  // Sort houses by HouseID
+  const sortedList = [...comparisonList].sort((a, b) => {
+    const numA = a.HouseID || a.house_number || 0;
+    const numB = b.HouseID || b.house_number || 0;
+    return numA - numB;
+  });
+
   return (
     <div className="comparison-dropdown">
       <div className="comparison-dropdown-header">
@@ -22,7 +29,7 @@ export const ComparisonDropdown = ({ onClearAll }) => {
         </button>
       </div>
       <div className="comparison-dropdown-list">
-        {comparisonList.map((house) => {
+        {sortedList.map((house) => {
           const phaseDisplay = Array.isArray(house.predicted_phase) && house.predicted_phase.length > 1
             ? `3-Phase (${house.predicted_phase.join(' → ')})`
             : Array.isArray(house.predicted_phase)

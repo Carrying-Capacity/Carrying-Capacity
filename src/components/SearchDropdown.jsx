@@ -7,9 +7,31 @@ export const SearchDropdown = ({ nodes, onSelect }) => {
 
   if (!nodes?.length) return null;
 
+  // Sort nodes: houses by HouseID, transformers by transformer_number
+  const sortedNodes = [...nodes].sort((a, b) => {
+    // Sort by type first (feeder, transformer, house)
+    const typeOrder = { feeder: 0, transformer: 1, house: 2 };
+    const typeA = typeOrder[a.type] ?? 3;
+    const typeB = typeOrder[b.type] ?? 3;
+    if (typeA !== typeB) return typeA - typeB;
+
+    // Within same type, sort by number
+    if (a.type === 'house') {
+      const numA = a.HouseID || a.house_number || 0;
+      const numB = b.HouseID || b.house_number || 0;
+      return numA - numB;
+    }
+    if (a.type === 'transformer') {
+      const numA = a.transformer_number || a.transformer || 0;
+      const numB = b.transformer_number || b.transformer || 0;
+      return numA - numB;
+    }
+    return 0;
+  });
+
   return (
     <div className="modern-search-dropdown">
-      {nodes.map((node) => {
+      {sortedNodes.map((node) => {
         const isInComparison = comparisonIdSet.has(node.id);
         const isHouse = node.type === "house";
         const NodeIcon = getNodeIcon(node.type);

@@ -1,11 +1,24 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { Home, Zap, Sun, Network as NetworkIcon } from "lucide-react";
 import { isHouse as isHouseNode } from "../../utils/nodeUtils.js";
 import { getPhaseColor, PHASE_COLORS } from "../../constants/index.js";
+import { useTransformerData } from "../../hooks/useTransformerData.js";
 
 export const NodeInfoSection = memo(({ node }) => {
   const isHouse = isHouseNode(node);
   const isTransformer = node?.type === 'transformer';
+  const graphData = useTransformerData();
+
+  // Count houses assigned to this transformer
+  const houseCount = useMemo(() => {
+    if (!isTransformer || !graphData?.nodes) return 0;
+    return graphData.nodes.filter(n => 
+      n.type === 'house' && 
+      (n.parent_transformer === node.transformer_number || 
+       n.parent === node.transformer_number ||
+       n.parent === `Transformer ${node.transformer_number}`)
+    ).length;
+  }, [isTransformer, graphData?.nodes, node?.transformer_number]);
 
   const NodeTypeIcon = node?.type === 'house' ? Home : node?.type === 'transformer' ? Zap : NetworkIcon;
 
@@ -25,12 +38,23 @@ export const NodeInfoSection = memo(({ node }) => {
       
       {isTransformer && node?.transformer_number && (
         <div className="mb-4">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
-              <Zap size={16} className="flex-shrink-0" />
-              <span>Transformer Number</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+                <Zap size={16} className="flex-shrink-0" />
+                <span>Transformer Number</span>
+              </div>
+              <div className="text-base font-semibold text-slate-900 pl-6">{node.transformer_number}</div>
             </div>
-            <div className="text-base font-semibold text-slate-900 pl-6">{node.transformer_number}</div>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+                <Home size={16} className="flex-shrink-0" />
+                <span>Houses Assigned</span>
+              </div>
+              <div className="text-base font-semibold text-slate-900 pl-6">
+                {houseCount} {houseCount === 1 ? 'house' : 'houses'}
+              </div>
+            </div>
           </div>
         </div>
       )}

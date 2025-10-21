@@ -1,4 +1,4 @@
-import example from "../data/example.json";
+import example from "../data/example2.json";
 
 const datasets = [example];
 const normalizeType = (t) => (t ? t.toLowerCase() : t);
