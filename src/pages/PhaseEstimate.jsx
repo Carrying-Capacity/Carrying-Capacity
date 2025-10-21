@@ -2,7 +2,6 @@ import React from "react";
 import AlexResultTable from "../components/AlexResultsTable";
 import PageLayout from '../components/PageLayout';
 import MathBlock from '../components/Mathblock';
-import 'katex/dist/katex.min.css';
 
 export default function PhaseEstimate() {
 
@@ -19,7 +18,7 @@ export default function PhaseEstimate() {
         </ul>
       </p>
       <p>The underlying math behind this is as follows:</p>
-      <p>I have displayed some example mathematics formatting here. Use the katex library.</p>
+      <p>I have displayed some example mathematics formatting here.</p>
       {/* Quadratic equation */}
       <MathBlock math={`R_{hg}(\\tau) = \\int_{-\\infty}^{\\infty} f(t) \\, g(t + \\tau) \\, dt`} />
       
