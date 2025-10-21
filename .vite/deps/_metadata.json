@@ -1,0 +1,40 @@
+{
+  "hash": "59120b27",
+  "configHash": "44110098",
+  "lockfileHash": "4701370e",
+  "browserHash": "e085ee34",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "52b326a9",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "1a005c74",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "0a0a048a",
+      "needsInterop": false
+    },
+    "react-force-graph-2d": {
+      "src": "../../node_modules/react-force-graph-2d/dist/react-force-graph-2d.mjs",
+      "file": "react-force-graph-2d.js",
+      "fileHash": "013913c7",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-4J6BLW67": {
+      "file": "chunk-4J6BLW67.js"
+    },
+    "chunk-WYQRYOQT": {
+      "file": "chunk-WYQRYOQT.js"
+    }
+  }
+}

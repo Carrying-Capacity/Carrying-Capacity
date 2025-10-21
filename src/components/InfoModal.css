@@ -1,0 +1,196 @@
+.modal-container {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl);
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.modal-header {
+  padding: var(--space-xl) var(--space-2xl);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  flex-shrink: 0;
+}
+
+.modal-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+.modal-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.modal-header-buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.modal-header-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--gray-500);
+  transition: all var(--transition-fast);
+}
+
+.modal-header-button:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-button);
+}
+
+.modal-header-button:active {
+  transform: translateY(0);
+}
+
+.modal-content-modern {
+  transition: all var(--transition-slow);
+}
+
+.modal-content-modern > div:not(.modal-header) {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-xl) var(--space-2xl);
+  min-height: 0;
+}
+
+.modal-content-modern > div:not(.modal-header)::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-content-modern > div:not(.modal-header)::-webkit-scrollbar-track {
+  background: var(--gray-100);
+  border-radius: 5px;
+}
+
+.modal-content-modern > div:not(.modal-header)::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: 5px;
+}
+
+.modal-content-modern > div:not(.modal-header)::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-500);
+}
+
+@media (max-width: 768px) {
+  .modal-container {
+    padding: var(--space-md);
+  }
+
+  .modal-header-button-fullscreen {
+    display: none;
+  }
+
+  .modal-header {
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .modal-header-title {
+    font-size: 1.125rem;
+  }
+
+  .modal-header-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .modal-content-modern > div:not(.modal-header) {
+    padding: var(--space-md) var(--space-lg);
+  }
+  
+  .modal-content-modern {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    left: 10px !important;
+    right: 10px !important;
+    inset-inline: 10px !important;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .modal-container {
+    padding: var(--space-sm);
+  }
+
+  .modal-header {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .modal-header-title {
+    font-size: 1rem;
+  }
+
+  .modal-header-button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .modal-content-modern > div:not(.modal-header) {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .modal-content-modern {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+    left: 8px !important;
+    right: 8px !important;
+    inset-inline: 8px !important;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-content-modern {
+  animation: modalSlideIn var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 769px) {
+  .modal-content-modern:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+}
+
+input[type="radio"]:focus-visible,
+button:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
