@@ -24,6 +24,12 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
     const [pulsingHouseIds, setPulsingHouseIds] = useState(new Set());
     const [pulseTick, setPulseTick] = useState(0);
     const iconLoadHandlersRef = useRef(new Map());
+    const flowAnimationFrameRef = useRef(null);
+    const flowAnimationLastTimeRef = useRef(null);
+    const flowAnimationAccumulatorRef = useRef(0);
+    const pulseAnimationFrameRef = useRef(null);
+    const pulseAnimationLastTimeRef = useRef(null);
+    const pulseAnimationAccumulatorRef = useRef(0);
     
     const [containerRef, dimensions] = useContainerSize();
     const { comparisonIdSet, toggleHouseInComparison } = useComparison();
@@ -275,23 +281,89 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
     
     useEffect(() => {
         if (!hasFlowLinks) {
+            if (flowAnimationFrameRef.current !== null) {
+                cancelAnimationFrame(flowAnimationFrameRef.current);
+                flowAnimationFrameRef.current = null;
+            }
+            flowAnimationLastTimeRef.current = null;
+            flowAnimationAccumulatorRef.current = 0;
             setTick(0);
             return;
         }
-        
-        const interval = setInterval(() => setTick((t) => t + 1), ANIMATION_CONFIG.animationInterval);
-        return () => clearInterval(interval);
+
+        const frameDuration = ANIMATION_CONFIG.animationInterval;
+
+        const animate = (timestamp) => {
+            if (flowAnimationLastTimeRef.current === null) {
+                flowAnimationLastTimeRef.current = timestamp;
+            }
+
+            const delta = timestamp - flowAnimationLastTimeRef.current;
+            flowAnimationLastTimeRef.current = timestamp;
+            flowAnimationAccumulatorRef.current += delta;
+
+            while (flowAnimationAccumulatorRef.current >= frameDuration) {
+                setTick((t) => t + 1);
+                flowAnimationAccumulatorRef.current -= frameDuration;
+            }
+
+            flowAnimationFrameRef.current = requestAnimationFrame(animate);
+        };
+
+        flowAnimationFrameRef.current = requestAnimationFrame(animate);
+
+        return () => {
+            if (flowAnimationFrameRef.current !== null) {
+                cancelAnimationFrame(flowAnimationFrameRef.current);
+                flowAnimationFrameRef.current = null;
+            }
+            flowAnimationLastTimeRef.current = null;
+            flowAnimationAccumulatorRef.current = 0;
+        };
     }, [hasFlowLinks]);
 
     // Pulse animation for houses connected to selected transformer
     useEffect(() => {
         if (pulsingHouseIds.size === 0) {
+            if (pulseAnimationFrameRef.current !== null) {
+                cancelAnimationFrame(pulseAnimationFrameRef.current);
+                pulseAnimationFrameRef.current = null;
+            }
+            pulseAnimationLastTimeRef.current = null;
+            pulseAnimationAccumulatorRef.current = 0;
             setPulseTick(0);
             return;
         }
-        
-        const interval = setInterval(() => setPulseTick((t) => t + 1), 1000 / 60); // 60 FPS
-        return () => clearInterval(interval);
+
+        const frameDuration = 1000 / 60;
+
+        const animate = (timestamp) => {
+            if (pulseAnimationLastTimeRef.current === null) {
+                pulseAnimationLastTimeRef.current = timestamp;
+            }
+
+            const delta = timestamp - pulseAnimationLastTimeRef.current;
+            pulseAnimationLastTimeRef.current = timestamp;
+            pulseAnimationAccumulatorRef.current += delta;
+
+            while (pulseAnimationAccumulatorRef.current >= frameDuration) {
+                setPulseTick((t) => t + 1);
+                pulseAnimationAccumulatorRef.current -= frameDuration;
+            }
+
+            pulseAnimationFrameRef.current = requestAnimationFrame(animate);
+        };
+
+        pulseAnimationFrameRef.current = requestAnimationFrame(animate);
+
+        return () => {
+            if (pulseAnimationFrameRef.current !== null) {
+                cancelAnimationFrame(pulseAnimationFrameRef.current);
+                pulseAnimationFrameRef.current = null;
+            }
+            pulseAnimationLastTimeRef.current = null;
+            pulseAnimationAccumulatorRef.current = 0;
+        };
     }, [pulsingHouseIds.size]);
 
     // Force re-render when hover changes to show/hide labels
@@ -305,6 +377,12 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                     fgRef.current.zoom(currentZoom);
                 }
             });
+        }
+    }, [hoverNode]);
+
+    useEffect(() => {
+        if (!hoverNode && fgRef.current?.canvas) {
+            fgRef.current.canvas.style.cursor = "default";
         }
     }, [hoverNode]);
 
@@ -479,25 +557,31 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                     ctx.fillRect(node.x - size / 2, node.y - size / 2, size, size);
                 }}
                 onNodeHover={(node) => {
-                    // Early return for street and feeder nodes to prevent any interaction
+                    const canvas = fgRef.current?.canvas;
                     if (node && (node.type === "street" || node.type === "feeder" || node.type === "network")) {
-                        if (fgRef.current?.canvas) {
-                            fgRef.current.canvas.style.cursor = 'default';
+                        if (canvas) {
+                            canvas.style.cursor = 'default';
                         }
+                        setHoverNode(null);
                         return;
                     }
-                    
-                    // Set context-sensitive cursor
-                    if (fgRef.current?.canvas) {
-                        if (!node) {
-                            fgRef.current.canvas.style.cursor = 'default';
-                        } else if (node.type === 'house' || node.type === 'transformer') {
-                            fgRef.current.canvas.style.cursor = 'pointer';
+
+                    if (!node) {
+                        if (canvas) {
+                            canvas.style.cursor = 'default';
+                        }
+                        setHoverNode(null);
+                        return;
+                    }
+
+                    if (canvas) {
+                        if (node.type === 'house' || node.type === 'transformer') {
+                            canvas.style.cursor = 'pointer';
                         } else {
-                            fgRef.current.canvas.style.cursor = 'default';
+                            canvas.style.cursor = 'default';
                         }
                     }
-                    
+
                     setHoverNode(node);
                 }}
                 nodeCanvasObject={renderNode}
