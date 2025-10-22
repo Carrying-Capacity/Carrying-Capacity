@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import favicon from "../assets/favicon.svg";
 
-const NAVIGATION_ROUTES = [
+export const NAVIGATION_ROUTES = [
   { path: "/", label: "Home" },
   { path: "/transformer", label: "Interactable Map" },
   { path: "/data_processing_info", label: "Data Processing" },

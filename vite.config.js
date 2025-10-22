@@ -7,6 +7,8 @@ export default defineConfig({
   base: '/Carrying-Capacity',
   plugins: [react(), tailwindcss()],
   build: {
+    // Enable source maps for staging/preview builds
+    sourcemap: process.env.NODE_ENV !== 'production',
     // Enable code splitting for better caching
     rollupOptions: {
       output: {
@@ -21,7 +23,7 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // Remove console logs in production
+        drop_console: process.env.NODE_ENV === 'production', // Remove console logs in production only
         drop_debugger: true,
       },
     },
@@ -31,7 +33,7 @@ export default defineConfig({
   // Optimize development
   server: {
     hmr: {
-      overlay: false, // Disable error overlay for better performance
+      overlay: process.env.VITE_HMR_OVERLAY !== 'false', // Enable error overlay by default, can be disabled via env
     },
   },
   // Optimize asset handling

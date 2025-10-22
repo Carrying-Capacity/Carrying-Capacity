@@ -9,7 +9,11 @@ export const fetchData = async (query, errorContext = 'data') => {
   } catch (err) {
     return { 
       data: null, 
-      error: err.message || `Failed to fetch ${errorContext}` 
+      error: {
+        message: err.message || `Failed to fetch ${errorContext}`,
+        code: err.code || 'UNKNOWN_ERROR',
+        status: err.status
+      }
     };
   }
 };

@@ -36,7 +36,11 @@ const useDataFetch = (fetchFn, dependency, dataKey = 'data') => {
       } catch (err) {
         if (!cancelled) {
           setData(null)
-          setError(err.message || 'Failed to fetch data')
+          setError({
+            message: err.message || 'Failed to fetch data',
+            code: err.code || 'UNKNOWN_ERROR',
+            status: err.status
+          })
           setLoading(false)
         }
       }
@@ -106,10 +110,17 @@ export const transformDailyData = (rawData, metrics) => {
 }
 
 // Hook to fetch time series data from towndatamarch_1_2 table for specific houses only
-export const useTimeSeriesData = (houseIds = []) => {
+export const useTimeSeriesData = (houseIds = [], options = {}) => {
   const [timeSeriesData, setTimeSeriesData] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+
+  // Default to last 7 days if no date range provided
+  const {
+    startDate = options.startDate,
+    endDate = options.endDate,
+    limit = 1000 // Strict limit to prevent heavy loads
+  } = options;
 
   // Create stable reference for houseIds array
   const houseIdsKey = useMemo(() => 
@@ -132,6 +143,9 @@ export const useTimeSeriesData = (houseIds = []) => {
         const { data, error } = await fetchTimeSeriesData('towndatamarch_1_2', {
           columns: 'timestamp, House_id, "Voltage.PhA", "Voltage.PhB", "Voltage.PhC", ImportPower, ExportPower, InductivePower, CapacitivePower',
           houseIds: houseIds,
+          startDate,
+          endDate,
+          limit,
           orderBy: 'timestamp',
           ascending: true
         })
@@ -142,7 +156,11 @@ export const useTimeSeriesData = (houseIds = []) => {
           setTimeSeriesData(data || [])
         }
       } catch (err) {
-        setError(err.message || 'Failed to fetch time series data')
+        setError({
+          message: err.message || 'Failed to fetch time series data',
+          code: err.code || 'UNKNOWN_ERROR',
+          status: err.status
+        })
       } finally {
         setLoading(false)
       }
@@ -172,22 +190,33 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
 
   // Create a map of house phases for quick lookup
   const housePhaseMap = comparisonList.reduce((map, house) => {
-    if (house.HouseID && house.predicted_phase) {
-      // Handle both old array format and new string format
-      const phaseValue = house.predicted_phase;
-      const isArray = Array.isArray(phaseValue);
-      const phaseString = isArray ? phaseValue.join('') : String(phaseValue);
+    // Early return for houses without valid predicted_phase
+    if (!house.HouseID || !house.predicted_phase) {
+      return map;
+    }
 
-      if (phaseString.length !== 1 && phaseString.length !== 3) {
-        console.warn(`Invalid phase data for House ${house.HouseID}: expected 1 or 3 phases, got ${phaseString.length}`);
-        return map;
-      }
-      
-      map[house.HouseID] = {
-        phase: phaseValue,
-        phaseString: phaseString,
-        isThreePhase: phaseString.length === 3
-      }
+    // Handle both old array format and new string format
+    const phaseValue = house.predicted_phase;
+    const isArray = Array.isArray(phaseValue);
+    const phaseString = isArray ? phaseValue.join('') : String(phaseValue);
+
+    // Validate phase data length
+    if (phaseString.length !== 1 && phaseString.length !== 3) {
+      console.warn(`Invalid phase data for House ${house.HouseID}: expected 1 or 3 phases, got ${phaseString.length}`);
+      return map;
+    }
+
+    // Validate phase characters (must be A, B, or C)
+    const validPhases = /^[ABC]+$/;
+    if (!validPhases.test(phaseString)) {
+      console.warn(`Invalid phase characters for House ${house.HouseID}: ${phaseString}`);
+      return map;
+    }
+    
+    map[house.HouseID] = {
+      phase: phaseValue,
+      phaseString: phaseString,
+      isThreePhase: phaseString.length === 3
     }
     return map
   }, {})
@@ -241,11 +270,12 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
             const singlePhase = Array.isArray(houseInfo.phase) ? houseInfo.phase[0] : houseInfo.phaseString[0]
             
             if (property === 'Voltage.PhA') {
-              // Check if this is a single-phase customer (only PhA has data, PhB and PhC are zero)
+              // Check if this is a single-phase customer (only PhA has data, PhB and PhC are near zero)
               const phBValue = row['Voltage.PhB'] || 0
               const phCValue = row['Voltage.PhC'] || 0
+              const epsilon = 0.1 // Small tolerance for floating point comparison
               
-              if (phBValue === 0 && phCValue === 0) {
+              if (Math.abs(phBValue) < epsilon && Math.abs(phCValue) < epsilon) {
                 // Single-phase customer - rename PhA to match assigned phase
                 const renamedKey = `${row.House_id}_Voltage.Ph${singlePhase}`
                 acc[timeKey][renamedKey] = value

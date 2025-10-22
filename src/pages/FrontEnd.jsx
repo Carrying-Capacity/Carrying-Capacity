@@ -6,7 +6,7 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
     name: "React",
-    version: "18.3.1",
+    version: "19.x",
     description: "Modern JavaScript library for building user interfaces",
     features: [
       "Component-based architecture for reusable UI elements",
@@ -24,7 +24,7 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
     name: "Tailwind CSS",
-    version: "4.0.0",
+    version: "4.x",
     description: "Utility-first CSS framework for rapid UI development",
     features: [
       "Utility classes for rapid prototyping",
@@ -40,7 +40,7 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg",
     name: "Supabase",
-    version: "2.76.1",
+    version: "2.x",
     description: "Open-source Firebase alternative with PostgreSQL",
     features: [
       "Real-time database subscriptions",
@@ -57,7 +57,7 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
     name: "React Force Graph",
-    version: "1.44.4",
+    version: "1.x",
     description: "Force-directed graph visualization using Canvas/WebGL",
     features: [
       "WebGL rendering for thousands of nodes",
@@ -76,7 +76,7 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
     name: "Recharts",
-    version: "3.3.0",
+    version: "3.x",
     description: "Composable charting library built on React components",
     features: [
       "Declarative chart composition",

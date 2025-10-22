@@ -52,6 +52,7 @@ const VoltageChart = () => {
       let query = towndata.select("*");
       query = towndata.filters.eq("House_id", houseId)(query);
       query = towndata.order("timestamp", true)(query);
+      query = towndata.limit(1000)(query); // Limit to latest 1000 points
 
       const { data, error } = await query;
 

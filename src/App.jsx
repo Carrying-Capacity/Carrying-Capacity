@@ -1,6 +1,6 @@
 import { useEffect, memo, Suspense, lazy } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import { Navigation } from "./components/Navigation";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { Navigation, NAVIGATION_ROUTES } from "./components/Navigation";
 import ErrorBoundary from "./components/ErrorBoundary";
 const Home = lazy(() => import("./pages/Home"));
 const PhaseEstimate = lazy(() => import("./pages/PhaseEstimate"));
@@ -25,18 +25,26 @@ const ScrollToTop = () => {
 
 ScrollToTop.displayName = "ScrollToTop";
 
-const RedirectHandler =() => {
+const RedirectHandler = () => {
     const navigate = useNavigate();
-    const location = useLocation();
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(location.search);
-        const redirectPath = urlParams.get('redirect');
+        const redirectPath = searchParams.get('redirect');
         
         if (redirectPath) {
-            navigate(redirectPath, { replace: true });
+            // Validate redirect path against allowed routes
+            const validPaths = NAVIGATION_ROUTES.map(route => route.path);
+            const normalizedPath = redirectPath.startsWith('/') ? redirectPath : '/' + redirectPath;
+            
+            if (validPaths.includes(normalizedPath)) {
+                navigate(normalizedPath, { replace: true });
+            } else {
+                // Invalid redirect, navigate to home
+                navigate('/', { replace: true });
+            }
         }
-    }, [navigate, location.search]);
+    }, [navigate, searchParams]);
 
     return null;
 };

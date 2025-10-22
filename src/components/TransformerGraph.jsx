@@ -273,6 +273,28 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
 
     return (
         <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
+            {/* Accessibility: Screen reader node list */}
+            <div className="sr-only" role="region" aria-label="Network graph nodes">
+                <h3>Network Nodes</h3>
+                <ul>
+                    {data.nodes.filter(n => n.type !== 'street').slice(0, 20).map(node => (
+                        <li key={node.id}>
+                            {node.type}: {node.label || node.id}
+                            {node.type === 'house' && (
+                                <button 
+                                    onClick={() => onNodeClick(node)}
+                                    aria-label={`Select ${node.label || node.id}`}
+                                >
+                                    Select
+                                </button>
+                            )}
+                        </li>
+                    ))}
+                    {data.nodes.filter(n => n.type !== 'street').length > 20 && (
+                        <li>...and {data.nodes.filter(n => n.type !== 'street').length - 20} more nodes</li>
+                    )}
+                </ul>
+            </div>
             <ForceGraph2D
                 ref={fgRef}
                 graphData={data}
