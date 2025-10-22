@@ -24,7 +24,9 @@
   --primary-light: #60a5fa;
   --primary-dark: #2563eb;
   --secondary: #8b5cf6;
+  --accent: #ec4899;
   --success: #10b981;
+  --warning: #f59e0b;
   --error: #ef4444;
   
   /* Spacing */
@@ -63,4 +65,17 @@
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-700) 100%);
   --gradient-bg: linear-gradient(180deg, var(--gray-50) 0%, #ffffff 50%, var(--gray-100) 100%);
+  --gradient-brand: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  --gradient-brand-extended: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+  
+  /* Hover/Active States */
+  --elev-hover-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+  --elev-active-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  /* Breakpoints (for reference in JS) */
+  --bp-mobile: 640px;
+  --bp-tablet: 768px;
+  --bp-desktop: 1024px;
+  --bp-wide: 1280px;
 }
+

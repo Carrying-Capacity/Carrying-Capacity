@@ -7,6 +7,14 @@ import { useComparison } from "../context/ComparisonContext.jsx";
 import { collectDownstreamNodes, tracePathToFeeder } from "../utils/graphUtils.js";
 import { ANIMATION_CONFIG } from '../constants/index.js';
 
+// Style constants extracted from render path
+const LINK_STYLES = {
+    flow: { strokeStyle: "#f97316", lineWidth: 2.5, fillStyle: "#f97316" },
+    normal: { strokeStyle: "#cbd5e1", lineWidth: 1.5, fillStyle: "#94a3b8" }
+};
+const ARROW_LENGTH = 10;
+const ARROW_WIDTH = 6;
+
 const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false }) => {
     const fgRef = useRef();
     const [hoverNode, setHoverNode] = useState(null);
@@ -160,6 +168,54 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
     // Only run animation when there are flow links to animate
     const hasFlowLinks = flowLinks.length > 0;
     const flowLinkSet = useMemo(() => new Set(flowLinks), [flowLinks]);
+    
+    // Memoize linkCanvasObject to avoid per-frame allocations
+    const linkCanvasObject = useCallback((link, ctx) => {
+        const isFlowLink = flowLinkSet.has(link);
+        const style = isFlowLink ? LINK_STYLES.flow : LINK_STYLES.normal;
+        
+        // Set link style
+        ctx.strokeStyle = style.strokeStyle;
+        ctx.lineWidth = style.lineWidth;
+        if (isFlowLink) {
+            ctx.setLineDash([5, 5]);
+            ctx.lineDashOffset = -tick;
+        } else {
+            ctx.setLineDash([]);
+        }
+
+        // Draw the line
+        ctx.beginPath();
+        ctx.moveTo(link.source.x, link.source.y);
+        ctx.lineTo(link.target.x, link.target.y);
+        ctx.stroke();
+
+        // Draw arrow at halfway point
+        const dx = link.target.x - link.source.x;
+        const dy = link.target.y - link.source.y;
+        const angle = Math.atan2(dy, dx);
+        
+        // Arrow position at 50% of the link
+        const arrowX = link.source.x + dx * 0.5;
+        const arrowY = link.source.y + dy * 0.5;
+        
+        ctx.save();
+        ctx.translate(arrowX, arrowY);
+        ctx.rotate(angle);
+        
+        // Draw arrow
+        ctx.beginPath();
+        ctx.moveTo(ARROW_LENGTH / 2, 0);
+        ctx.lineTo(-ARROW_LENGTH / 2, -ARROW_WIDTH / 2);
+        ctx.lineTo(-ARROW_LENGTH / 2, ARROW_WIDTH / 2);
+        ctx.closePath();
+        
+        ctx.fillStyle = style.fillStyle;
+        ctx.fill();
+        
+        ctx.restore();
+    }, [tick, flowLinkSet]);
+    
     useEffect(() => {
         if (!hasFlowLinks) {
             setTick(0);
@@ -334,54 +390,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                         }
                     }
                 }}
-                linkCanvasObject={(link, ctx) => {
-                    // Highlight path links
-                    if (flowLinkSet.has(link)) {
-                        ctx.strokeStyle = "#f97316";
-                        ctx.lineWidth = 2.5;
-                        ctx.setLineDash([5, 5]);
-                        ctx.lineDashOffset = -tick;
-                    } else {
-                        ctx.strokeStyle = "#cbd5e1";
-                        ctx.lineWidth = 1.5;
-                        ctx.setLineDash([]);
-                    }
-
-                    // Draw the line
-                    ctx.beginPath();
-                    ctx.moveTo(link.source.x, link.source.y);
-                    ctx.lineTo(link.target.x, link.target.y);
-                    ctx.stroke();
-
-                    // Draw arrow at halfway point
-                    const dx = link.target.x - link.source.x;
-                    const dy = link.target.y - link.source.y;
-                    const angle = Math.atan2(dy, dx);
-                    
-                    // Arrow position at 50% of the link
-                    const arrowX = link.source.x + dx * 0.5;
-                    const arrowY = link.source.y + dy * 0.5;
-                    
-                    // Arrow properties
-                    const arrowLength = 10;
-                    const arrowWidth = 6;
-                    
-                    ctx.save();
-                    ctx.translate(arrowX, arrowY);
-                    ctx.rotate(angle);
-                    
-                    // Draw arrow
-                    ctx.beginPath();
-                    ctx.moveTo(arrowLength / 2, 0);
-                    ctx.lineTo(-arrowLength / 2, -arrowWidth / 2);
-                    ctx.lineTo(-arrowLength / 2, arrowWidth / 2);
-                    ctx.closePath();
-                    
-                    ctx.fillStyle = flowLinkSet.has(link) ? "#f97316" : "#94a3b8";
-                    ctx.fill();
-                    
-                    ctx.restore();
-                }}
+                linkCanvasObject={linkCanvasObject}
                 onNodeClick={(node) => {
                     // Don't allow clicking on street nodes
                     if (node.type !== "street") {

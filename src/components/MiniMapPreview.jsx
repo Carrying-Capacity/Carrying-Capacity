@@ -52,6 +52,12 @@ const MiniMapPreview = memo(() => {
     const scaleY = (height - padding * 2) / rangeY;
     const scale = Math.min(scaleX, scaleY);
 
+    // Calculate offsets to center the graph
+    const scaledWidth = rangeX * scale;
+    const scaledHeight = rangeY * scale;
+    const offsetX = (width - scaledWidth) / 2;
+    const offsetY = (height - scaledHeight) / 2;
+
     // Draw links first (background)
     ctx.strokeStyle = "rgba(148, 163, 184, 0.3)";
     ctx.lineWidth = 1;
@@ -60,10 +66,10 @@ const MiniMapPreview = memo(() => {
       const target = data.nodes.find(n => n.id === link.target || n.id === link.target?.id);
       
       if (source && target) {
-        const x1 = padding + (source.x - minX) * scale;
-        const y1 = padding + (source.y - minY) * scale;
-        const x2 = padding + (target.x - minX) * scale;
-        const y2 = padding + (target.y - minY) * scale;
+        const x1 = offsetX + (source.x - minX) * scale;
+        const y1 = offsetY + (source.y - minY) * scale;
+        const x2 = offsetX + (target.x - minX) * scale;
+        const y2 = offsetY + (target.y - minY) * scale;
 
         ctx.beginPath();
         ctx.moveTo(x1, y1);
@@ -74,8 +80,8 @@ const MiniMapPreview = memo(() => {
 
     // Draw nodes
     data.nodes.forEach(node => {
-      const x = padding + (node.x - minX) * scale;
-      const y = padding + (node.y - minY) * scale;
+      const x = offsetX + (node.x - minX) * scale;
+      const y = offsetY + (node.y - minY) * scale;
 
       ctx.beginPath();
       

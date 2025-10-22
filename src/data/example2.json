@@ -20,7 +20,7 @@
         "next_nodes": [
             "d64952e638b94"
         ],
-        "prev_nodes": ["346a78dc59c64"],
+        "prev_nodes": [],
         "prev_node_distance": 38.95327030564753,
         "x_meters": 222.38232722202,
         "y_meters": 374.67922785795486,
@@ -978,7 +978,7 @@
             "9cef0e931eb74",
             "b62bb67681334"
         ],
-        "prev_nodes": ["346a78dc59c64"],
+        "prev_nodes": [],
         "prev_node_distance": 55.71575719102306,
         "x_meters": 90.68067459411813,
         "y_meters": -528.4996648287897,
@@ -1989,7 +1989,7 @@
         "next_nodes": [
             "9323957c9b534"
         ],
-        "prev_nodes": ["346a78dc59c64"],
+        "prev_nodes": [],
         "prev_node_distance": 34.576304524009835,
         "x_meters": 47.31009390539086,
         "y_meters": 126.07577930490777,
@@ -2965,7 +2965,7 @@
             "bd25494f589d4",
             "d9f761ba6d914"
         ],
-        "prev_nodes": ["346a78dc59c64"],
+        "prev_nodes": [],
         "prev_node_distance": 43.023801152626675,
         "x_meters": 356.7714370068399,
         "y_meters": 56.139626372011755,

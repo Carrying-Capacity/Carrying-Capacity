@@ -1,11 +1,24 @@
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { readFileSync } from 'fs'
+
+// Read package.json to inject versions
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'))
 
 // https://vite.dev/config/
 export default defineConfig({
   base: '/Carrying-Capacity',
   plugins: [react(), tailwindcss()],
+  define: {
+    __PKG_VERSIONS__: JSON.stringify({
+      react: pkg.dependencies.react,
+      tailwindcss: pkg.devDependencies.tailwindcss,
+      supabase: pkg.dependencies['@supabase/supabase-js'],
+      forceGraph: pkg.dependencies['react-force-graph-2d'],
+      recharts: pkg.dependencies.recharts
+    })
+  },
   build: {
     // Enable source maps for staging/preview builds
     sourcemap: process.env.NODE_ENV !== 'production',

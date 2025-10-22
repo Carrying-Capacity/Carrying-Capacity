@@ -2,11 +2,14 @@ import React from 'react';
 import {CheckCircle, ArrowRight } from 'lucide-react';
 import './FrontEnd.css';
 
+// Access versions injected by Vite from package.json
+const VERSIONS = typeof __PKG_VERSIONS__ !== 'undefined' ? __PKG_VERSIONS__ : {};
+
 const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
     name: "React",
-    version: "19.x",
+    version: VERSIONS.react || "19.x",
     description: "Modern JavaScript library for building user interfaces",
     features: [
       "Component-based architecture for reusable UI elements",
@@ -24,7 +27,7 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
     name: "Tailwind CSS",
-    version: "4.x",
+    version: VERSIONS.tailwindcss || "4.x",
     description: "Utility-first CSS framework for rapid UI development",
     features: [
       "Utility classes for rapid prototyping",
@@ -40,7 +43,7 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg",
     name: "Supabase",
-    version: "2.x",
+    version: VERSIONS.supabase || "2.x",
     description: "Open-source Firebase alternative with PostgreSQL",
     features: [
       "Real-time database subscriptions",
@@ -57,7 +60,7 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
     name: "React Force Graph",
-    version: "1.x",
+    version: VERSIONS.forceGraph || "1.x",
     description: "Force-directed graph visualization using Canvas/WebGL",
     features: [
       "WebGL rendering for thousands of nodes",
@@ -76,7 +79,7 @@ const TECHNOLOGIES = [
   {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
     name: "Recharts",
-    version: "3.x",
+    version: VERSIONS.recharts || "3.x",
     description: "Composable charting library built on React components",
     features: [
       "Declarative chart composition",

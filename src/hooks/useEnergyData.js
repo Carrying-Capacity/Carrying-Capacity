@@ -117,8 +117,8 @@ export const useTimeSeriesData = (houseIds = [], options = {}) => {
 
   // Default to last 7 days if no date range provided
   const {
-    startDate = options.startDate,
-    endDate = options.endDate,
+    startDate,
+    endDate,
     limit = 1000 // Strict limit to prevent heavy loads
   } = options;
 
