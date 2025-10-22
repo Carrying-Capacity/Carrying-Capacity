@@ -1,4 +1,4 @@
-import{c as e}from"./index-BI0MNHDa.js";import{r}from"./force-graph-D6mYncco.js";import{d as a}from"./example2-ot_Jf3FU.js";
+import{c as e}from"./index-D2DM-8MB.js";import{r}from"./force-graph-D6mYncco.js";import{d as a}from"./example2-ot_Jf3FU.js";
 /**
  * @license lucide-react v0.545.0 - ISC
  *
