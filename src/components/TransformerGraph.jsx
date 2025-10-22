@@ -332,6 +332,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
         if (!fgRef.current || !focusNode) {
             // Stop flow animation when focusNode is cleared
             setFlowLinks([]);
+            setPulsingHouseIds(new Set());
             setLastFocusNode(null);
             return;
         }
