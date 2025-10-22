@@ -51,6 +51,7 @@ export default function ReferencesCitations() {
   return (
     <PageLayout>
       <h1>References</h1>
+      <hr className="my-4 border-gray-300" />
       <p>Below are the references  used for this project.</p>
       <div style={{ maxHeight: "100vh", overflowY: "auto" }}>
         {citations.map((cite, i) => (
@@ -59,7 +60,8 @@ export default function ReferencesCitations() {
       </div>
       {/* AI usage section */}
       <h1>AI usage</h1>
-      <p>Chatbots and AI was used in the production and development of this project, and the primary chat bot used was ChatGPT. 
+      <hr className="my-4 border-gray-300" />
+      <p>ChatGPT and Claude were used to aid in bug fixing, production and development of this project. At the end of the project, we ensured that the majority of functional code was hand-written. 
       </p>
       {/* Sam said this was unneccesary but i have it here for legacy */}
       {/* <ReadTenPrompter conversations={conversationData}/> */}

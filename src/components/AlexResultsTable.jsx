@@ -57,7 +57,7 @@ const AlexResultTable = () => {
                   ))}
               </tr>
             </thead>
-            <tbody> {currentData.map((item, idx) => {
+            <tbody>{currentData.map((item, idx) => {
                 const isTotalRow =
                   Object.values(item).some(
                     (val) =>
@@ -78,7 +78,7 @@ const AlexResultTable = () => {
                   >
                     {Object.values(item).map((val, i) => (
                       <td key={i} className="border px-4 py-2 text-center align-middle">
-                        {renderValue(val)}
+                      {renderValue(val)}
                       </td>
                     ))}
                   </tr>

@@ -13,7 +13,7 @@
   background-color: #ffffff;
   color: #333;
   padding: 3rem;
-  padding-top: 80px;         /* 🧩 Added top padding to separate from navbar */
+  padding-top: 80px;
   max-width: 60%;
   width: 90%;
   border-radius: 0;
@@ -30,14 +30,30 @@
 /* Typography */
 .content-stripe h1 {
   font-size: 2.2rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
   color: #1e40af;
 }
 
 .content-stripe h2 {
-  font-size: 1.2rem;
-  color: #07174a;
+  font-size: 1.6rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: #304486;
 }
+
+.content-stripe h3 {
+  font-size: 1.3rem;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  color: #2614c9;
+}
+
+.content-stripe h4 {
+  font-size: 1.1rem;
+  color: #292f8a;
+}
+
 
 .content-stripe p {
   line-height: 1.6;

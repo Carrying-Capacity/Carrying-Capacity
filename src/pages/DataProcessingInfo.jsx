@@ -6,6 +6,7 @@ export default function DataProcessingInfo() {
   return (
     <PageLayout>
       <h1>Data Visualisation and Processing</h1>
+      <hr className="my-4 border-gray-300" />
       {/* <img src={NetworkImage} alt="Electrical Network" className="home-image" /> */}
       <p>The original data was given to us in CSV format. James helped with converting this format into 
         parquets, because this was faster for loading into python files. After the data was converted into Parquet format, Alex had made a standardized cleaned format for everyone
