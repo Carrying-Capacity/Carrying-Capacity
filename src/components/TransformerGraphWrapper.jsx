@@ -1,4 +1,4 @@
-import { useState, Suspense, useRef, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import { Search, Navigation, Layers, X, GitCompare, Home, Zap as ZapIcon, Network, ChevronDown } from "lucide-react";
 import TransformerGraph from "./TransformerGraph";
 import InfoModal from "./InfoModal";
@@ -71,7 +71,10 @@ const TransformerGraphWrapperContent = () => {
 
     const handleNodeClick = (node) => {
         setFocusNode(String(node.id));
-        setSelectedNode(node);
+        // Don't show info modal for feeder nodes, just zoom to them
+        if (node.type !== 'feeder') {
+            setSelectedNode(node);
+        }
         setShowComparison(false);
     };
 
@@ -80,7 +83,12 @@ const TransformerGraphWrapperContent = () => {
         if (nodeId) {
             const node = nodes.find(n => String(n.id) === nodeId);
             setFocusNode(nodeId);
-            setSelectedNode(node || null);
+            // Don't show info modal for feeder nodes, just zoom to them
+            if (node && node.type !== 'feeder') {
+                setSelectedNode(node);
+            } else {
+                setSelectedNode(null);
+            }
         } else {
             setFocusNode(null);
             setSelectedNode(null);
@@ -276,14 +284,16 @@ const TransformerGraphWrapperContent = () => {
                 </div>
             )}
 
-            <div style={{ 
+            {/* Graph Container */}
+            <div style={{
                 position: 'fixed',
                 top: `${graphTopOffset}px`,
                 left: 0,
-                right: 0,
+                right: selectedNode && !isModalFullscreen && !isMobile ? '500px' : 0,
                 bottom: 0,
                 overflow: 'hidden',
-                background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)'
+                background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
+                transition: 'right 0.3s ease'
             }}>
                 <TransformerGraph
                     data={data}
@@ -291,14 +301,12 @@ const TransformerGraphWrapperContent = () => {
                     onNodeClick={handleNodeClick}
                     isMobile={isMobile}
                 />
-                <Suspense fallback={null}>
-                    <InfoModal 
-                        node={selectedNode} 
-                        onClose={closeModal}
-                        isComparison={showComparison}
-                        onFullscreenChange={setIsModalFullscreen}
-                    />
-                </Suspense>
+                <InfoModal 
+                    node={selectedNode} 
+                    onClose={closeModal}
+                    isComparison={showComparison}
+                    onFullscreenChange={setIsModalFullscreen}
+                />
             </div>
         </div>
     );

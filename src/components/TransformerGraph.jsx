@@ -21,9 +21,28 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
     const [flowLinks, setFlowLinks] = useState([]);
     const [tick, setTick] = useState(0);
     const [lastFocusNode, setLastFocusNode] = useState(null);
+    const iconLoadHandlersRef = useRef(new Map());
     
     const [containerRef, dimensions] = useContainerSize();
     const { comparisonIdSet, toggleHouseInComparison } = useComparison();
+
+    // Helper to attach onload handler for incomplete icons
+    const ensureIconLoaded = useCallback((icon) => {
+        if (!icon || icon.complete) return;
+        
+        // Check if we already have a handler for this icon
+        if (iconLoadHandlersRef.current.has(icon)) return;
+        
+        const handler = () => {
+            // Trigger a refresh when the icon loads
+            fgRef.current?.refresh?.();
+            // Clean up the handler
+            iconLoadHandlersRef.current.delete(icon);
+        };
+        
+        icon.addEventListener('load', handler, { once: true });
+        iconLoadHandlersRef.current.set(icon, handler);
+    }, []);
 
     const renderNode = useCallback((node, ctx) => {
         const size = getNodeSize(node.type);
@@ -33,6 +52,9 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
         if (node.type === "house" && node.solar) {
             icon = iconCache.houseSolar;
         }
+
+        // Ensure icon will trigger refresh when loaded
+        ensureIconLoaded(icon);
 
         if (node.type === "house") {
             ctx.save();
@@ -88,7 +110,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 ctx.drawImage(icon, node.x - size / 2, node.y - size / 2, size, size);
             }
         }
-    }, [comparisonIdSet]);
+    }, [comparisonIdSet, ensureIconLoaded]);
 
     const renderLabel = useCallback((node, ctx) => {
         if (hoverNode && hoverNode.id === node.id) {
@@ -165,6 +187,17 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
         }
     }, [hoverNode, comparisonIdSet]);
 
+    // Cleanup icon load handlers on unmount
+    useEffect(() => {
+        return () => {
+            // Remove all pending icon load handlers
+            iconLoadHandlersRef.current.forEach((handler, icon) => {
+                icon.removeEventListener('load', handler);
+            });
+            iconLoadHandlersRef.current.clear();
+        };
+    }, []);
+
     // Only run animation when there are flow links to animate
     const hasFlowLinks = flowLinks.length > 0;
     const flowLinkSet = useMemo(() => new Set(flowLinks), [flowLinks]);
@@ -225,6 +258,20 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
         const interval = setInterval(() => setTick((t) => t + 1), ANIMATION_CONFIG.animationInterval);
         return () => clearInterval(interval);
     }, [hasFlowLinks]);
+
+    // Force re-render when hover changes to show/hide labels
+    useEffect(() => {
+        if (fgRef.current) {
+            // Request animation frame to ensure label renders immediately
+            requestAnimationFrame(() => {
+                if (fgRef.current) {
+                    // Nudge the graph to trigger onRenderFramePost
+                    const currentZoom = fgRef.current.zoom();
+                    fgRef.current.zoom(currentZoom);
+                }
+            });
+        }
+    }, [hoverNode]);
 
 
     // Focus effect - runs when focusNode changes or dimensions change significantly
@@ -333,7 +380,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
             <div className="sr-only" role="region" aria-label="Network graph nodes">
                 <h3>Network Nodes</h3>
                 <ul>
-                    {data.nodes.filter(n => n.type !== 'street').slice(0, 20).map(node => (
+                    {data.nodes.filter(n => n.type !== 'street' && n.type !== 'feeder').slice(0, 20).map(node => (
                         <li key={node.id}>
                             {node.type}: {node.label || node.id}
                             {node.type === 'house' && (
@@ -346,8 +393,8 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                             )}
                         </li>
                     ))}
-                    {data.nodes.filter(n => n.type !== 'street').length > 20 && (
-                        <li>...and {data.nodes.filter(n => n.type !== 'street').length - 20} more nodes</li>
+                    {data.nodes.filter(n => n.type !== 'street' && n.type !== 'feeder').length > 20 && (
+                        <li>...and {data.nodes.filter(n => n.type !== 'street' && n.type !== 'feeder').length - 20} more nodes</li>
                     )}
                 </ul>
             </div>
@@ -363,8 +410,8 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 nodeRelSize={6}
                 nodeLabel={() => ""}
                 nodePointerAreaPaint={(node, color, ctx) => {
-                    // Disable pointer area for street nodes
-                    if (node.type === "street") {
+                    // Disable pointer area for street and feeder nodes - return immediately without drawing
+                    if (node.type === "street" || node.type === "feeder" || node.type === "network") {
                         return;
                     }
                     // Default pointer area for other nodes
@@ -373,35 +420,53 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                     ctx.fillRect(node.x - size / 2, node.y - size / 2, size, size);
                 }}
                 onNodeHover={(node) => {
-                    // Don't show hover for street nodes
-                    if (node && node.type === "street") {
-                        setHoverNode(null);
-                    } else {
-                        setHoverNode(node);
+                    // Early return for street and feeder nodes to prevent any interaction
+                    if (node && (node.type === "street" || node.type === "feeder" || node.type === "network")) {
+                        if (fgRef.current?.canvas) {
+                            fgRef.current.canvas.style.cursor = 'default';
+                        }
+                        return;
                     }
+                    
+                    // Set context-sensitive cursor
+                    if (fgRef.current?.canvas) {
+                        if (!node) {
+                            fgRef.current.canvas.style.cursor = 'default';
+                        } else if (node.type === 'house' || node.type === 'transformer') {
+                            fgRef.current.canvas.style.cursor = 'pointer';
+                        } else {
+                            fgRef.current.canvas.style.cursor = 'default';
+                        }
+                    }
+                    
+                    setHoverNode(node);
                 }}
                 nodeCanvasObject={renderNode}
                 onRenderFramePost={(ctx) => {
                     // Render all hover labels after all nodes are rendered to ensure they appear on top
                     if (hoverNode) {
                         const node = data.nodes.find(n => n.id === hoverNode.id);
-                        if (node) {
+                        // Skip label rendering for street and feeder nodes
+                        if (node && node.type !== 'street' && node.type !== 'feeder') {
                             renderLabel(node, ctx);
                         }
                     }
                 }}
                 linkCanvasObject={linkCanvasObject}
                 onNodeClick={(node) => {
-                    // Don't allow clicking on street nodes
-                    if (node.type !== "street") {
-                        onNodeClick(node);
+                    // Early return for street and feeder nodes to prevent any interaction
+                    if (!node || node.type === "street" || node.type === "feeder" || node.type === "network") {
+                        return;
                     }
+                    onNodeClick(node);
                 }}
                 onNodeRightClick={useCallback((node, event) => {
                     event?.preventDefault();
-                    if (node.type === "house") {
-                        toggleHouseInComparison(node);
+                    // Defensive check: only handle house nodes
+                    if (!node || node.type !== "house") {
+                        return;
                     }
+                    toggleHouseInComparison(node);
                 }, [toggleHouseInComparison])}
             />
         </div>
