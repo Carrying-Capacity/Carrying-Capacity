@@ -1,9 +1,9 @@
 {
-    "name": "Phase Identification Map",
-    "short_name": "Phase Map",
+    "name": "Carrying Capacity: Phase Identification",
+    "short_name": "Carrying Capacity",
     "icons": [
         {
-            "src": "/favicon.svg",
+            "src": "./favicon.svg",
             "sizes": "any",
             "type": "image/svg+xml"
         }
