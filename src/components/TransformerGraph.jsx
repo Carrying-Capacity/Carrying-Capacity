@@ -21,6 +21,8 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
     const [flowLinks, setFlowLinks] = useState([]);
     const [tick, setTick] = useState(0);
     const [lastFocusNode, setLastFocusNode] = useState(null);
+    const [pulsingHouseIds, setPulsingHouseIds] = useState(new Set());
+    const [pulseTick, setPulseTick] = useState(0);
     const iconLoadHandlersRef = useRef(new Map());
     
     const [containerRef, dimensions] = useContainerSize();
@@ -71,6 +73,28 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 bgColor = PHASE_COLORS_SOFT[phase] || PHASE_COLORS_SOFT.default;
             }
             
+            // Draw pulsing ring for houses connected to selected transformer
+            if (pulsingHouseIds.has(node.id)) {
+                const pulseProgress = (pulseTick % 60) / 60; // 0 to 1 over 60 frames
+                const pulseScale = 1 + Math.sin(pulseProgress * Math.PI * 2) * 0.3; // Oscillate between 1 and 1.3
+                const pulseAlpha = 0.6 - (Math.sin(pulseProgress * Math.PI * 2) * 0.3); // Oscillate opacity
+                
+                ctx.strokeStyle = "#f97316"; // Orange color
+                ctx.lineWidth = 3;
+                ctx.globalAlpha = pulseAlpha;
+                const pulseSize = size * 1.2 * pulseScale;
+                ctx.beginPath();
+                ctx.roundRect(
+                    node.x - pulseSize / 2,
+                    node.y - pulseSize / 2,
+                    pulseSize,
+                    pulseSize,
+                    4
+                );
+                ctx.stroke();
+                ctx.globalAlpha = 1.0;
+            }
+            
             // Draw rounded square background (full opacity)
             const squareSize = size * 1.2;
             const cornerRadius = 4;
@@ -110,7 +134,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 ctx.drawImage(icon, node.x - size / 2, node.y - size / 2, size, size);
             }
         }
-    }, [comparisonIdSet, ensureIconLoaded]);
+    }, [comparisonIdSet, ensureIconLoaded, pulsingHouseIds, pulseTick]);
 
     const renderLabel = useCallback((node, ctx) => {
         if (hoverNode && hoverNode.id === node.id) {
@@ -259,6 +283,17 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
         return () => clearInterval(interval);
     }, [hasFlowLinks]);
 
+    // Pulse animation for houses connected to selected transformer
+    useEffect(() => {
+        if (pulsingHouseIds.size === 0) {
+            setPulseTick(0);
+            return;
+        }
+        
+        const interval = setInterval(() => setPulseTick((t) => t + 1), 1000 / 60); // 60 FPS
+        return () => clearInterval(interval);
+    }, [pulsingHouseIds.size]);
+
     // Force re-render when hover changes to show/hide labels
     useEffect(() => {
         if (fgRef.current) {
@@ -273,6 +308,18 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
         }
     }, [hoverNode]);
 
+    // Initial zoom-to-fit when graph first loads
+    useEffect(() => {
+        if (!fgRef.current || !data.nodes.length || isMobile) return;
+        
+        const timeoutId = setTimeout(() => {
+            if (fgRef.current) {
+                fgRef.current.zoomToFit(1000, 150);
+            }
+        }, 200);
+        
+        return () => clearTimeout(timeoutId);
+    }, [data.nodes.length, isMobile]);
 
     // Focus effect - runs when focusNode changes or dimensions change significantly
     useEffect(() => {
@@ -304,10 +351,19 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 if (node.type === "feeder") {
                     // Zoom to show entire network for feeder
                     fgRef.current.zoomToFit(1000, 150);
+                    setPulsingHouseIds(new Set());
                 } else {
                     // For transformer, find all downstream nodes (recursively)
                     const allDownstreamNodes = collectDownstreamNodes(data, node);
                     const downstreamIds = new Set(allDownstreamNodes.map(dn => dn.id));
+                    
+                    // Set pulsing for houses connected to this transformer
+                    const houseIds = new Set(
+                        allDownstreamNodes
+                            .filter(n => n.type === 'house')
+                            .map(n => n.id)
+                    );
+                    setPulsingHouseIds(houseIds);
 
                     fgRef.current.zoomToFit(
                         1000,
@@ -319,6 +375,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 // Trace path back to feeder
                 const { pathNodes, pathLinks } = tracePathToFeeder(data, node);
                 setFlowLinks(pathLinks);
+                setPulsingHouseIds(new Set());
 
                 // Zoom to fit all nodes along the path
                 const pathNodeIds = new Set(pathNodes.map(p => p.id));
@@ -329,6 +386,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 );
             } else {
                 setFlowLinks([]);
+                setPulsingHouseIds(new Set());
                 fgRef.current.zoomToFit(1000, 100);
             }
         }, 150); // Increased delay for fullscreen transitions
