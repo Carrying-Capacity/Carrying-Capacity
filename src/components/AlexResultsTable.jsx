@@ -21,6 +21,7 @@ const AlexResultTable = () => {
     return val;
   };
 
+    // Find the total row (by id === "total")
   return (
     <div className="w-full p-4 bg-white shadow rounded-lg">
       {/* Dropdown */}
@@ -49,28 +50,44 @@ const AlexResultTable = () => {
                   Object.keys(currentData[0]).map((key) => (
                     <th
                       key={key}
-                      className="border px-4 py-2 text-left bg-gray-100"
+                      className="border px-4 py-2 text-left bg-gray-200"
                     >
                       {key.charAt(0).toUpperCase() + key.slice(1)}
                     </th>
                   ))}
               </tr>
             </thead>
-            <tbody>
-              {currentData.map((item, idx) => (
-                <tr key={idx} className="hover:bg-gray-50">
-                  {Object.values(item).map((val, i) => (
-                    <td key={i} className="border px-4 py-2">
-                      {renderValue(val)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+            <tbody> {currentData.map((item, idx) => {
+                const isTotalRow =
+                  Object.values(item).some(
+                    (val) =>
+                      typeof val === "string" &&
+                      val.toLowerCase().trim() === "total"
+                  ) ||
+                  Object.keys(item).some(
+                    (key) =>
+                      key.toLowerCase().trim() === "total"
+                  );
+
+                return (
+                  <tr
+                    key={idx}
+                    className={`hover:bg-gray-50 ${
+                      isTotalRow ? "bg-gray-50 font-bold" : ""
+                    }`}
+                  >
+                    {Object.values(item).map((val, i) => (
+                      <td key={i} className="border px-4 py-2 text-center align-middle">
+                        {renderValue(val)}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
-
       {currentData.length === 0 && <p className="mt-2">No data available.</p>}
     </div>
   );
