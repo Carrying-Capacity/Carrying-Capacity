@@ -370,7 +370,9 @@
   }
 
   .modern-page-section {
+    max-width: 100%;
     padding: var(--space-md);
+    animation: fadeInUp 0.8s ease-out;
   }
 
   .modern-content-wrapper {
