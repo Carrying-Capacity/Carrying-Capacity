@@ -1,3 +1,23 @@
+@ARTICLE{10.3389/fenrg.2021.752571,
+  
+AUTHOR={Yu, Huang  and Wu, Yufeng  and Guan, Weiling  and Zhang, Daolu  and Yu, Tao  and Liu, Qianjin },
+         
+TITLE={Practical Method for Data-Driven User Phase Identification in Low-Voltage Distribution Networks},
+        
+JOURNAL={Frontiers in Energy Research},
+        
+VOLUME={Volume 9 - 2021},
+
+YEAR={2021},
+
+URL={https://www.frontiersin.org/journals/energy-research/articles/10.3389/fenrg.2021.752571},
+
+DOI={10.3389/fenrg.2021.752571},
+
+ISSN={2296-598X},
+
+ABSTRACT={ For low voltage distribution network (LVDN), accurate models depicting network and phase connectivity are crucial to the analysis, planning, and operation of these networks.  However, phase connectivity data in LVDN is usually incorrect or missing. Wrong or incomplete phase information collected could lead to unbalanced operation of three-phase distribution systems and increased power loss. Based on advanced measurement infrastructure (AMI) in development of smart gird, in this study, a novel data-driven phase identification algorithm is proposed. Firstly, the method involves extracting features from voltage-time matrices using a nonlinear dimension reduction algorithm. Secondly, density-based spatial clustering of applications with noise (DBSCAN) algorithm is used to divide customers into clusters with arbitrary shape. Finally, the algorithms were tested with the IEEE European Low Voltage Test Feeder of the IEEE PES AMPS DSAS Test Feeder working group. The results showed an accuracy of over 90% for the method.}}
+
 @ARTICLE{10542958,
   author={Jiao, Fengshun and Li, Zhikeng and Ai, Jingwen and Yang, Haisen and Deng, Yongsheng and Li, Duo and Gao, Weijie and Lai, Zhaoyang and Fu, Xieli},
   journal={IEEE Access}, 
@@ -46,7 +66,7 @@
   doi={}}
 
 
-@article{Zaragoza_2021,
+ @article{Zaragoza_2021,
 title={Denoising with Singular Value Decomposition for Phase Identification in Power Distribution Systems},
 url={http://dx.doi.org/10.36227/techrxiv.15102072.v1},
 DOI={10.36227/techrxiv.15102072.v1},
@@ -55,16 +75,42 @@ author={Zaragoza, Nicholas and Rao, Vittal},
 year={2021},
 month=aug }
 
-@ARTICLE{10.3389/fenrg.2021.752571,
-AUTHOR={Yu, Huang  and Wu, Yufeng  and Guan, Weiling  and Zhang, Daolu  and Yu, Tao  and Liu, Qianjin },
-TITLE={Practical Method for Data-Driven User Phase Identification in Low-Voltage Distribution Networks},     
-JOURNAL={Frontiers in Energy Research},
-VOLUME={Volume 9 - 2021},
-YEAR={2021},
-URL={https://www.frontiersin.org/journals/energy-research/articles/10.3389/fenrg.2021.752571},
-DOI={10.3389/fenrg.2021.752571},
-ISSN={2296-598X},
-ABSTRACT={ For low voltage distribution network (LVDN), accurate models depicting network and phase connectivity are crucial to the analysis, planning, and operation of these networks.  However, phase connectivity data in LVDN is usually incorrect or missing. Wrong or incomplete phase information collected could lead to unbalanced operation of three-phase distribution systems and increased power loss. Based on advanced measurement infrastructure (AMI) in development of smart gird, in this study, a novel data-driven phase identification algorithm is proposed. Firstly, the method involves extracting features from voltage-time matrices using a nonlinear dimension reduction algorithm. Secondly, density-based spatial clustering of applications with noise (DBSCAN) algorithm is used to divide customers into clusters with arbitrary shape. Finally, the algorithms were tested with the IEEE European Low Voltage Test Feeder of the IEEE PES AMPS DSAS Test Feeder working group. The results showed an accuracy of over 90% for the method.}}
 
+@article{GARCIA2023108525,
+title = {Phase topology identification in low-voltage distribution networks: A Bayesian approach},
+journal = {International Journal of Electrical Power & Energy Systems},
+volume = {144},
+pages = {108525},
+year = {2023},
+issn = {0142-0615},
+doi = {https://doi.org/10.1016/j.ijepes.2022.108525},
+url = {https://www.sciencedirect.com/science/article/pii/S0142061522005270},
+author = {Sebastián García and Javier M. Mora-Merchán and Diego F. Larios and Enrique Personal and Antonio Parejo and Carlos León},
+keywords = {Phase identification, Distribution networks, Data analytics, Smart meters, Distribution system operators},
+abstract = {Knowledge of customer phase connection in low-voltage distribution networks is important for Distribution System Operators (DSOs). This paper presents a novel data-driven phase identification method based on Bayesian inference, which uses load consumption profiles as inputs. This method uses a non-linear function to establish the probability of a customer being connected to a given phase, based on variations in the customer’s consumption and those in the phase feeders. Owing to the Bayesian inference, the proposed method can provide up-to-date certainty about the phase connection of each customer. To improve the detection of those customers that are more difficult to identify, after obtaining the up-to-date certainty for all users, the consumption of those who have an up-to-date certainty above a certain percentile compared with the rest of the substation (those that are more likely to be correctly classified) is subtracted from the phase in which they are classified. The performance of the proposed method was evaluated using a real (non-synthetic) low-voltage distribution network. Favourable results (with accuracies higher than 97 %) were obtained in almost all cases, regardless of the percentage of Smart Meter penetration and the size of the substation. A comparison with other state-of-the-art methods showed that the proposed method outperforms (or equals) them. The proposed method does not necessarily require previously labelled data; however, it can handle them even if they contain errors. Having previous information (partial or complete) increases the performance of phase identification, making it possible to correct erroneous previous labelling.}
+}
+
+@INPROCEEDINGS{8582318,
+  author={Ma, Yi and Fan, Xingyuan and Tang, Run and Duan, Pan and Sun, Ying and Du, Jinyang and Duan, Qichang},
+  booktitle={2018 2nd IEEE Conference on Energy Internet and Energy System Integration (EI2)}, 
+  title={Phase Identification of Smart Meters by Spectral Clustering}, 
+  year={2018},
+  volume={},
+  number={},
+  pages={1-5},
+  keywords={Meters;Low voltage;Time series analysis;Europe;Energy Internet;Distribution networks;System integration;Smart meters;Power grids;Load flow analysis;clustering;spectral clustering;phase identification;smart meter;distributed power grid},
+  doi={10.1109/EI2.2018.8582318}}
+
+
+@ARTICLE{10542958,
+  author={Jiao, Fengshun and Li, Zhikeng and Ai, Jingwen and Yang, Haisen and Deng, Yongsheng and Li, Duo and Gao, Weijie and Lai, Zhaoyang and Fu, Xieli},
+  journal={IEEE Access}, 
+  title={Topology Identification Method for Low-Voltage Distribution Node Networks Based on Density Clustering Using Smart Meter Real-Time Measurement Data}, 
+  year={2024},
+  volume={12},
+  number={},
+  pages={83600-83610},
+  keywords={Topology;Network topology;Smart meters;Distribution networks;Low voltage;Transformers;Dimensionality reduction;Distribution networks;Stochastic processes;Nearest neighbor methods;Low-voltage distribution network;topology identification;noise-containing customer data;t-distributed stochastic neighbor embedding (t-SNE);density clustering},
+  doi={10.1109/ACCESS.2024.3407827}}
 
 

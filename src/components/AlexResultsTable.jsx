@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import data from "../data/alex_results.json"; // adjust path
+import data from "../data/alex_results.json";
+
+// Alex's result table, to display Alex's results for correlation.
 
 const AlexResultTable = () => {
   // Dynamically get categories from JSON keys
@@ -11,6 +13,7 @@ const AlexResultTable = () => {
   const currentData = data[selectedCategory] || [];
 
   const renderValue = (val) => {
+    // Display the values. Type checker for booleans/arrays.
     if (Array.isArray(val)) {
       // Render arrays with commas and spaces
       return val.join(", ");
@@ -21,7 +24,6 @@ const AlexResultTable = () => {
     return val;
   };
 
-    // Find the total row (by id === "total")
   return (
     <div className="w-full p-4 bg-white shadow rounded-lg">
       {/* Dropdown */}
