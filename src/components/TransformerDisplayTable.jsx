@@ -2,21 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import data from "../data/nodes.json";
 
 const ReactiveTable = () => {
-  // Extract only houses
-  const houses = data.filter((item) => item.type === "house");
 
-  // Get unique transformer IDs
-  const uniqueTransformers = [
-    ...new Set(houses.map((h) => h.transformer).filter((t) => t != null)),
-  ];
+  const houses = data.filter((item) => item.type === "house");  // Extract only houses, ignore streets, Feeders and transformers
+  const uniqueTransformers = [...new Set(houses.map((h) => h.transformer).filter((t) => t != null)),];  // Get unique transformer IDs
 
-  const [selectedTransformer, setSelectedTransformer] = useState(
-    uniqueTransformers[0] || null
-  );
-
+  const [pendingScrollHouse, setPendingScrollHouse] = useState(null);
+  const [selectedTransformer, setSelectedTransformer] = useState(uniqueTransformers[0] || null);
   const [searchTerm, setSearchTerm] = useState("");
-
-  // Columns to show (in order)
   const columns = ["house_number", "predicted_phase", "solar"];
 
   // Filter + sort data by house number
@@ -38,28 +30,33 @@ const ReactiveTable = () => {
     return val ?? "";
   };
 
-  // User searches for a house number
+  // 🔍 When user searches for a house number
   const handleSearch = () => {
     const targetNum = Number(searchTerm.trim());
     if (!targetNum || isNaN(targetNum)) return;
 
     const targetTransformer = houseToTransformer[targetNum];
     if (!targetTransformer) {
-      alert(`House ${targetNum} was not found.`);
+      alert(`House ${targetNum} not found.`);
       return;
     }
-
-    // Change transformer and then scroll after DOM updates
+    // Store the house we want to scroll to
+    setPendingScrollHouse(targetNum);
+    // Trigger transformer switch (this re-renders the table)
     setSelectedTransformer(targetTransformer);
-    setTimeout(() => {
-      const row = rowRefs.current[targetNum];
-      if (row) {
-        row.scrollIntoView({ behavior: "smooth", block: "center" });
-        row.classList.add("bg-yellow-100");
-        setTimeout(() => row.classList.remove("bg-yellow-100"), 2000);
-      }
-    }, 200);
   };
+
+  useEffect(() => {
+  if (!pendingScrollHouse) return;
+
+  const row = rowRefs.current[pendingScrollHouse];
+  if (row) {
+    row.scrollIntoView({ behavior: "smooth", block: "center" });
+    row.classList.add("bg-yellow-100");
+    setTimeout(() => row.classList.remove("bg-yellow-100"), 2000);
+    setPendingScrollHouse(null); // reset
+  }
+  }, [currentData, pendingScrollHouse]); // runs after table renders
 
   // Reset row refs on transformer change
   useEffect(() => {
