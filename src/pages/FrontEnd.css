@@ -45,8 +45,8 @@
 }
 
 .frontend-title {
-  font-size: 3rem;
-  font-weight: 800;
+  font-size: 3.5rem;
+  font-weight: 400;
   line-height: 1.2;
   color: #0f172a;
   margin-bottom: 1.5rem;
@@ -83,7 +83,7 @@
 
 .frontend-section-title {
   font-size: 2.5rem;
-  font-weight: 800;
+  font-weight: 400;
   color: #0f172a;
   margin-bottom: 1rem;
 }
@@ -154,7 +154,7 @@
 
 .tech-name {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #0f172a;
   margin: 0;
 }
