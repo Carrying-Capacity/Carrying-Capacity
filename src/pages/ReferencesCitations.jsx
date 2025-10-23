@@ -54,7 +54,8 @@ export default function ReferencesCitations() {
 
       <section className="modern-page-section fade-in-up">
         <div className="modern-info-card">
-          <p>Below are the references used for this project. ChatGPT and Claude were used to aid in bug fixing, production and development of this project. At the end of the project, we ensured that the majority of functional code was hand-written.</p>
+          <p>Below are the references used for this project.</p>
+            {/* ChatGPT and Claude were used to aid in bug fixing, production and development of this project. At the end of the project, we ensured that the majority of functional code was hand-written.</p> */}
         </div>
 
         <div className="modern-card fade-in-up-delay-1">
