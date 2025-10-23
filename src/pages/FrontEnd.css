@@ -2,14 +2,14 @@
 
 .frontend-modern {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%);
+  background: var(--gradient-bg);
 }
 
 /* Hero Section */
 .frontend-hero {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 4rem 2rem 3rem;
+  padding: var(--space-2xl) var(--space-2xl) var(--space-2xl);
   text-align: center;
 }
 
@@ -26,16 +26,14 @@
 .frontend-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.9) 0%, 
-    rgba(248, 250, 252, 0.9) 100%);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: 9999px;
-  color: #3b82f6;
+  color: var(--primary);
   font-size: 0.875rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
@@ -48,13 +46,13 @@
   font-size: 3rem;
   font-weight: 800;
   line-height: 1.2;
-  color: #0f172a;
+  color: var(--gray-900);
   margin-bottom: 1.5rem;
   letter-spacing: -0.02em;
 }
 
 .frontend-title-gradient {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+  background: var(--gradient-brand-extended);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -63,7 +61,7 @@
 .frontend-description {
   font-size: 1.125rem;
   line-height: 1.8;
-  color: #475569;
+  color: var(--gray-600);
   max-width: 700px;
   margin: 0 auto;
 }
@@ -72,7 +70,7 @@
 .frontend-section {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: var(--space-2xl) var(--space-2xl);
 }
 
 .frontend-section-header {
@@ -84,13 +82,13 @@
 .frontend-section-title {
   font-size: 2.5rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--gray-900);
   margin-bottom: 1rem;
 }
 
 .frontend-section-subtitle {
   font-size: 1.125rem;
-  color: #64748b;
+  color: var(--gray-500);
   max-width: 600px;
   margin: 0 auto;
 }
@@ -99,16 +97,16 @@
 .technologies-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 2rem;
+  gap: var(--space-2xl);
 }
 
 .tech-card {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
-  padding: 2rem;
-  transition: all 0.4s ease;
+  padding: var(--space-2xl);
+  transition: all var(--transition-slow);
   animation: fadeInUp 0.8s ease-out both;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
@@ -122,19 +120,19 @@
 .tech-card-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-lg);
   margin-bottom: 1.5rem;
 }
 
 .tech-logo-container {
   width: 64px;
   height: 64px;
-  border-radius: 16px;
+  border-radius: var(--radius-2xl);
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid var(--glass-border);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
   padding: 12px;
@@ -155,13 +153,13 @@
 .tech-name {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--gray-900);
   margin: 0;
 }
 
 .tech-version {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--gray-500);
   font-weight: 500;
   font-family: 'Courier New', monospace;
   background: rgba(100, 116, 139, 0.1);
@@ -172,7 +170,7 @@
 
 .tech-description {
   font-size: 1rem;
-  color: #475569;
+  color: var(--gray-600);
   line-height: 1.6;
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
@@ -190,7 +188,7 @@
 .tech-section-title {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--gray-900);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.75rem;
@@ -202,27 +200,27 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-sm);
 }
 
 .tech-feature-item {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: var(--space-sm);
   font-size: 0.9375rem;
-  color: #475569;
+  color: var(--gray-600);
   line-height: 1.6;
 }
 
 .tech-feature-icon {
-  color: #10b981;
+  color: var(--success);
   flex-shrink: 0;
   margin-top: 0.125rem;
 }
 
 .tech-justification {
   font-size: 0.9375rem;
-  color: #475569;
+  color: var(--gray-600);
   line-height: 1.7;
   background: rgba(59, 130, 246, 0.05);
   padding: 1rem;
@@ -236,20 +234,20 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-sm);
 }
 
 .tech-usecase-item {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: var(--space-sm);
   font-size: 0.9375rem;
-  color: #475569;
+  color: var(--gray-600);
   line-height: 1.6;
 }
 
 .tech-usecase-icon {
-  color: #3b82f6;
+  color: var(--primary);
   flex-shrink: 0;
   margin-top: 0.25rem;
 }
@@ -264,11 +262,11 @@
 .principle-card {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 16px;
-  padding: 2rem;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-2xl);
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal);
   animation: fadeInUp 0.8s ease-out both;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
@@ -283,7 +281,7 @@
   width: 56px;
   height: 56px;
   margin: 0 auto 1rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background: var(--gradient-brand);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -298,13 +296,13 @@
 .principle-title {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--gray-900);
   margin-bottom: 0.5rem;
 }
 
 .principle-description {
   font-size: 0.9375rem;
-  color: #64748b;
+  color: var(--gray-500);
   line-height: 1.6;
 }
 
@@ -312,7 +310,7 @@
 .architecture-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid var(--glass-border);
   border-radius: 24px;
   padding: 3rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
@@ -322,14 +320,14 @@
 .architecture-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--gray-900);
   margin-bottom: 1rem;
   text-align: center;
 }
 
 .architecture-description {
   font-size: 1.125rem;
-  color: #475569;
+  color: var(--gray-600);
   text-align: center;
   margin-bottom: 2.5rem;
   max-width: 700px;
@@ -339,15 +337,15 @@
 
 .architecture-layers {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-lg);
 }
 
 .architecture-layer {
   background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 1.5rem;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal);
 }
 
 .architecture-layer:hover {
@@ -360,7 +358,7 @@
   display: inline-block;
   font-size: 0.875rem;
   font-weight: 700;
-  color: #3b82f6;
+  color: var(--primary);
   background: rgba(59, 130, 246, 0.1);
   padding: 0.375rem 0.875rem;
   border-radius: 8px;
@@ -369,7 +367,7 @@
 
 .layer-description {
   font-size: 0.9375rem;
-  color: #475569;
+  color: var(--gray-600);
   line-height: 1.7;
   margin: 0;
 }
@@ -378,7 +376,7 @@
 .metrics-card {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid var(--glass-border);
   border-radius: 24px;
   padding: 3rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
@@ -388,7 +386,7 @@
 .metrics-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--gray-900);
   margin-bottom: 2rem;
   text-align: center;
 }
@@ -396,16 +394,16 @@
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
+  gap: var(--space-2xl);
 }
 
 .metric-item {
   text-align: center;
   padding: 1.5rem;
   background: rgba(255, 255, 255, 0.9);
-  border-radius: 16px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  transition: all 0.3s ease;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition-normal);
 }
 
 .metric-item:hover {
@@ -417,7 +415,7 @@
 .metric-value {
   font-size: 2.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -426,7 +424,7 @@
 
 .metric-label {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--gray-500);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -456,7 +454,7 @@
 
   .architecture-card,
   .metrics-card {
-    padding: 2rem;
+    padding: var(--space-2xl);
   }
 }
 

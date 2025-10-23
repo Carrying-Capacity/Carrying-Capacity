@@ -10,7 +10,6 @@ const DataProcessingInfo = lazy(() => import("./pages/DataProcessingInfo"));
 const FrontEnd = lazy(() => import("./pages/FrontEnd"));
 const Transformer = lazy(() => import("./components/TransformerGraphWrapper"));
 const ReferencesCitations = lazy(() => import("./pages/ReferencesCitations"));
-import "./styles/shared.css";
 
 const ScrollToTop = () => {
     const location = useLocation();
