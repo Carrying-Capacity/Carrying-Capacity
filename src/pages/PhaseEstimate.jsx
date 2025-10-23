@@ -13,12 +13,14 @@ export default function PhaseEstimate() {
       <div className="modern-page-hero">
         <h1 className="modern-page-title">Phase Estimation</h1>
         <p className="modern-page-subtitle">
-          Phase identification was a major part of our work, as electrical companies do not keep track of the phases of each of their customers. This can lead to overloading on specific phases reducing the ability of customers on that overloaded phase to feed eneegry back into the grid, and in worst cases cause blackouts or fires in the transformers.
+        Estimation of Phase from Voltage Data
         </p>
       </div>
 
       <section className="modern-page-section fade-in-up">
         <div className="modern-content-wrapper">
+          <h2>Phase Estimation</h2>
+          <p>Phase identification was a major part of our work, as electrical companies do not keep track of the phases of each of their customers. This can lead to overloading on specific phases reducing the ability of customers on that overloaded phase to feed eneegry back into the grid, and in worst cases cause blackouts or fires in the transformers.</p>
           <h2 className="modern-section-title">Methodology</h2>
           <p>To identify the phase of each customer on the network, clustering algorithims were used. Our data however, had to be transformed first in order to fit each algorithm</p>
           <h3 className="modern-subsection-title">Data formating</h3>

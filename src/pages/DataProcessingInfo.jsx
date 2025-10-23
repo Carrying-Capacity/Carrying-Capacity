@@ -38,6 +38,18 @@ export default function DataProcessingInfo() {
               <ReactiveTable/>
           </div>
         </div>
+        <div className="modern-card fade-in-up-delay-2">
+          <h2>Project Pipeline Overview</h2>
+          <p>The phase identification project follows a multistage process as described in Figure 1. Firstly, the large dataset is converted into a Parquet file for compression purposes. Following this a custom “ImportData” function allows for consistent data extraction from the files across the project.  
+          </p>
+          <p>The pipeline then splits into two distinct processes. Seperatly, the dataset is analysed to identify and attach phase labels to each transformer, while also interpreted to generate a minimum spanning tree of the overarching electrical network. The two separate methods are then combined and layered, before being converted into a user-friendly network map. Finally, the results are displayed on a website. Further details about each described step can be found in their respective sections.</p>
+          <img src="src\assets\figs\pipeline.png" alt="" style={{ height: "10%", display: "block", margin: "0 auto"}}/>
+        </div>
+        <div className="modern-card fade-in-up-delay-2">
+          <h2>Parquet file Usage</h2>
+          <p>Due to the size of the database, a parquet-based file system was chosen for data storage. This is due to its superior compression and reading speed when compared to the traditionally csv format. The data was stored in six individual parquet files, each representing 2-3 transformers. The use of the parquet files also necessitated a custom importData function. This function ensured that data extraction across all methods within the code based followed a common style and output, ensuring overall reusability and portability. </p>
+          <img src="src\assets\figs\parquets.png" alt="" style={{ width: "30%", display: "block", margin: "0 auto"}}/>
+        </div>
       </section>
     </PageLayout>
   );
