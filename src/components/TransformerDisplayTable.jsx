@@ -30,7 +30,7 @@ const ReactiveTable = () => {
     return val ?? "";
   };
 
-  // 🔍 When user searches for a house number
+  // When user searches for a house number
   const handleSearch = () => {
     const targetNum = Number(searchTerm.trim());
     if (!targetNum || isNaN(targetNum)) return;
