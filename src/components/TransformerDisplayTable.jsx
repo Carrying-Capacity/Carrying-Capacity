@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import data from "../data/example2.json"; // your JSON file
+import data from "../data/nodes.json";
 
 const ReactiveTable = () => {
   // Extract only houses

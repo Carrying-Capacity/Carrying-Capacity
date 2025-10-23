@@ -1,6 +1,6 @@
-import example from "../data/example2.json";
+import nodes from "../data/nodes.json";
 
-const datasets = [example];
+const datasets = [nodes];
 const normalizeType = (t) => (t ? t.toLowerCase() : t);
 
 // Helper function to generate appropriate labels for nodes
@@ -28,7 +28,7 @@ export function loadTransformerData() {
     // Scale factor for positioning
     const scale = 100;
 
-    // Process the single network (example.json contains the complete network)
+    // Process the single network (nodes.json contains the complete network)
     const network = datasets[0]; // Only one dataset now - the complete network
     
     // Create a set of all valid node IDs for reference cleaning
