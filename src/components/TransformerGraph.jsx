@@ -10,6 +10,7 @@ import { ANIMATION_CONFIG } from '../constants/index.js';
 // Style constants extracted from render path
 const LINK_STYLES = {
     flow: { strokeStyle: "#f97316", lineWidth: 2.5, fillStyle: "#f97316" },
+    feederToTransformer: { strokeStyle: "#475569", lineWidth: 3, fillStyle: "#475569" },
     normal: { strokeStyle: "#cbd5e1", lineWidth: 1.5, fillStyle: "#94a3b8" }
 };
 const ARROW_LENGTH = 10;
@@ -21,7 +22,9 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
     const [flowLinks, setFlowLinks] = useState([]);
     const [tick, setTick] = useState(0);
     const [lastFocusNode, setLastFocusNode] = useState(null);
-    const [pulsingHouseIds, setPulsingHouseIds] = useState(new Set());
+    const [pulsingNodeIds, setPulsingNodeIds] = useState(new Set());
+    const [downstreamLinks, setDownstreamLinks] = useState(new Set());
+    const [selectedTransformerId, setSelectedTransformerId] = useState(null);
     const [pulseTick, setPulseTick] = useState(0);
     const iconLoadHandlersRef = useRef(new Map());
     const flowAnimationFrameRef = useRef(null);
@@ -80,7 +83,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
             }
             
             // Draw pulsing ring for houses connected to selected transformer
-            if (pulsingHouseIds.has(node.id)) {
+            if (pulsingNodeIds.has(node.id)) {
                 const pulseProgress = (pulseTick % 60) / 60; // 0 to 1 over 60 frames
                 const pulseScale = 1 + Math.sin(pulseProgress * Math.PI * 2) * 0.3; // Oscillate between 1 and 1.3
                 const pulseAlpha = 0.6 - (Math.sin(pulseProgress * Math.PI * 2) * 0.3); // Oscillate opacity
@@ -135,12 +138,30 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 ctx.restore();
             }
         } else {
-            // Draw non-house nodes normally
+            // Draw non-house nodes (network, street, transformer, feeder)
+            // Draw pulsing glow for selected transformer
+            if (node.type === "transformer" && selectedTransformerId === node.id) {
+                ctx.save();
+                const pulseProgress = (pulseTick % 60) / 60; // 0 to 1 over 60 frames
+                const pulseScale = 1 + Math.sin(pulseProgress * Math.PI * 2) * 0.3; // Oscillate between 1 and 1.3
+                const pulseAlpha = 0.6 - (Math.sin(pulseProgress * Math.PI * 2) * 0.3); // Oscillate opacity
+                
+                ctx.strokeStyle = "#f97316"; // Orange color
+                ctx.lineWidth = 3;
+                ctx.globalAlpha = pulseAlpha;
+                const pulseSize = size * 1.4 * pulseScale;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, pulseSize / 2, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.globalAlpha = 1.0;
+                ctx.restore();
+            }
+            
             if (icon && icon.complete) {
                 ctx.drawImage(icon, node.x - size / 2, node.y - size / 2, size, size);
             }
         }
-    }, [comparisonIdSet, ensureIconLoaded, pulsingHouseIds, pulseTick]);
+    }, [comparisonIdSet, ensureIconLoaded, pulsingNodeIds, selectedTransformerId, pulseTick]);
 
     const renderLabel = useCallback((node, ctx) => {
         if (hoverNode && hoverNode.id === node.id) {
@@ -235,7 +256,26 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
     // Memoize linkCanvasObject to avoid per-frame allocations
     const linkCanvasObject = useCallback((link, ctx) => {
         const isFlowLink = flowLinkSet.has(link);
-        const style = isFlowLink ? LINK_STYLES.flow : LINK_STYLES.normal;
+        const isDownstreamLink = downstreamLinks.has(link);
+        
+        // Check if this is a feeder-to-transformer link
+        const sourceNode = link.source;
+        const targetNode = link.target;
+        const isFeederToTransformer = 
+            (sourceNode.type === "feeder" && targetNode.type === "transformer") ||
+            (sourceNode.type === "transformer" && targetNode.type === "feeder");
+        
+        // Determine style: flow links get animated orange, feeder-to-transformer get thick dark, downstream links get static orange, others normal
+        let style;
+        if (isFlowLink) {
+            style = LINK_STYLES.flow;
+        } else if (isFeederToTransformer) {
+            style = LINK_STYLES.feederToTransformer;
+        } else if (isDownstreamLink) {
+            style = { strokeStyle: "#f97316", lineWidth: 2, fillStyle: "#f97316" };
+        } else {
+            style = LINK_STYLES.normal;
+        }
         
         // Set link style
         ctx.strokeStyle = style.strokeStyle;
@@ -252,32 +292,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
         ctx.moveTo(link.source.x, link.source.y);
         ctx.lineTo(link.target.x, link.target.y);
         ctx.stroke();
-
-        // Draw arrow at halfway point
-        const dx = link.target.x - link.source.x;
-        const dy = link.target.y - link.source.y;
-        const angle = Math.atan2(dy, dx);
-        
-        // Arrow position at 50% of the link
-        const arrowX = link.source.x + dx * 0.5;
-        const arrowY = link.source.y + dy * 0.5;
-        
-        ctx.save();
-        ctx.translate(arrowX, arrowY);
-        ctx.rotate(angle);
-        
-        // Draw arrow
-        ctx.beginPath();
-        ctx.moveTo(ARROW_LENGTH / 2, 0);
-        ctx.lineTo(-ARROW_LENGTH / 2, -ARROW_WIDTH / 2);
-        ctx.lineTo(-ARROW_LENGTH / 2, ARROW_WIDTH / 2);
-        ctx.closePath();
-        
-        ctx.fillStyle = style.fillStyle;
-        ctx.fill();
-        
-        ctx.restore();
-    }, [tick, flowLinkSet]);
+    }, [tick, flowLinkSet, downstreamLinks]);
     
     useEffect(() => {
         if (!hasFlowLinks) {
@@ -322,9 +337,9 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
         };
     }, [hasFlowLinks]);
 
-    // Pulse animation for houses connected to selected transformer
+    // Pulse animation for nodes connected to selected transformer
     useEffect(() => {
-        if (pulsingHouseIds.size === 0) {
+        if (pulsingNodeIds.size === 0) {
             if (pulseAnimationFrameRef.current !== null) {
                 cancelAnimationFrame(pulseAnimationFrameRef.current);
                 pulseAnimationFrameRef.current = null;
@@ -364,7 +379,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
             pulseAnimationLastTimeRef.current = null;
             pulseAnimationAccumulatorRef.current = 0;
         };
-    }, [pulsingHouseIds.size]);
+    }, [pulsingNodeIds.size]);
 
     // Force re-render when hover changes to show/hide labels
     useEffect(() => {
@@ -410,7 +425,9 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
         if (!fgRef.current || !focusNode) {
             // Stop flow animation when focusNode is cleared
             setFlowLinks([]);
-            setPulsingHouseIds(new Set());
+            setPulsingNodeIds(new Set());
+            setDownstreamLinks(new Set());
+            setSelectedTransformerId(null);
             setLastFocusNode(null);
             return;
         }
@@ -430,19 +447,33 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 if (node.type === "feeder") {
                     // Zoom to show entire network for feeder
                     fgRef.current.zoomToFit(1000, 150);
-                    setPulsingHouseIds(new Set());
+                    setPulsingNodeIds(new Set());
+                    setDownstreamLinks(new Set());
+                    setSelectedTransformerId(null);
                 } else {
                     // For transformer, find all downstream nodes (recursively)
                     const allDownstreamNodes = collectDownstreamNodes(data, node);
                     const downstreamIds = new Set(allDownstreamNodes.map(dn => dn.id));
                     
-                    // Set pulsing for houses connected to this transformer
-                    const houseIds = new Set(
+                    // Set pulsing for houses connected to this transformer only
+                    const pulsingIds = new Set(
                         allDownstreamNodes
                             .filter(n => n.type === 'house')
                             .map(n => n.id)
                     );
-                    setPulsingHouseIds(houseIds);
+                    setPulsingNodeIds(pulsingIds);
+                    setSelectedTransformerId(node.id);
+                    
+                    // Collect all links between downstream nodes for orange coloring
+                    const downstreamLinkSet = new Set();
+                    data.links.forEach(link => {
+                        const sourceId = link.source.id || link.source;
+                        const targetId = link.target.id || link.target;
+                        if (downstreamIds.has(sourceId) && downstreamIds.has(targetId)) {
+                            downstreamLinkSet.add(link);
+                        }
+                    });
+                    setDownstreamLinks(downstreamLinkSet);
 
                     fgRef.current.zoomToFit(
                         1000,
@@ -454,7 +485,9 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 // Trace path back to feeder
                 const { pathNodes, pathLinks } = tracePathToFeeder(data, node);
                 setFlowLinks(pathLinks);
-                setPulsingHouseIds(new Set());
+                setPulsingNodeIds(new Set());
+                setDownstreamLinks(new Set());
+                setSelectedTransformerId(null);
 
                 // Zoom to fit all nodes along the path
                 const pathNodeIds = new Set(pathNodes.map(p => p.id));
@@ -465,7 +498,9 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 );
             } else {
                 setFlowLinks([]);
-                setPulsingHouseIds(new Set());
+                setPulsingNodeIds(new Set());
+                setDownstreamLinks(new Set());
+                setSelectedTransformerId(null);
                 fgRef.current.zoomToFit(1000, 100);
             }
         }, 150); // Increased delay for fullscreen transitions

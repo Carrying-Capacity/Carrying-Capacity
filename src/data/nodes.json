@@ -27301,7 +27301,7 @@
     "prev_nodes": [],
     "prev_node_distance": null,
     "x_meters": 0,
-    "y_meters": 0,
+    "y_meters": -5,
     "transformer": null
   },
   {
@@ -27312,7 +27312,6 @@
       "7dae80d798194"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": -1.4066516198202492,
@@ -28379,7 +28378,6 @@
       "4e216c7f52be4"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": 10.288396931631599,
@@ -29254,7 +29252,7 @@
       "2480a7842a234"
     ],
     "prev_nodes": [
-      "5a00363423de4"
+
     ],
     "prev_node_distance": null,
     "x_meters": -4.197492929687302,
@@ -29480,7 +29478,6 @@
       "095b5d8c743e4"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": 7.849391570228991,
@@ -29756,7 +29753,6 @@
       "c98f54bf96e94"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": 10.418824477016411,
@@ -30684,7 +30680,6 @@
       "1840f0c3ca7e4"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": 8.180085154151255,
@@ -31209,7 +31204,7 @@
       "1c66d920a4bf4"
     ],
     "prev_nodes": [
-      "5a00363423de4"
+
     ],
     "prev_node_distance": null,
     "x_meters": 10.089500927180078,
@@ -31368,22 +31363,6 @@
     "predicted_phase": "B",
     "solar": true,
     "house_number": 226
-  },
-  {
-    "type": "house",
-    "id": "3916119bba404",
-    "next_nodes": [],
-    "prev_nodes": [
-      "f045ce5a19964"
-    ],
-    "prev_node_distance": 0.4856767932538749,
-    "x_meters": 0,
-    "y_meters": 0,
-    "transformer": 7,
-    "voltage_data": [],
-    "predicted_phase": "B",
-    "solar": false,
-    "house_number": 227
   },
   {
     "type": "house",
@@ -32544,7 +32523,6 @@
       "c11182e8ce2d4"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": 15.01458139506967,
@@ -32750,7 +32728,6 @@
       "be510d01a3294"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": 6.45822808774262,
@@ -33645,7 +33622,6 @@
       "3b47d3152bf74"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": -9.518995330022644,
@@ -34851,7 +34827,6 @@
       "1420b006fbdb4"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": -4.1234790185746615,
@@ -36377,7 +36352,6 @@
       "6603d84962a64"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": -3.750012157847242,
@@ -36657,7 +36631,6 @@
       "2d6c307446e14"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": -18.209147281906585,
@@ -37776,7 +37749,6 @@
       "260bd06651994"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": -0.3794763858070553,
@@ -38636,7 +38608,6 @@
       "de44ec6d47654"
     ],
     "prev_nodes": [
-      "5a00363423de4"
     ],
     "prev_node_distance": null,
     "x_meters": -13.555825951202685,
