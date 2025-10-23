@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { fetchMonthlyData, fetchDailyData, fetchTimeSeriesData } from '../utils/dataFetching.js'
+import { parsePhaseOrder } from '../utils/stringUtils.js'
 
 /**
  * Generic hook for data fetching with loading and error states
@@ -195,28 +196,18 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
       return map;
     }
 
-    // Handle both old array format and new string format
-    const phaseValue = house.predicted_phase;
-    const isArray = Array.isArray(phaseValue);
-    const phaseString = isArray ? phaseValue.join('') : String(phaseValue);
-
-    // Validate phase data length
-    if (phaseString.length !== 1 && phaseString.length !== 3) {
-      console.warn(`Invalid phase data for House ${house.HouseID}: expected 1 or 3 phases, got ${phaseString.length}`);
-      return map;
-    }
-
-    // Validate phase characters (must be A, B, or C)
-    const validPhases = /^[ABC]+$/;
-    if (!validPhases.test(phaseString)) {
-      console.warn(`Invalid phase characters for House ${house.HouseID}: ${phaseString}`);
+    // Parse the predicted_phase value using the utility function
+    const phaseArray = parsePhaseOrder(house.predicted_phase);
+    
+    // Skip if parsing failed or returned null
+    if (!phaseArray || phaseArray.length === 0) {
+      console.warn(`Invalid phase data for House ${house.HouseID}: ${house.predicted_phase}`);
       return map;
     }
     
     map[house.HouseID] = {
-      phase: phaseValue,
-      phaseString: phaseString,
-      isThreePhase: phaseString.length === 3
+      phase: phaseArray,
+      isThreePhase: phaseArray.length === 3
     }
     return map
   }, {})
@@ -230,10 +221,11 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
     if (!acc[timeKey]) {
       acc[timeKey] = {
         timestamp: offsetTimestamp.toISOString(),
-        time: offsetTimestamp.toLocaleTimeString('en-AU', {
+        time: offsetTimestamp.toLocaleString('en-AU', {
+          day: '2-digit',
+          month: '2-digit',
           hour: '2-digit',
-          minute: '2-digit',
-          timeZone: 'UTC'
+          minute: '2-digit'
         }),
         fullDateTime: offsetTimestamp,
         sortOrder: offsetTimestamp.getTime() // Use offset timestamp for sorting
@@ -252,8 +244,7 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
         if (houseInfo) {
           if (houseInfo.isThreePhase) {
             // 3-phase customer - rename all phases according to phase order
-            const phaseOrder = houseInfo.phaseString // e.g., "BCA" or ['B', 'C', 'A']
-            const phaseArray = Array.isArray(houseInfo.phase) ? houseInfo.phase : phaseOrder.split('')
+            const phaseArray = houseInfo.phase // Already parsed as array by parsePhaseOrder
             const phaseMap = {
               'Voltage.PhA': `Voltage.Ph${phaseArray[0]}`,
               'Voltage.PhB': `Voltage.Ph${phaseArray[1]}`,
@@ -267,7 +258,7 @@ export const transformTimeSeriesData = (rawData, selectedCategory, comparisonLis
             }
           } else {
             // Single-phase customer
-            const singlePhase = Array.isArray(houseInfo.phase) ? houseInfo.phase[0] : houseInfo.phaseString[0]
+            const singlePhase = houseInfo.phase[0] // Already parsed as array by parsePhaseOrder
             
             if (property === 'Voltage.PhA') {
               // Check if this is a single-phase customer (only PhA has data, PhB and PhC are near zero)

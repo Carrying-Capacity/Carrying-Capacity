@@ -60,3 +60,39 @@ export const normalizePhase = (value) => {
   
   return null;
 };
+
+/**
+ * Parse predicted_phase value into an array of phase characters
+ * Handles multiple formats: single string ("A"), comma-separated ("C,A,B"), or array (["C", "A", "B"])
+ * @param {string|string[]} value - The predicted_phase value to parse
+ * @returns {string[]|null} Array of phase characters (e.g., ["C", "A", "B"]) or null if invalid
+ */
+export const parsePhaseOrder = (value) => {
+  if (!value) return null;
+  
+  let phaseArray;
+  
+  // Handle array format
+  if (Array.isArray(value)) {
+    phaseArray = value;
+  }
+  // Handle comma-separated string format (e.g., "C,A,B")
+  else if (typeof value === 'string' && value.includes(',')) {
+    phaseArray = value.split(',').map(p => p.trim().toUpperCase());
+  }
+  // Handle single string format (e.g., "A", "B", "C")
+  else if (typeof value === 'string') {
+    const normalized = value.trim().toUpperCase();
+    phaseArray = [normalized];
+  }
+  else {
+    return null;
+  }
+  
+  // Validate that all elements are valid phase characters (A, B, or C)
+  const isValid = phaseArray.length > 0 && phaseArray.every(phase => 
+    phase === 'A' || phase === 'B' || phase === 'C'
+  );
+  
+  return isValid ? phaseArray : null;
+};

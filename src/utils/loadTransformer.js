@@ -26,7 +26,7 @@ export function loadTransformerData() {
     const nodeMap = new Map();
     
     // Scale factor for positioning
-    const scale = 4;
+    const scale = 100;
 
     // Process the single network (example.json contains the complete network)
     const network = datasets[0]; // Only one dataset now - the complete network
