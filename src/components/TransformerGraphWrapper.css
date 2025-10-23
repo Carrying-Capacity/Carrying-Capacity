@@ -717,3 +717,69 @@
     font-size: 0.625rem;
   }
 }
+
+/* Auto-zoom Toggle */
+.zoom-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  user-select: none;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
+}
+
+.zoom-toggle-container:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.zoom-toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.zoom-toggle-slider {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  background-color: var(--gray-300);
+  border-radius: 20px;
+  transition: background-color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.zoom-toggle-slider::before {
+  content: '';
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.zoom-toggle-input:checked + .zoom-toggle-slider {
+  background-color: var(--primary);
+}
+
+.zoom-toggle-input:checked + .zoom-toggle-slider::before {
+  transform: translateX(16px);
+}
+
+.zoom-toggle-input:focus + .zoom-toggle-slider {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.zoom-toggle-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  white-space: nowrap;
+}

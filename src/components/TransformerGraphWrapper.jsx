@@ -26,6 +26,7 @@ const TransformerGraphWrapperContent = () => {
     const [showSearchResults, setShowSearchResults] = useState(false);
     const [isModalFullscreen, setIsModalFullscreen] = useState(false);
     const [showComparisonDropdown, setShowComparisonDropdown] = useState(false);
+    const [autoZoomEnabled, setAutoZoomEnabled] = useState(true);
     const searchContainerRef = useRef(null);
     const comparisonDropdownRef = useRef(null);
     
@@ -217,6 +218,20 @@ const TransformerGraphWrapperContent = () => {
                                 />
                             )}
                         </div>
+
+                        {/* Auto-zoom Toggle - Hidden on mobile */}
+                        {!isMobile && (
+                            <label className="zoom-toggle-container">
+                                <input
+                                    type="checkbox"
+                                    checked={autoZoomEnabled}
+                                    onChange={(e) => setAutoZoomEnabled(e.target.checked)}
+                                    className="zoom-toggle-input"
+                                />
+                                <span className="zoom-toggle-slider"></span>
+                                <span className="zoom-toggle-label">Auto-zoom</span>
+                            </label>
+                        )}
                     </div>
                     
                     {/* Right side - Comparison Controls */}
@@ -300,6 +315,7 @@ const TransformerGraphWrapperContent = () => {
                     focusNode={focusNode}
                     onNodeClick={handleNodeClick}
                     isMobile={isMobile}
+                    autoZoomEnabled={autoZoomEnabled}
                 />
                 <InfoModal 
                     node={selectedNode} 

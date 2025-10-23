@@ -9,14 +9,14 @@ import { ANIMATION_CONFIG } from '../constants/index.js';
 
 // Style constants extracted from render path
 const LINK_STYLES = {
-    flow: { strokeStyle: "#f97316", lineWidth: 2.5, fillStyle: "#f97316" },
-    feederToTransformer: { strokeStyle: "#475569", lineWidth: 3, fillStyle: "#475569" },
+    flow: { strokeStyle: "#f97316", lineWidth: 1.5, fillStyle: "#f97316" },
+    feederToTransformer: { strokeStyle: "#cbd5e1", lineWidth: 1.5, fillStyle: "#94a3b8" },
     normal: { strokeStyle: "#cbd5e1", lineWidth: 1.5, fillStyle: "#94a3b8" }
 };
 const ARROW_LENGTH = 10;
 const ARROW_WIDTH = 6;
 
-const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false }) => {
+const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false, autoZoomEnabled = true }) => {
     const fgRef = useRef();
     const [hoverNode, setHoverNode] = useState(null);
     const [flowLinks, setFlowLinks] = useState([]);
@@ -445,8 +445,10 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 setFlowLinks([]);
                 
                 if (node.type === "feeder") {
-                    // Zoom to show entire network for feeder
-                    fgRef.current.zoomToFit(1000, 150);
+                    // Zoom to show entire network for feeder (only if auto-zoom enabled)
+                    if (autoZoomEnabled) {
+                        fgRef.current.zoomToFit(1000, 150);
+                    }
                     setPulsingNodeIds(new Set());
                     setDownstreamLinks(new Set());
                     setSelectedTransformerId(null);
@@ -475,11 +477,14 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                     });
                     setDownstreamLinks(downstreamLinkSet);
 
-                    fgRef.current.zoomToFit(
-                        1000,
-                        150,
-                        (n) => downstreamIds.has(n.id)
-                    );
+                    // Only zoom if auto-zoom is enabled
+                    if (autoZoomEnabled) {
+                        fgRef.current.zoomToFit(
+                            1000,
+                            150,
+                            (n) => downstreamIds.has(n.id)
+                        );
+                    }
                 }
             } else if (node.type === "house" || node.type === "street") {
                 // Trace path back to feeder
@@ -489,28 +494,32 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
                 setDownstreamLinks(new Set());
                 setSelectedTransformerId(null);
 
-                // Zoom to fit all nodes along the path
-                const pathNodeIds = new Set(pathNodes.map(p => p.id));
-                fgRef.current.zoomToFit(
-                    1000,
-                    150,
-                    (n) => pathNodeIds.has(n.id)
-                );
+                // Only zoom if auto-zoom is enabled
+                if (autoZoomEnabled) {
+                    const pathNodeIds = new Set(pathNodes.map(p => p.id));
+                    fgRef.current.zoomToFit(
+                        1000,
+                        150,
+                        (n) => pathNodeIds.has(n.id)
+                    );
+                }
             } else {
                 setFlowLinks([]);
                 setPulsingNodeIds(new Set());
                 setDownstreamLinks(new Set());
                 setSelectedTransformerId(null);
-                fgRef.current.zoomToFit(1000, 100);
+                if (autoZoomEnabled) {
+                    fgRef.current.zoomToFit(1000, 100);
+                }
             }
         }, 150); // Increased delay for fullscreen transitions
 
         return () => clearTimeout(timeoutId);
-    }, [focusNode, data, isMobile]);
+    }, [focusNode, data, isMobile, autoZoomEnabled]);
 
     // Re-trigger focus when dimensions change significantly (e.g., fullscreen toggle)
     useEffect(() => {
-        if (isMobile) return; // Disable re-focus auto zoom on mobile
+        if (isMobile || !autoZoomEnabled) return; // Disable re-focus auto zoom on mobile or when disabled
         if (!lastFocusNode || !fgRef.current) return;
 
         const node = data.nodes.find((n) => n.id === lastFocusNode);
@@ -544,7 +553,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false 
         }, 200);
 
         return () => clearTimeout(timeoutId);
-    }, [dimensions.width, dimensions.height, lastFocusNode, data, isMobile]);
+    }, [dimensions.width, dimensions.height, lastFocusNode, data, isMobile, autoZoomEnabled]);
 
     return (
         <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
