@@ -45,7 +45,7 @@
 
 .hero-title {
   font-size: 3.5rem;
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.15;
   color: var(--gray-900);
   letter-spacing: -0.02em;
@@ -86,7 +86,7 @@
   border: none;
   border-radius: var(--radius-lg);
   font-size: 1.0625rem;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   transition: all var(--transition-normal);
   box-shadow: var(--shadow-button);
@@ -129,8 +129,8 @@
 
 .hero-stat-value {
   font-size: 2rem;
-  font-weight: 700;
-  background: var(--gradient-primary);
+  font-weight: 400;
+  background: linear-gradient(135deg, #0f172a 0%, #475569 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -283,8 +283,8 @@
 
 .features-title {
   font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--gray-900);
+  font-weight: 600;
+  color: #0f172a;
   margin-bottom: 1rem;
 }
 
@@ -349,8 +349,8 @@
 
 .feature-title {
   font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--gray-900);
+  font-weight: 600;
+  color: #0f172a;
   margin-bottom: 0.75rem;
   position: relative;
   z-index: 1;

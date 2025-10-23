@@ -21,11 +21,7 @@ export default function PhaseEstimate() {
         <div className="modern-content-wrapper">
           <h2 className="modern-section-title">Methodology</h2>
           <p>To identify the phase of each customer on the network, clustering algorithims were used. Our data however, had to be transformed first in order to fit each algorithm</p>
-          
           <h3 className="modern-subsection-title">Data formating</h3>
-        </div>
-
-        <div className="modern-card fade-in-up-delay-1">
           <CollapsibleDiv title={'Dynamic Time Warping'}>
             <p>DTW measure similarity between two waves taking into account they might be out of phase or streched/ compressed. For our time series data, two waves were compared</p>
             <MathBlock math={`\\bold{x} = \\{x_1, x_2, x_3, ..., x_n\\}, \\quad \\bold{y} = \\{y_1, y_2, y_3, ..., y_m\\}`}/>
@@ -45,9 +41,7 @@ export default function PhaseEstimate() {
             <MathBlock math={`\\text{DTW}(\\bold{x}, \\bold{y}) = \\frac{C_{n, m}}{K}`}/>
             <p>It should be noted that this does not take the square root unlike a true euclidian distance, but averages to find the MSE between two waves providing a more accurate result in our case.</p>
           </CollapsibleDiv>
-        </div>
-
-        <div className="modern-card fade-in-up-delay-1">
+          <br />
           <CollapsibleDiv title={`Pearson's Correlation Matrix`}>
             <h4></h4>
             <p>Unbaised pearsons correlation for samples were used, this is a similartiy score between two waves,</p>
@@ -58,9 +52,7 @@ export default function PhaseEstimate() {
             <MathBlock math={`r_{xy} = \\frac{\\text{cov}(\\bold{x}, \\bold{y})}{\\sqrt{\\text{cov}(\\bold{x}, \\bold{x})}\\,\\sqrt{\\text{cov}(\\bold{y}, \\bold{y})}}`} />
             This was appllied to the stacked wave matrix, to give us the <InlineMath math={`n \\times n`}/> pearsons correlation matrix.
           </CollapsibleDiv>
-        </div>
-
-        <div className="modern-card fade-in-up-delay-1">
+          <br />
           <CollapsibleDiv title={`Spearman's rank correlation`}>
             <p>The Spearman rank correlation coefficient was used as a similarity score between two waves, scoring the monotonic relationship between two waves,</p>
             <MathBlock math={`\\bold{x} = \\{x_1, x_2, x_3, ..., x_n\\}, \\quad \\bold{y} = \\{y_1, y_2, y_3, ..., y_n\\}`} />
@@ -72,9 +64,6 @@ export default function PhaseEstimate() {
             <MathBlock math={`\\rho_{xy} = \\frac{\\text{cov}(R(\\bold{x}), R(\\bold{y}))}{\\sqrt{\\text{cov}(R(\\bold{x}), R(\\bold{x}))} \\, \\sqrt{\\text{cov}(R(\\bold{y}), R(\\bold{y}))}}`} />
             <p>This was appllied to the stacked wave matrix, to give us the <InlineMath math={`n \\times n`}/> Spearman correlation matrix.</p>
           </CollapsibleDiv>
-        </div>
-
-        <div className="modern-card fade-in-up-delay-2">
           <h3 className="modern-section-title">Results</h3>
           <p>Using these methods, it is possible to group all of the houses from the transformers, and calculate each of their accuracy scores. This was tabulated into a JSON file and the results are shown as below.</p>
           <AlexResultTable/>

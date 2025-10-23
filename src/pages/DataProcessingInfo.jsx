@@ -11,18 +11,16 @@ export default function DataProcessingInfo() {
           Exploring and understanding the electrical network data through interactive visualizations
         </p>
       </div>
-
       <section className="modern-page-section fade-in-up">
-        <div className="modern-content-wrapper">
-          <p>The original data was given to us in CSV format. James helped with converting this format into 
-            parquets, because this was faster for loading into python files. After the data was converted into Parquet format, Alex had made a standardized cleaned format for everyone
-            to use, which is this format.
-          </p>
-        </div>
-
         <div className="modern-card fade-in-up-delay-1">
           <h2 className="modern-section-title">Raw Data Viewer</h2>
           <p className="modern-intro-text">
+            The original data was given to us in CSV format. James helped with converting this format into 
+            parquets, because this was faster for loading into python files. After the data was converted into Parquet format, Alex had made a standardized cleaned format for everyone
+            to use, which is this format.
+
+            <br />
+
             Due to the large size of the database, the viewer below is only for data between 01/03/2025 and 03/03/2025.
             Use the selector to change the house number and chart type. The grapher shows the data obtained from the parquet files, so they have only been sorted
             chronologically and the timestamps were ordered, but no further processing was done.
@@ -30,9 +28,7 @@ export default function DataProcessingInfo() {
           <div className="voltage-box">
             <VoltageChart2/>
           </div>
-        </div>
-
-        <div className="modern-card fade-in-up-delay-2">
+          <br />
           <p>
             First, note that some of the graphs are 1-phase, whereas others are 3-phase. For example, house 665 is 3-phase since Voltage.PhB and Voltage.PhC exist. 
           </p>
