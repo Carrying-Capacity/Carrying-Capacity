@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import favicon from "../assets/favicon.svg";
+import favicon from "/favicon.svg";
 
 export const NAVIGATION_ROUTES = [
   { path: "/", label: "Home" },

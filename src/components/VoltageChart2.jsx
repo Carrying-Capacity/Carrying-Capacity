@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import {
   LineChart,
   Line,
@@ -9,7 +9,6 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { supabase } from "../lib/supabase";
 import { buildQuery } from "../utils/dataFetching";
 
 const VALUE_TYPES = [

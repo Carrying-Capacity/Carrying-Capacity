@@ -33,10 +33,7 @@ const TransformerGraphWrapperContent = () => {
     const isMobile = useMediaQuery(BREAKPOINTS.tablet);
     const {
         comparisonList,
-        comparisonIdSet,
         showComparison,
-        toggleHouseInComparison,
-        removeFromComparison,
         clearComparison,
         toggleComparisonModal,
         setShowComparison,

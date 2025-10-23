@@ -89,5 +89,84 @@ export function loadTransformerData() {
         }
     });
 
-    return { nodes, links };
+    // Build adjacency maps for O(1) lookups
+    const childrenByNodeId = new Map(); // nodeId -> Set of child node IDs
+    const parentsByNodeId = new Map(); // nodeId -> Set of parent node IDs
+    const streetsByNetNodeId = new Map(); // netNodeId -> Set of street node IDs
+    const linkById = new Map(); // "sourceId-targetId" -> link object
+
+    // Initialize maps
+    nodes.forEach(node => {
+        childrenByNodeId.set(node.id, new Set());
+        parentsByNodeId.set(node.id, new Set());
+    });
+
+    // Populate children and parents from next_nodes
+    nodes.forEach(node => {
+        if (Array.isArray(node.next_nodes)) {
+            node.next_nodes.forEach(childId => {
+                if (nodeMap.has(childId)) {
+                    childrenByNodeId.get(node.id).add(childId);
+                    parentsByNodeId.get(childId).add(node.id);
+                }
+            });
+        }
+    });
+
+    // Populate parents from prev_nodes (in case next_nodes is incomplete)
+    nodes.forEach(node => {
+        if (Array.isArray(node.prev_nodes)) {
+            node.prev_nodes.forEach(parentId => {
+                if (nodeMap.has(parentId)) {
+                    parentsByNodeId.get(node.id).add(parentId);
+                    childrenByNodeId.get(parentId).add(node.id);
+                }
+            });
+        }
+    });
+
+    // Build street-to-net-node map
+    nodes.forEach(node => {
+        if (node.type === "street" && node.net_node_id) {
+            if (!streetsByNetNodeId.has(node.net_node_id)) {
+                streetsByNetNodeId.set(node.net_node_id, new Set());
+            }
+            streetsByNetNodeId.get(node.net_node_id).add(node.id);
+            
+            // Also establish bidirectional connection
+            childrenByNodeId.get(node.id).add(node.net_node_id);
+            childrenByNodeId.get(node.net_node_id).add(node.id);
+        }
+    });
+
+    // Build street connected_nodes adjacency
+    nodes.forEach(node => {
+        if (node.type === "street" && Array.isArray(node.connected_nodes)) {
+            node.connected_nodes.forEach(connectedId => {
+                if (nodeMap.has(connectedId)) {
+                    childrenByNodeId.get(node.id).add(connectedId);
+                }
+            });
+        }
+    });
+
+    // Build link lookup map (bidirectional)
+    links.forEach(link => {
+        const sourceId = link.source;
+        const targetId = link.target;
+        linkById.set(`${sourceId}-${targetId}`, link);
+        linkById.set(`${targetId}-${sourceId}`, link);
+    });
+
+    return { 
+        nodes, 
+        links,
+        adjacency: {
+            nodeById: nodeMap,
+            childrenByNodeId,
+            parentsByNodeId,
+            streetsByNetNodeId,
+            linkById
+        }
+    };
 }

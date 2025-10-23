@@ -1,7 +1,7 @@
 import { ANIMATION_CONFIG } from '../constants/index.js';
 
 /**
- * Get node by ID from graph data
+ * Get node by ID from graph data (deprecated - use adjacency.nodeById map instead)
  */
 export const getNodeById = (nodes, id) => nodes.find(n => n.id === id);
 
@@ -19,7 +19,7 @@ export const getPreviousNodeIds = (node) => {
 };
 
 /**
- * Find link between two nodes
+ * Find link between two nodes (deprecated - use adjacency.linkById map instead)
  */
 export const findLinkBetweenNodes = (links, nodeId1, nodeId2) => {
   return links.find(link => {
@@ -32,10 +32,12 @@ export const findLinkBetweenNodes = (links, nodeId1, nodeId2) => {
 
 /**
  * Collect all downstream nodes starting from a given node (used for transformer views)
+ * Uses precomputed adjacency maps for O(1) lookups instead of O(N) scans
  */
 export const collectDownstreamNodes = (graphData, startNode) => {
-  if (!graphData?.nodes || !startNode) return [];
+  if (!graphData?.adjacency || !startNode) return [];
 
+  const { nodeById, childrenByNodeId } = graphData.adjacency;
   const visited = new Set();
   const queue = [startNode];
   const result = [];
@@ -46,44 +48,18 @@ export const collectDownstreamNodes = (graphData, startNode) => {
     const curr = queue.shift();
     result.push(curr);
 
-    const enqueueNode = (nodeId) => {
-      if (!nodeId || visited.has(nodeId)) return;
-      const childNode = getNodeById(graphData.nodes, nodeId);
-      if (childNode) {
-        visited.add(nodeId);
-        queue.push(childNode);
-      }
-    };
-
-    // 1) explicit next_nodes
-    if (Array.isArray(curr.next_nodes)) {
-      curr.next_nodes.forEach(enqueueNode);
-    }
-
-    // 2) nodes whose prev includes current node
-    graphData.nodes.forEach(node => {
-      const prevIds = getPreviousNodeIds(node);
-      if (prevIds.includes(curr.id)) {
-        enqueueNode(node.id);
-      }
-    });
-
-    // 3) streets anchored to this net node (transformer or house)
-    if (curr.type !== "street") {
-      graphData.nodes.forEach(node => {
-        if (node.type === "street" && node.net_node_id === curr.id) {
-          enqueueNode(node.id);
+    // Get all children from precomputed adjacency map (O(1) lookup)
+    const children = childrenByNodeId.get(curr.id);
+    if (children) {
+      children.forEach(childId => {
+        if (!visited.has(childId)) {
+          const childNode = nodeById.get(childId);
+          if (childNode) {
+            visited.add(childId);
+            queue.push(childNode);
+          }
         }
       });
-    }
-
-    // 4) if this is a street, walk connected streets and bridge to its net node
-    if (curr.type === "street") {
-      const connected = Array.isArray(curr.connected_nodes) ? curr.connected_nodes : [];
-      connected.forEach(enqueueNode);
-      if (curr.net_node_id) {
-        enqueueNode(curr.net_node_id);
-      }
     }
   }
 
@@ -92,37 +68,41 @@ export const collectDownstreamNodes = (graphData, startNode) => {
 
 /**
  * Trace path from a house/street node back to the feeder (root)
+ * Uses precomputed adjacency maps for O(1) lookups instead of O(N) scans
  */
 export const tracePathToFeeder = (graphData, startNode) => {
-  if (!graphData?.nodes || !startNode) return { pathNodes: [], pathLinks: [] };
+  if (!graphData?.adjacency || !startNode) return { pathNodes: [], pathLinks: [] };
 
+  const { nodeById, parentsByNodeId, linkById } = graphData.adjacency;
   const pathNodes = [startNode];
   const pathLinks = [];
   let currentNode = startNode;
   const visitedNodes = new Set([startNode.id]);
 
   for (let depth = 0; depth < ANIMATION_CONFIG.maxTraversalDepth; depth++) {
-    let prevIds = getPreviousNodeIds(currentNode);
-    
-    // If this is a street node with an associated network node, bridge to it
-    if (prevIds.length === 0 && currentNode.type === "street" && currentNode.net_node_id) {
-      prevIds = [currentNode.net_node_id];
+    // Get parents from precomputed adjacency map (O(1) lookup)
+    const parents = parentsByNodeId.get(currentNode.id);
+    if (!parents || parents.size === 0) {
+      break;
     }
 
-    const prevId = prevIds[0];
+    // Take the first parent (typically there's only one in a tree structure)
+    const prevId = Array.from(parents)[0];
     if (!prevId) {
       break;
     }
 
-    let prevNode = getNodeById(graphData.nodes, prevId);
-
+    const prevNode = nodeById.get(prevId);
+    if (!prevNode) {
+      break;
+    }
 
     // Add the previous node to the path
     pathNodes.push(prevNode);
     visitedNodes.add(prevNode.id);
 
-    // Find the link between current and previous node
-    const link = findLinkBetweenNodes(graphData.links, currentNode.id, prevNode.id);
+    // Find the link using precomputed link map (O(1) lookup)
+    const link = linkById.get(`${currentNode.id}-${prevNode.id}`);
     if (link) {
       pathLinks.push(link);
     }

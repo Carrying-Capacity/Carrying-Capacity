@@ -13,8 +13,6 @@ const LINK_STYLES = {
     feederToTransformer: { strokeStyle: "#cbd5e1", lineWidth: 1.5, fillStyle: "#94a3b8" },
     normal: { strokeStyle: "#cbd5e1", lineWidth: 1.5, fillStyle: "#94a3b8" }
 };
-const ARROW_LENGTH = 10;
-const ARROW_WIDTH = 6;
 
 const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false, autoZoomEnabled = true }) => {
     const fgRef = useRef();
@@ -407,7 +405,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
         
         const timeoutId = setTimeout(() => {
             if (fgRef.current) {
-                fgRef.current.zoomToFit(1000, 150);
+                fgRef.current.zoomToFit(1000, 50);
             }
         }, 200);
         
@@ -447,7 +445,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 if (node.type === "feeder") {
                     // Zoom to show entire network for feeder (only if auto-zoom enabled)
                     if (autoZoomEnabled) {
-                        fgRef.current.zoomToFit(1000, 150);
+                        fgRef.current.zoomToFit(1000, 50);
                     }
                     setPulsingNodeIds(new Set());
                     setDownstreamLinks(new Set());
@@ -467,21 +465,30 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                     setSelectedTransformerId(node.id);
                     
                     // Collect all links between downstream nodes for orange coloring
+                    // Use adjacency map for O(1) lookups instead of scanning all links
                     const downstreamLinkSet = new Set();
-                    data.links.forEach(link => {
-                        const sourceId = link.source.id || link.source;
-                        const targetId = link.target.id || link.target;
-                        if (downstreamIds.has(sourceId) && downstreamIds.has(targetId)) {
-                            downstreamLinkSet.add(link);
-                        }
-                    });
+                    if (data.adjacency?.linkById) {
+                        downstreamIds.forEach(nodeId => {
+                            const children = data.adjacency.childrenByNodeId.get(nodeId);
+                            if (children) {
+                                children.forEach(childId => {
+                                    if (downstreamIds.has(childId)) {
+                                        const link = data.adjacency.linkById.get(`${nodeId}-${childId}`);
+                                        if (link) {
+                                            downstreamLinkSet.add(link);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
                     setDownstreamLinks(downstreamLinkSet);
 
                     // Only zoom if auto-zoom is enabled
                     if (autoZoomEnabled) {
                         fgRef.current.zoomToFit(
                             1000,
-                            150,
+                            50,
                             (n) => downstreamIds.has(n.id)
                         );
                     }
@@ -499,7 +506,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                     const pathNodeIds = new Set(pathNodes.map(p => p.id));
                     fgRef.current.zoomToFit(
                         1000,
-                        150,
+                        50,
                         (n) => pathNodeIds.has(n.id)
                     );
                 }
@@ -509,7 +516,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 setDownstreamLinks(new Set());
                 setSelectedTransformerId(null);
                 if (autoZoomEnabled) {
-                    fgRef.current.zoomToFit(1000, 100);
+                    fgRef.current.zoomToFit(1000, 30);
                 }
             }
         }, 150); // Increased delay for fullscreen transitions
@@ -531,13 +538,13 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
 
             if (node.type === "feeder" || node.type === "transformer") {
                 if (node.type === "feeder") {
-                    fgRef.current.zoomToFit(1000, 150);
+                    fgRef.current.zoomToFit(1000, 50);
                 } else {
                     const allDownstreamNodes = collectDownstreamNodes(data, node);
                     const downstreamIds = new Set(allDownstreamNodes.map(dn => dn.id));
                     fgRef.current.zoomToFit(
                         1000,
-                        150,
+                        50,
                         (n) => downstreamIds.has(n.id)
                     );
                 }
@@ -546,7 +553,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 const pathNodeIds = new Set(pathNodes.map(p => p.id));
                 fgRef.current.zoomToFit(
                     1000,
-                    150,
+                    50,
                     (n) => pathNodeIds.has(n.id)
                 );
             }

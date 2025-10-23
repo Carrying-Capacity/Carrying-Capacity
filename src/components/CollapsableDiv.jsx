@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import "../pages/PagesFormat.css";
 
 const CollapsibleBox = ({ children, title }) => {
   const [isOpen, setIsOpen] = useState(false);
