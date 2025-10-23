@@ -29,6 +29,16 @@
   --warning: #f59e0b;
   --error: #ef4444;
   
+  /* Additional Brand Colors */
+  --blue-500: #3b82f6;
+  --purple-500: #8b5cf6;
+  --purple-600: #7c3aed;
+  --green-500: #10b981;
+  --green-600: #059669;
+  
+  /* Extended Gray Scale */
+  --gray-800: #1e293b;
+  
   /* Spacing */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
