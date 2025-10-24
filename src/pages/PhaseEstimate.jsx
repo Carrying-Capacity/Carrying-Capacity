@@ -70,7 +70,7 @@ export default function PhaseEstimate() {
           <p>Using these methods, it is possible to group all of the houses from the transformers, and calculate each of their accuracy scores. This was tabulated into a JSON file and the results are shown as below.</p>
           <AlexResultTable/>
           <br />
-          Fromt the table, the method with the highest average total score is the Pearson fuzzy C-means method with an accuracy rating of 0.93, meaning it has the highest accuracy. Therefore it was used for the following methods.
+          From the table, the method with the highest average total score is the Pearson fuzzy C-means method with an accuracy rating of 0.93, meaning it has the highest accuracy. Therefore it was used for the following methods.
         </div>
       </section>
     </PageLayout>

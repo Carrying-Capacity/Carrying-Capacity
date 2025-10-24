@@ -105,11 +105,10 @@ export default function FrontEnd() {
         <div className="frontend-hero">
           <div className="frontend-hero-content">
             <h1 className="frontend-title">
-              Built with Modern Web Technologies
+              Front End
             </h1>
             <p className="frontend-description">
-              Our application leverages cutting-edge frameworks and libraries to deliver 
-              a fast, responsive, and visually stunning experience for electrical network analysis.
+              Methodology and libraries used for the website front-end
             </p>
           </div>
         </div>
