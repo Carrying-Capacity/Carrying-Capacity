@@ -37,17 +37,32 @@ export default function NetworkEstimate() {
           </CollapsibleDiv><br />
           <CollapsibleDiv title={`Kendall-Tau Correlation`}>
           <p>Based on research by Tong et al. in “Topology and Impedance Identification Method of Low-Voltage Distribution Network Based on Smart Meter Measurements” an electrical network topology can be found by comparing the Kendall-Tau correlation coefficient for every pair of nodes using their voltage time series data. This methodology has strengths including applicability to irregular time stamps. </p>
-          <p>Following the construction of the Kendall-Tau correlation matrix between each node, each value represents the strength of the correlation between the nodes. These edges can then be used to construct a maximum spanning tree utilising the python library networkx. This tree structure represents the likely topology of the network. An example of the output from this method can be seen below in Figure 2.</p>
-          <img src="src/assets/figs/mst.png" alt="" style={{ width: "50%", display: "block", margin: "0 auto"}} />
+          <p>Following the construction of the Kendall-Tau correlation matrix between each node, each value represents the strength of the correlation between the nodes. These edges can then be used to construct a maximum spanning tree utilising the python library networkx. This tree structure represents the likely topology of the network. This can be seen in the MST diagram below, before root node identification.</p>
           </CollapsibleDiv><br />
           <CollapsibleDiv title={`Graphical Lasso – Concentration Matrix`}>
           Based on research by Bolognani et al., this method follows a step-by-step approach to generate a candidate network topology. First, each nodes voltage measurements are converted from a raw measurement to a deviation from their voltage mean. Following this, graphical lasso with cross validation is applied to estimate a spare concentration matrix, identifying conditional dependencies between nodes. Finally, the absolute values of the concentration matrix are used in edge weights in a graph, with a maximum spanning tree forming the probable topology. 
           </CollapsibleDiv>
-
         </div>
         
         <div className="modern-content-wrapper fade-in-up-delay-1">
-          <h2>Accuracy and consistency testing- Topology</h2>
+          <h3>Generated MST topologies</h3>
+          <figure className="text-center">
+            <img src="./figs/mst.png" alt="MST diagram" style={{ width: "50%", display: "block", margin: "0 auto"}} /> 
+            <figcaption style={{ fontSize: "0.9rem", color: "#555", marginTop: "0.5rem" }}>
+            Generated Topology MST before root node identification
+            </figcaption>
+          </figure>
+          <br />
+          <figure className="text-center">
+            <img src="./figs/mst_2.png" alt="MST diagram 2" style={{ width: "80%", display: "block", margin: "0 auto"}} /> 
+            <figcaption style={{ fontSize: "0.9rem", color: "#555", marginTop: "0.5rem" }}>
+            Generated Topology MST after root node identification
+            </figcaption>
+          </figure>
+        </div>
+
+        <div className="modern-content-wrapper fade-in-up-delay-2">
+          <h2>Accuracy and consistency testing - Topology</h2>
           <p>Due to the absence of ground truth network topology data, a consensus-based accuracy metric was developed. As described above, we implemented various peer-reviewed methodologies, each having been validated and reporting high levels of accuracy. From this set of proven techniques, we can score them based of two tests. </p>
           <ol>
             <li>Consistency to Other Methods: Independent methods returning similar outputs despite using different approaches indicate the output is more likely to be correct</li>
