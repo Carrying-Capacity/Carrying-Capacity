@@ -1,5 +1,5 @@
 {
-  "30-70 Pearson": [
+  "Pearson Fuzzy C-means": [
     {
       "id": "TX1",
       "threePhase": "1/1",
@@ -181,735 +181,7 @@
       "score": "0.930"
     }
   ],
-  "30-70 Spearman Fuzzy C-means": [
-    {
-      "id": "TX1",
-      "threePhase": "1/1",
-      "split": [
-        20,
-        20,
-        22
-      ],
-      "score": "0.987"
-    },
-    {
-      "id": "TX2",
-      "threePhase": "0/0",
-      "split": [
-        16,
-        16,
-        17
-      ],
-      "score": "0.992"
-    },
-    {
-      "id": "TX3",
-      "threePhase": "0/0",
-      "split": [
-        4,
-        2,
-        6
-      ],
-      "score": "0.900"
-    },
-    {
-      "id": "TX4",
-      "threePhase": "0/1",
-      "split": [
-        1,
-        10,
-        6
-      ],
-      "score": "0.135"
-    },
-    {
-      "id": "TX5",
-      "threePhase": "4/6",
-      "split": [
-        6,
-        36,
-        22
-      ],
-      "score": "0.623"
-    },
-    {
-      "id": "TX6",
-      "threePhase": "16/16",
-      "split": [
-        20,
-        16,
-        25
-      ],
-      "score": "0.954"
-    },
-    {
-      "id": "TX7",
-      "threePhase": "2/2",
-      "split": [
-        25,
-        34,
-        20
-      ],
-      "score": "0.942"
-    },
-    {
-      "id": "TX8",
-      "threePhase": "0/0",
-      "split": [
-        4,
-        3,
-        4
-      ],
-      "score": "0.964"
-    },
-    {
-      "id": "TX9",
-      "threePhase": "2/2",
-      "split": [
-        18,
-        18,
-        18
-      ],
-      "score": "1.000"
-    },
-    {
-      "id": "TX10",
-      "threePhase": "0/0",
-      "split": [
-        24,
-        22,
-        22
-      ],
-      "score": "0.988"
-    },
-    {
-      "id": "TX11",
-      "threePhase": "2/2",
-      "split": [
-        33,
-        27,
-        30
-      ],
-      "score": "0.980"
-    },
-    {
-      "id": "TX12",
-      "threePhase": "1/1",
-      "split": [
-        6,
-        5,
-        6
-      ],
-      "score": "0.976"
-    },
-    {
-      "id": "TX13",
-      "threePhase": "0/0",
-      "split": [
-        21,
-        20,
-        22
-      ],
-      "score": "0.990"
-    },
-    {
-      "id": "TX14",
-      "threePhase": "0/0",
-      "split": [
-        18,
-        16,
-        14
-      ],
-      "score": "0.975"
-    },
-    {
-      "id": "TX15",
-      "threePhase": "0/0",
-      "split": [
-        4,
-        6,
-        9
-      ],
-      "score": "0.916"
-    },
-    {
-      "id": "TX16",
-      "threePhase": "0/0",
-      "split": [
-        5,
-        1,
-        2
-      ],
-      "score": "0.825"
-    },
-    {
-      "id": "TX17",
-      "threePhase": "2/2",
-      "split": [
-        6,
-        3,
-        4
-      ],
-      "score": "0.923"
-    },
-    {
-      "id": "Total",
-      "threePhase": "30/33",
-      "split": [
-        231,
-        255,
-        249
-      ],
-      "score": "0.887"
-    }
-  ],
-  "30-70 DTW Fuzzy": [
-    {
-      "id": "TX1",
-      "threePhase": "1/1",
-      "split": [
-        18,
-        23,
-        21
-      ],
-      "score": "0.974"
-    },
-    {
-      "id": "TX2",
-      "threePhase": "0/0",
-      "split": [
-        16,
-        17,
-        16
-      ],
-      "score": "0.992"
-    },
-    {
-      "id": "TX3",
-      "threePhase": "0/0",
-      "split": [
-        3,
-        4,
-        5
-      ],
-      "score": "0.950"
-    },
-    {
-      "id": "TX4",
-      "threePhase": "0/1",
-      "split": [
-        6,
-        1,
-        10
-      ],
-      "score": "0.135"
-    },
-    {
-      "id": "TX5",
-      "threePhase": "5/6",
-      "split": [
-        27,
-        19,
-        18
-      ],
-      "score": "0.830"
-    },
-    {
-      "id": "TX6",
-      "threePhase": "16/16",
-      "split": [
-        23,
-        20,
-        18
-      ],
-      "score": "0.974"
-    },
-    {
-      "id": "TX7",
-      "threePhase": "2/2",
-      "split": [
-        24,
-        26,
-        29
-      ],
-      "score": "0.980"
-    },
-    {
-      "id": "TX8",
-      "threePhase": "0/0",
-      "split": [
-        1,
-        3,
-        7
-      ],
-      "score": "0.818"
-    },
-    {
-      "id": "TX9",
-      "threePhase": "2/2",
-      "split": [
-        18,
-        18,
-        18
-      ],
-      "score": "1.000"
-    },
-    {
-      "id": "TX10",
-      "threePhase": "0/0",
-      "split": [
-        22,
-        22,
-        24
-      ],
-      "score": "0.988"
-    },
-    {
-      "id": "TX11",
-      "threePhase": "1/2",
-      "split": [
-        43,
-        20,
-        27
-      ],
-      "score": "0.563"
-    },
-    {
-      "id": "TX12",
-      "threePhase": "1/1",
-      "split": [
-        6,
-        5,
-        6
-      ],
-      "score": "0.976"
-    },
-    {
-      "id": "TX13",
-      "threePhase": "0/0",
-      "split": [
-        21,
-        20,
-        22
-      ],
-      "score": "0.990"
-    },
-    {
-      "id": "TX14",
-      "threePhase": "0/0",
-      "split": [
-        18,
-        16,
-        14
-      ],
-      "score": "0.975"
-    },
-    {
-      "id": "TX15",
-      "threePhase": "0/0",
-      "split": [
-        6,
-        7,
-        6
-      ],
-      "score": "0.979"
-    },
-    {
-      "id": "TX16",
-      "threePhase": "0/0",
-      "split": [
-        2,
-        2,
-        4
-      ],
-      "score": "0.900"
-    },
-    {
-      "id": "TX17",
-      "threePhase": "0/2",
-      "split": [
-        8,
-        3,
-        2
-      ],
-      "score": "0.131"
-    },
-    {
-      "id": "Total",
-      "threePhase": "28/33",
-      "split": [
-        262,
-        226,
-        247
-      ],
-      "score": "0.833"
-    }
-  ],
-  "30-70 DTW GMM": [
-    {
-      "id": "TX1",
-      "threePhase": "1/1",
-      "split": [
-        17,
-        26,
-        19
-      ],
-      "score": "0.948"
-    },
-    {
-      "id": "TX2",
-      "threePhase": "0/0",
-      "split": [
-        16,
-        17,
-        16
-      ],
-      "score": "0.992"
-    },
-    {
-      "id": "TX3",
-      "threePhase": "0/0",
-      "split": [
-        4,
-        5,
-        3
-      ],
-      "score": "0.950"
-    },
-    {
-      "id": "TX4",
-      "threePhase": "0/1",
-      "split": [
-        3,
-        1,
-        13
-      ],
-      "score": "0.041"
-    },
-    {
-      "id": "TX5",
-      "threePhase": "3/6",
-      "split": [
-        24,
-        19,
-        21
-      ],
-      "score": "0.625"
-    },
-    {
-      "id": "TX6",
-      "threePhase": "16/16",
-      "split": [
-        21,
-        20,
-        20
-      ],
-      "score": "0.993"
-    },
-    {
-      "id": "TX7",
-      "threePhase": "2/2",
-      "split": [
-        29,
-        27,
-        23
-      ],
-      "score": "0.975"
-    },
-    {
-      "id": "TX8",
-      "threePhase": "0/0",
-      "split": [
-        3,
-        4,
-        4
-      ],
-      "score": "0.964"
-    },
-    {
-      "id": "TX9",
-      "threePhase": "0/2",
-      "split": [
-        7,
-        36,
-        11
-      ],
-      "score": "0.100"
-    },
-    {
-      "id": "TX10",
-      "threePhase": "0/0",
-      "split": [
-        22,
-        24,
-        22
-      ],
-      "score": "0.988"
-    },
-    {
-      "id": "TX11",
-      "threePhase": "1/2",
-      "split": [
-        18,
-        27,
-        45
-      ],
-      "score": "0.550"
-    },
-    {
-      "id": "TX12",
-      "threePhase": "1/1",
-      "split": [
-        6,
-        5,
-        6
-      ],
-      "score": "0.976"
-    },
-    {
-      "id": "TX13",
-      "threePhase": "0/0",
-      "split": [
-        38,
-        20,
-        5
-      ],
-      "score": "0.838"
-    },
-    {
-      "id": "TX14",
-      "threePhase": "0/0",
-      "split": [
-        17,
-        18,
-        13
-      ],
-      "score": "0.963"
-    },
-    {
-      "id": "TX15",
-      "threePhase": "0/0",
-      "split": [
-        4,
-        6,
-        9
-      ],
-      "score": "0.916"
-    },
-    {
-      "id": "TX16",
-      "threePhase": "0/0",
-      "split": [
-        4,
-        2,
-        2
-      ],
-      "score": "0.900"
-    },
-    {
-      "id": "TX17",
-      "threePhase": "0/2",
-      "split": [
-        8,
-        2,
-        3
-      ],
-      "score": "0.131"
-    },
-    {
-      "id": "Total",
-      "threePhase": "24/33",
-      "split": [
-        241,
-        259,
-        235
-      ],
-      "score": "0.756"
-    }
-  ],
-  "30-70 DTW Spectral": [
-    {
-      "id": "TX1",
-      "threePhase": "0/1",
-      "split": [
-        36,
-        18,
-        8
-      ],
-      "score": "0.152"
-    },
-    {
-      "id": "TX2",
-      "threePhase": "0/0",
-      "split": [
-        32,
-        8,
-        9
-      ],
-      "score": "0.808"
-    },
-    {
-      "id": "TX3",
-      "threePhase": "0/0",
-      "split": [
-        5,
-        4,
-        3
-      ],
-      "score": "0.950"
-    },
-    {
-      "id": "TX4",
-      "threePhase": "0/1",
-      "split": [
-        10,
-        6,
-        1
-      ],
-      "score": "0.135"
-    },
-    {
-      "id": "TX5",
-      "threePhase": "5/6",
-      "split": [
-        23,
-        22,
-        19
-      ],
-      "score": "0.861"
-    },
-    {
-      "id": "TX6",
-      "threePhase": "16/16",
-      "split": [
-        20,
-        25,
-        16
-      ],
-      "score": "0.954"
-    },
-    {
-      "id": "TX7",
-      "threePhase": "0/2",
-      "split": [
-        26,
-        34,
-        19
-      ],
-      "score": "0.242"
-    },
-    {
-      "id": "TX8",
-      "threePhase": "0/0",
-      "split": [
-        4,
-        4,
-        3
-      ],
-      "score": "0.964"
-    },
-    {
-      "id": "TX9",
-      "threePhase": "2/2",
-      "split": [
-        18,
-        18,
-        18
-      ],
-      "score": "1.000"
-    },
-    {
-      "id": "TX10",
-      "threePhase": "0/0",
-      "split": [
-        24,
-        22,
-        22
-      ],
-      "score": "0.988"
-    },
-    {
-      "id": "TX11",
-      "threePhase": "1/2",
-      "split": [
-        20,
-        27,
-        43
-      ],
-      "score": "0.563"
-    },
-    {
-      "id": "TX12",
-      "threePhase": "1/1",
-      "split": [
-        5,
-        6,
-        6
-      ],
-      "score": "0.976"
-    },
-    {
-      "id": "TX13",
-      "threePhase": "0/0",
-      "split": [
-        9,
-        34,
-        20
-      ],
-      "score": "0.876"
-    },
-    {
-      "id": "TX14",
-      "threePhase": "0/0",
-      "split": [
-        16,
-        18,
-        14
-      ],
-      "score": "0.975"
-    },
-    {
-      "id": "TX15",
-      "threePhase": "0/0",
-      "split": [
-        6,
-        6,
-        7
-      ],
-      "score": "0.979"
-    },
-    {
-      "id": "TX16",
-      "threePhase": "0/0",
-      "split": [
-        2,
-        3,
-        3
-      ],
-      "score": "0.950"
-    },
-    {
-      "id": "TX17",
-      "threePhase": "0/2",
-      "split": [
-        6,
-        5,
-        2
-      ],
-      "score": "0.192"
-    },
-    {
-      "id": "Total",
-      "threePhase": "25/33",
-      "split": [
-        262,
-        260,
-        213
-      ],
-      "score": "0.739"
-    }
-  ],
-  "30-70 Pearson GMM": [
+  "Pearson GMM": [
     {
       "id": "TX1",
       "threePhase": "1/1",
@@ -1091,7 +363,7 @@
       "score": "0.805"
     }
   ],
-  "30-70 Pearson Spectral": [
+  "Pearson Spectral": [
     {
       "id": "TX1",
       "threePhase": "1/1",
@@ -1273,7 +545,189 @@
       "score": "0.911"
     }
   ],
-  "30-70 Spearman GMM": [
+  "Spearman Fuzzy C-means": [
+    {
+      "id": "TX1",
+      "threePhase": "1/1",
+      "split": [
+        20,
+        20,
+        22
+      ],
+      "score": "0.987"
+    },
+    {
+      "id": "TX2",
+      "threePhase": "0/0",
+      "split": [
+        16,
+        16,
+        17
+      ],
+      "score": "0.992"
+    },
+    {
+      "id": "TX3",
+      "threePhase": "0/0",
+      "split": [
+        4,
+        2,
+        6
+      ],
+      "score": "0.900"
+    },
+    {
+      "id": "TX4",
+      "threePhase": "0/1",
+      "split": [
+        1,
+        10,
+        6
+      ],
+      "score": "0.135"
+    },
+    {
+      "id": "TX5",
+      "threePhase": "4/6",
+      "split": [
+        6,
+        36,
+        22
+      ],
+      "score": "0.623"
+    },
+    {
+      "id": "TX6",
+      "threePhase": "16/16",
+      "split": [
+        20,
+        16,
+        25
+      ],
+      "score": "0.954"
+    },
+    {
+      "id": "TX7",
+      "threePhase": "2/2",
+      "split": [
+        25,
+        34,
+        20
+      ],
+      "score": "0.942"
+    },
+    {
+      "id": "TX8",
+      "threePhase": "0/0",
+      "split": [
+        4,
+        3,
+        4
+      ],
+      "score": "0.964"
+    },
+    {
+      "id": "TX9",
+      "threePhase": "2/2",
+      "split": [
+        18,
+        18,
+        18
+      ],
+      "score": "1.000"
+    },
+    {
+      "id": "TX10",
+      "threePhase": "0/0",
+      "split": [
+        24,
+        22,
+        22
+      ],
+      "score": "0.988"
+    },
+    {
+      "id": "TX11",
+      "threePhase": "2/2",
+      "split": [
+        33,
+        27,
+        30
+      ],
+      "score": "0.980"
+    },
+    {
+      "id": "TX12",
+      "threePhase": "1/1",
+      "split": [
+        6,
+        5,
+        6
+      ],
+      "score": "0.976"
+    },
+    {
+      "id": "TX13",
+      "threePhase": "0/0",
+      "split": [
+        21,
+        20,
+        22
+      ],
+      "score": "0.990"
+    },
+    {
+      "id": "TX14",
+      "threePhase": "0/0",
+      "split": [
+        18,
+        16,
+        14
+      ],
+      "score": "0.975"
+    },
+    {
+      "id": "TX15",
+      "threePhase": "0/0",
+      "split": [
+        4,
+        6,
+        9
+      ],
+      "score": "0.916"
+    },
+    {
+      "id": "TX16",
+      "threePhase": "0/0",
+      "split": [
+        5,
+        1,
+        2
+      ],
+      "score": "0.825"
+    },
+    {
+      "id": "TX17",
+      "threePhase": "2/2",
+      "split": [
+        6,
+        3,
+        4
+      ],
+      "score": "0.923"
+    },
+    {
+      "id": "Total",
+      "threePhase": "30/33",
+      "split": [
+        231,
+        255,
+        249
+      ],
+      "score": "0.887"
+    }
+  ],
+  "Spearman GMM": [
     {
       "id": "TX1",
       "threePhase": "1/1",
@@ -1455,7 +909,7 @@
       "score": "0.833"
     }
   ],
-  "30-70 Spearman Spectral": [
+  "Spearman Spectral": [
     {
       "id": "TX1",
       "threePhase": "1/1",
@@ -1635,6 +1089,552 @@
         238
       ],
       "score": "0.917"
+    }
+  ],
+  "DTW Fuzzy C-means": [
+    {
+      "id": "TX1",
+      "threePhase": "1/1",
+      "split": [
+        18,
+        23,
+        21
+      ],
+      "score": "0.974"
+    },
+    {
+      "id": "TX2",
+      "threePhase": "0/0",
+      "split": [
+        16,
+        17,
+        16
+      ],
+      "score": "0.992"
+    },
+    {
+      "id": "TX3",
+      "threePhase": "0/0",
+      "split": [
+        3,
+        4,
+        5
+      ],
+      "score": "0.950"
+    },
+    {
+      "id": "TX4",
+      "threePhase": "0/1",
+      "split": [
+        6,
+        1,
+        10
+      ],
+      "score": "0.135"
+    },
+    {
+      "id": "TX5",
+      "threePhase": "5/6",
+      "split": [
+        27,
+        19,
+        18
+      ],
+      "score": "0.830"
+    },
+    {
+      "id": "TX6",
+      "threePhase": "16/16",
+      "split": [
+        23,
+        20,
+        18
+      ],
+      "score": "0.974"
+    },
+    {
+      "id": "TX7",
+      "threePhase": "2/2",
+      "split": [
+        24,
+        26,
+        29
+      ],
+      "score": "0.980"
+    },
+    {
+      "id": "TX8",
+      "threePhase": "0/0",
+      "split": [
+        1,
+        3,
+        7
+      ],
+      "score": "0.818"
+    },
+    {
+      "id": "TX9",
+      "threePhase": "2/2",
+      "split": [
+        18,
+        18,
+        18
+      ],
+      "score": "1.000"
+    },
+    {
+      "id": "TX10",
+      "threePhase": "0/0",
+      "split": [
+        22,
+        22,
+        24
+      ],
+      "score": "0.988"
+    },
+    {
+      "id": "TX11",
+      "threePhase": "1/2",
+      "split": [
+        43,
+        20,
+        27
+      ],
+      "score": "0.563"
+    },
+    {
+      "id": "TX12",
+      "threePhase": "1/1",
+      "split": [
+        6,
+        5,
+        6
+      ],
+      "score": "0.976"
+    },
+    {
+      "id": "TX13",
+      "threePhase": "0/0",
+      "split": [
+        21,
+        20,
+        22
+      ],
+      "score": "0.990"
+    },
+    {
+      "id": "TX14",
+      "threePhase": "0/0",
+      "split": [
+        18,
+        16,
+        14
+      ],
+      "score": "0.975"
+    },
+    {
+      "id": "TX15",
+      "threePhase": "0/0",
+      "split": [
+        6,
+        7,
+        6
+      ],
+      "score": "0.979"
+    },
+    {
+      "id": "TX16",
+      "threePhase": "0/0",
+      "split": [
+        2,
+        2,
+        4
+      ],
+      "score": "0.900"
+    },
+    {
+      "id": "TX17",
+      "threePhase": "0/2",
+      "split": [
+        8,
+        3,
+        2
+      ],
+      "score": "0.131"
+    },
+    {
+      "id": "Total",
+      "threePhase": "28/33",
+      "split": [
+        262,
+        226,
+        247
+      ],
+      "score": "0.833"
+    }
+  ],
+  "DTW GMM": [
+    {
+      "id": "TX1",
+      "threePhase": "1/1",
+      "split": [
+        17,
+        26,
+        19
+      ],
+      "score": "0.948"
+    },
+    {
+      "id": "TX2",
+      "threePhase": "0/0",
+      "split": [
+        16,
+        17,
+        16
+      ],
+      "score": "0.992"
+    },
+    {
+      "id": "TX3",
+      "threePhase": "0/0",
+      "split": [
+        4,
+        5,
+        3
+      ],
+      "score": "0.950"
+    },
+    {
+      "id": "TX4",
+      "threePhase": "0/1",
+      "split": [
+        3,
+        1,
+        13
+      ],
+      "score": "0.041"
+    },
+    {
+      "id": "TX5",
+      "threePhase": "3/6",
+      "split": [
+        24,
+        19,
+        21
+      ],
+      "score": "0.625"
+    },
+    {
+      "id": "TX6",
+      "threePhase": "16/16",
+      "split": [
+        21,
+        20,
+        20
+      ],
+      "score": "0.993"
+    },
+    {
+      "id": "TX7",
+      "threePhase": "2/2",
+      "split": [
+        29,
+        27,
+        23
+      ],
+      "score": "0.975"
+    },
+    {
+      "id": "TX8",
+      "threePhase": "0/0",
+      "split": [
+        3,
+        4,
+        4
+      ],
+      "score": "0.964"
+    },
+    {
+      "id": "TX9",
+      "threePhase": "0/2",
+      "split": [
+        7,
+        36,
+        11
+      ],
+      "score": "0.100"
+    },
+    {
+      "id": "TX10",
+      "threePhase": "0/0",
+      "split": [
+        22,
+        24,
+        22
+      ],
+      "score": "0.988"
+    },
+    {
+      "id": "TX11",
+      "threePhase": "1/2",
+      "split": [
+        18,
+        27,
+        45
+      ],
+      "score": "0.550"
+    },
+    {
+      "id": "TX12",
+      "threePhase": "1/1",
+      "split": [
+        6,
+        5,
+        6
+      ],
+      "score": "0.976"
+    },
+    {
+      "id": "TX13",
+      "threePhase": "0/0",
+      "split": [
+        38,
+        20,
+        5
+      ],
+      "score": "0.838"
+    },
+    {
+      "id": "TX14",
+      "threePhase": "0/0",
+      "split": [
+        17,
+        18,
+        13
+      ],
+      "score": "0.963"
+    },
+    {
+      "id": "TX15",
+      "threePhase": "0/0",
+      "split": [
+        4,
+        6,
+        9
+      ],
+      "score": "0.916"
+    },
+    {
+      "id": "TX16",
+      "threePhase": "0/0",
+      "split": [
+        4,
+        2,
+        2
+      ],
+      "score": "0.900"
+    },
+    {
+      "id": "TX17",
+      "threePhase": "0/2",
+      "split": [
+        8,
+        2,
+        3
+      ],
+      "score": "0.131"
+    },
+    {
+      "id": "Total",
+      "threePhase": "24/33",
+      "split": [
+        241,
+        259,
+        235
+      ],
+      "score": "0.756"
+    }
+  ],
+  "DTW Spectral": [
+    {
+      "id": "TX1",
+      "threePhase": "0/1",
+      "split": [
+        36,
+        18,
+        8
+      ],
+      "score": "0.152"
+    },
+    {
+      "id": "TX2",
+      "threePhase": "0/0",
+      "split": [
+        32,
+        8,
+        9
+      ],
+      "score": "0.808"
+    },
+    {
+      "id": "TX3",
+      "threePhase": "0/0",
+      "split": [
+        5,
+        4,
+        3
+      ],
+      "score": "0.950"
+    },
+    {
+      "id": "TX4",
+      "threePhase": "0/1",
+      "split": [
+        10,
+        6,
+        1
+      ],
+      "score": "0.135"
+    },
+    {
+      "id": "TX5",
+      "threePhase": "5/6",
+      "split": [
+        23,
+        22,
+        19
+      ],
+      "score": "0.861"
+    },
+    {
+      "id": "TX6",
+      "threePhase": "16/16",
+      "split": [
+        20,
+        25,
+        16
+      ],
+      "score": "0.954"
+    },
+    {
+      "id": "TX7",
+      "threePhase": "0/2",
+      "split": [
+        26,
+        34,
+        19
+      ],
+      "score": "0.242"
+    },
+    {
+      "id": "TX8",
+      "threePhase": "0/0",
+      "split": [
+        4,
+        4,
+        3
+      ],
+      "score": "0.964"
+    },
+    {
+      "id": "TX9",
+      "threePhase": "2/2",
+      "split": [
+        18,
+        18,
+        18
+      ],
+      "score": "1.000"
+    },
+    {
+      "id": "TX10",
+      "threePhase": "0/0",
+      "split": [
+        24,
+        22,
+        22
+      ],
+      "score": "0.988"
+    },
+    {
+      "id": "TX11",
+      "threePhase": "1/2",
+      "split": [
+        20,
+        27,
+        43
+      ],
+      "score": "0.563"
+    },
+    {
+      "id": "TX12",
+      "threePhase": "1/1",
+      "split": [
+        5,
+        6,
+        6
+      ],
+      "score": "0.976"
+    },
+    {
+      "id": "TX13",
+      "threePhase": "0/0",
+      "split": [
+        9,
+        34,
+        20
+      ],
+      "score": "0.876"
+    },
+    {
+      "id": "TX14",
+      "threePhase": "0/0",
+      "split": [
+        16,
+        18,
+        14
+      ],
+      "score": "0.975"
+    },
+    {
+      "id": "TX15",
+      "threePhase": "0/0",
+      "split": [
+        6,
+        6,
+        7
+      ],
+      "score": "0.979"
+    },
+    {
+      "id": "TX16",
+      "threePhase": "0/0",
+      "split": [
+        2,
+        3,
+        3
+      ],
+      "score": "0.950"
+    },
+    {
+      "id": "TX17",
+      "threePhase": "0/2",
+      "split": [
+        6,
+        5,
+        2
+      ],
+      "score": "0.192"
+    },
+    {
+      "id": "Total",
+      "threePhase": "25/33",
+      "split": [
+        262,
+        260,
+        213
+      ],
+      "score": "0.739"
     }
   ]
 }

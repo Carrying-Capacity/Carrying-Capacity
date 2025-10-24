@@ -18,7 +18,7 @@ export default function NetworkEstimate() {
         <div className="modern-card">
           <h2>Topology and Generation</h2>
           <h3>Rationale</h3>
-          <p>The purpose of this section is to explain how the network structure was constructed. This section follows after Phase estimation, and uses the same cleaned dataset.</p>
+          {/* <p>The purpose of this section is to explain how the network structure was constructed. This section follows after Phase estimation, and uses the same cleaned dataset.</p> */}
           <p>
           Generation of the electrical network topology allows for an intuitive user-friendly interface for network planners to interact with. It provides the opportunity for a visualisation of a transformers electrical network allowing for simplified analysis of factors such as network structure and phase distribution.</p>
           <h3>Methodology</h3>
@@ -63,16 +63,16 @@ export default function NetworkEstimate() {
 
         <div className="modern-content-wrapper fade-in-up-delay-2">
           <h2>Accuracy and consistency testing - Topology</h2>
-          <p>Due to the absence of ground truth network topology data, a consensus-based accuracy metric was developed. As described above, we implemented various peer-reviewed methodologies, each having been validated and reporting high levels of accuracy. From this set of proven techniques, we can score them based of two tests. </p>
-          <ol>
-            <li>Consistency to Other Methods: Independent methods returning similar outputs despite using different approaches indicate the output is more likely to be correct</li>
-            <li>Consistency Across Time: We split our dataset into multiple segments, with methods returning similar results despite differing inputs showing robustness</li>
+          <p>Due to the absence of ground truth network topology data, a consensus-based accuracy metric was developed. As described above, we implemented various peer-reviewed methodologies, each having been validated and reporting high levels of accuracy. From this set of proven techniques, we can score them based of two tests: </p>
+          <ol className="list-decimal list-outside p-3 pl-6">
+            <li>Consistency to Other Methods: Independent methods returning similar outputs despite using different approaches indicate the output is more likely to be correct.</li>
+            <li>Consistency Across Time: We split our dataset into multiple segments, with methods returning similar results despite differing inputs showing robustness.</li>
           </ol>
           <p>As a result, the method that shows both consensus with peer methods and robustness can be deemed to be the most accurate and best fit for our data.</p>
           <p>For each transformer, an MST was generated using each method, as well for each time segment. The outputs were then compared to each other, with points being assigned for similarities on edge connections, branching similarity, degree similarity, and path similarity. Following testing, the most accurate method (utilising Kendall-Tau Correlation) is used to generate the displayed topology. </p> 
           <h3>Approximate Distance Calculation</h3>
           <p>In addition to generation of connected nodes using a tree, the approximated distance between nodes was also calculated using calculated impedance values for the connecting lines. This was done using a number of power equations: </p>
-          <ul>
+          <ul className="list-disc list-outside p-3 pl-6">
           <li>Ohm’s Law (proxy): <InlineMath math={`z=\\Delta V/I`}/></li>
           <li>Voltage Drop: <InlineMath math={`\\mathrm{\\Delta V}=V1-V2`}/></li>
           <li>Current Magnitude: <InlineMath math={`I=\\left|S\\right|/V`}/></li>
