@@ -7,30 +7,50 @@ export default function StreetGeneration() {
       <div className="modern-page-hero">
         <h1 className="modern-page-title">Street Generation</h1>
         <p className="modern-page-subtitle">
-          Street generation algorithm
+          Ant algorithm, custom built ant agents and Kernel density estimation
         </p>
       </div>
-
       <section className="modern-page-section fade-in-up">
         <div className="modern-content-wrapper">
           <h2 className="modern-section-title">Ant Function Algorithm</h2>
           <h3 className="modern-subsection-title">Custom Built ‘Ant’ Agents</h3>
-          <p>Nodes were positioned using kernel density estimation and custom agents called ants. The ant agents extend another class called TurtleStack, which itself was inspired by the python turtle library -- although we do not use this library. The TurtleStack class basically stores our current position, direction, and our link to NetworkNodes. It has functions for popping state, pushing state, getting direction, etc. The ant class provides more intelligence than the turtle. The idea is that ants will automatically generate street layouts by moving forward and turning in a way which makes sense for an actual network topology (i.e.,  they should cross over each other’s paths, should not place houses on top of existing houses, should not generate streets which run too close to other streets, and should not extend excessively far from the main network).</p>
-        </div>
-
-        <div className="modern-card fade-in-up-delay-1">
-          <h3 className="modern-subsection-title">Kernel Density Estimation</h3>
-          <p>This was achieved using kernel density estimation to determine whether any given ant is too close to, or to far from existing nodes. The ants then have two states: “moving in” and “moving out”. In the moving out state, the ant has realised it is too close to existing nodes, and will try to minimize kernel density, and in the “moving in” state, the opposite is true. To avoid landing directly on other housing in the “moving in” state, we also use a smaller kernel to identify nodes which are too close to our next position, to stop the ant landing immediately adjacent to them. This smaller kernel is weighted very heavily when we score positions because we never want this to happen.</p>
+          <p>Nodes are positioned using kernel density estimation (KDE) and custom agents called ants. The ant agents extend the TurtleStack class, which stores the current position, direction, and link to associated NetworkNodes, and provides functions for pushing and popping state and getting direction.
+            <br />
+          The Ant class adds logic that allows the agents to automatically generate street layouts by moving forward and turning in ways that make sense for an actual network topology. They should not cross paths, place houses on top of existing houses, run streets too close to each other, or extend too far from the main network.
+          <br />
+          <h3>Network Generation Algorithm</h3>
+          </p>
+          <CollapsibleDiv title={`Network Generation Algorithm`}>
+          <ol class="list-decimal list-outside mx-6 my-6">
+              <li>Each StreetNode represents a spatial position linked to a network node and tracks its previous and next nodes.</li>
+              <li>Ant agents are initialised from transformer nodes and move through space to generate realistic street layouts.</li>
+              <li>Each ant stores its current position, direction, and state, allowing it to branch or backtrack as needed.</li>
+              <li>Node placement is determined using kernel density estimation (KDE) to measure proximity to existing nodes.</li>
+              <li>When density is too high, ants move outwards.</li>
+              <li>When density is too low, they move inwards.</li>
+              <li>At each step, ants test multiple candidate directions, score them using KDE and short-range penalties, and move to the best position.</li>
+              <li>When a branch in the network occurs, new ants are created for each child node.</li>
+              <li>The process continues until all ants reach their terminal nodes, producing a spatially distributed network ready for JSON generation and front-end rendering.</li>
+          </ol>
+          </CollapsibleDiv>
+                    <h3 className="modern-subsection-title">Kernel Density Estimation</h3>
+                    <p>KDE is used to determine whether an ant is too close to or too far from existing nodes. Ants have two states: “moving in” and “moving out.”:
+          <ul class="list-disc list-outside mx-6 my-6">
+            <li>In the moving out state, the ant moves away from areas where nodes are too close together.</li>
+          <li>In the moving in state, it moves toward areas with lower node density.</li>
+            </ul>
+          A smaller alternative kernel is used to detect when the next position is too close to an existing node. This smaller kernel is weighted heavily when scoring positions to prevent ants from placing new nodes right next to existing ones.
+          </p>
           <img src="./figs/ant.png" alt="Ant street generation" style={{ width: "60%", display: "block", margin: "0 auto"}}/>
-        </div>
-        <div className="modern-card fade-in-up-delay-2">
-          <h3 className="modern-subsection-title">JSON output file format</h3>
+          </div>
+          <div className="modern-card fade-in-up-delay-2">
+            <h3 className="modern-subsection-title">JSON output file format</h3>
 
-          <p>The most critical function of the data platform is JSON generation. The final output of the JSON files were formatted as below.</p>
-          <div className='w-2/3 mx-auto'>
-            <CollapsibleDiv title={`JSON file format`}>
-              <div style={{ whiteSpace: "pre" }}>
-                <p>{
+            <p>The most critical function of the data platform is JSON generation. The final output of the JSON files were formatted as below.</p>
+            <div className='w-2/3 mx-auto'>
+              <CollapsibleDiv title={`JSON file format`}>
+                <div style={{ whiteSpace: "pre" }}>
+                  <p>{
   `{"type": "house",
         "id": "95af7aadf50d4",
             "next_nodes": [
@@ -51,7 +71,7 @@ export default function StreetGeneration() {
         "house_number": 441
   }`}</p>
               </div>
-              <p>The idea here is that each node tracks previous nodes and next nodes and then have a payload associated with each node. Although our topology is a tree, we track previous nodes as an array instead of as a single node for consistency and in case we must handle different types of topologies going forward (where circuits are theoretically possible).</p>
+              {/* <p>The idea here is that each node tracks previous nodes and next nodes and then have a payload associated with each node. Although our topology is a tree, we track previous nodes as an array instead of as a single node for consistency and in case we must handle different types of topologies going forward (where circuits are theoretically possible).</p> */}
             </CollapsibleDiv>
           </div>
         </div>

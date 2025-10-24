@@ -94,6 +94,24 @@ const TECHNOLOGIES = [
       "Custom legends with scrollable overflow",
       "Interactive tooltips with detailed metrics"
     ]
+  },
+  {
+  logo: "https://upload.wikimedia.org/wikipedia/commons/5/58/KaTeX_logo.svg",
+  name: "KaTeX",
+  version: VERSIONS.katex || "0.18.x",
+  description: "Web-based LaTeX typesetting library for rendering math expressions",
+  features: [
+    "High-performance rendering of LaTeX math",
+    "Supports most LaTeX math symbols and environments",
+    "Server-side rendering and client-side rendering",
+    "Lightweight and responsive"
+  ],
+  justification: "KaTeX provides fast rendering of LaTeX math in web applications. Its lightweight footprint ensures fast page loads and smooth user experience. Full LaTeX support allows complex mathematical notation to be displayed consistently in React components or plain HTML.",
+  useCases: [
+    "Displaying calculations from the documentation",
+    "Rendering of complex equations and mathematical expressions",
+    "Interactive educational content for electrical engineering concepts"
+  ]
   }
 ];
 
@@ -108,7 +126,7 @@ export default function FrontEnd() {
               Front End
             </h1>
             <p className="frontend-description">
-              Methodology and libraries used for the website front-end
+              Collection of dependencies used for the website front-end. 
             </p>
           </div>
         </div>
@@ -116,9 +134,8 @@ export default function FrontEnd() {
         {/* Technologies Grid */}
         <div className="frontend-section">
           <div className="frontend-section-header">
-            <h2 className="frontend-section-title">Core Technologies</h2>
+            <h2 className="frontend-section-title"></h2>
             <p className="frontend-section-subtitle">
-              Five powerful tools working together to create an exceptional user experience
             </p>
           </div>
 

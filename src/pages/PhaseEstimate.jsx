@@ -66,12 +66,21 @@ export default function PhaseEstimate() {
             <MathBlock math={`\\rho_{xy} = \\frac{\\text{cov}(R(\\bold{x}), R(\\bold{y}))}{\\sqrt{\\text{cov}(R(\\bold{x}), R(\\bold{x}))} \\, \\sqrt{\\text{cov}(R(\\bold{y}), R(\\bold{y}))}}`} />
             <p>This was appllied to the stacked wave matrix, to give us the <InlineMath math={`n \\times n`}/> Spearman correlation matrix.</p>
           </CollapsibleDiv>
-          <h3 className="modern-section-title">Results</h3>
-          <p>Using these methods, it is possible to group all of the houses from the transformers, and calculate each of their accuracy scores. This was tabulated into a JSON file and the results are shown as below.</p>
+          <h3 className="modern-section-title">Creation of an Accuracy Score for Phase Assignment </h3>
+          <p>Due to the lack of ground truth for customer phases and transformer data, a custom accuracy metric was developed. GridQube provided insights into the typical phase distribution per transformer and confirmed that three-phase houses had three unique phases. This allowed partial ground truth to be inferred, forming the basis for two key accuracy tests:
+          <ol class="list-decimal list-outside mx-6 my-6">
+            <li>The phase distribution. A normalised penalty rate was applied to each transformers phase distribution as it drifted further away from the perfect distribution of [1/3, 1/3, 1/3].
+          It should be noted that the perfect distribution is never found in real life, however since this is the ideal it is more likely to be close to this ideal that have a large swing to one phase. This was confirmed by GridQube and research and had a 30% weight on the accuracy of each transformer.</li>
+          <li>The correct identification of three-phase households. A % score was applied to each transformer with a three-phase household, based on the number of correctly assigned three phase household. A correct assignment allocated each voltage time series a unique phase. If a transformer did not have a three-phase house, a score of 100% was allocated.</li>
+          </ol>
+          With 33 three-phase households, partial ground truth was available for transformers containing them. Assuming that three-phase houses have three unique phases, a principle supported both academically and industrially, these transformers were weighted at 70%. A weighted average produced a score between 0 and 1 for each transformer, which was then averaged to yield the final method score. Applying this across all data processing and clustering combinations resulted in a highest accuracy of 93.504% for fuzzy c-means with Pearson correlation and a lowest accuracy of 73.921% for spectral clustering with dynamic time warping.
+          </p></div>
+          <div className="modern-content-wrapper">
+            <h2 className="modern-section-title">Results</h2>
+            <p>Using these methods, it is possible to group all of the houses from the transformers, and calculate each of their accuracy scores. This was tabulated into a JSON file and the results are shown as below.</p>
           <AlexResultTable/>
-          <br />
-          From the table, the method with the highest average total score is the Pearson fuzzy C-means method with an accuracy rating of 0.93, meaning it has the highest accuracy. Therefore it was used for the following methods.
-        </div>
+          </div>
+          {/* From the table, the method with the highest average total score is the Pearson fuzzy C-means method with an accuracy rating of 0.93, meaning it has the highest accuracy. Therefore it was used for the following methods. */}
       </section>
     </PageLayout>
   );
