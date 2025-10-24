@@ -73,7 +73,7 @@ export default function NetworkEstimate() {
           <p>Following chosen method topology generation, distance scoring and root node assignment. The MST is then layered with each nodes identified phase label. The data is then returned to the next stage of the pipeline using a network graph. This graph is attached with labelled nodes for phase as well as estimated distance from the last node. This information is passed on to be converted into the appropriate JSON format.</p>
         </div>
 
-        <div className="modern-card fade-in-up-delay-2">
+        {/* <div className="modern-card fade-in-up-delay-2">
           <CollapsibleDiv title={'Minimal Spanning Tree Algorithm'}>
               <p><strong>Input</strong>: Correlation Matrix <span>{`K`}</span> for <span>{`U`}</span> nodes </p>
               <p><strong>Output</strong>: Node adjacency matrix <span>{`A`}</span></p>
@@ -97,7 +97,7 @@ export default function NetworkEstimate() {
               <li>Update <span>A</span> by <span>B</span>, return <span>A</span></li>
             </ol>
           </CollapsibleDiv>
-        </div>
+        </div> */}
       </section>
     </PageLayout>
   );
