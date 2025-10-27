@@ -67,8 +67,9 @@ export const collectDownstreamNodes = (graphData, startNode) => {
 };
 
 /**
- * Trace path from a house/street node back to the feeder (root)
+ * Trace path from a house/street node back to the transformer (stops before feeder)
  * Uses precomputed adjacency maps for O(1) lookups instead of O(N) scans
+ * Excludes feeder-to-transformer connections from the path
  */
 export const tracePathToFeeder = (graphData, startNode) => {
   if (!graphData?.adjacency || !startNode) return { pathNodes: [], pathLinks: [] };
@@ -97,6 +98,11 @@ export const tracePathToFeeder = (graphData, startNode) => {
       break;
     }
 
+    // Stop if the next link would be feeder-to-transformer (don't include feeder)
+    if (prevNode.type === "feeder" && currentNode.type === "transformer") {
+      break;
+    }
+
     // Add the previous node to the path
     pathNodes.push(prevNode);
     visitedNodes.add(prevNode.id);
@@ -109,8 +115,8 @@ export const tracePathToFeeder = (graphData, startNode) => {
 
     currentNode = prevNode;
 
-    // Stop if we've reached the feeder (root of the network)
-    if (currentNode.type === "feeder") {
+    // Stop if we've reached the transformer (don't continue to feeder)
+    if (currentNode.type === "transformer") {
       break;
     }
   }
