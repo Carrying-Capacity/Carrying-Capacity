@@ -102,6 +102,7 @@ const TransformerGraphWrapperContent = () => {
             .filter(n => {
                 // Exclude streets from search results
                 if (n.type === 'street') return false;
+                if (n.type === 'network') return false;
                 
                 const label = String(n.label || n.id).toLowerCase();
                 return label.includes(lowerTerm) || (n.type || '').toLowerCase().includes(lowerTerm);
