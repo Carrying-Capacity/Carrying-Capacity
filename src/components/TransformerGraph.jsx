@@ -14,7 +14,7 @@ const LINK_STYLES = {
     normal: { strokeStyle: "#cbd5e1", lineWidth: 1.5, fillStyle: "#94a3b8" }
 };
 
-const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false, autoZoomEnabled = true }) => {
+const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false, autoZoomEnabled = true, isCompareMode = false }) => {
     const fgRef = useRef();
     const [hoverNode, setHoverNode] = useState(null);
     const [flowLinks, setFlowLinks] = useState([]);
@@ -163,35 +163,52 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
 
     const renderLabel = useCallback((node, ctx) => {
         if (hoverNode && hoverNode.id === node.id) {
-            const label = node.label || node.id;
-            const padding = 12;
-            const boxX = node.x + 15;
-            const boxY = node.y - 12;
+            // Get current zoom level and calculate scale factor
+            const zoomLevel = fgRef.current?.zoom?.() || 1;
+            // Clamp scale factor between 0.5 and 2.0 for readability
+            const scaleFactor = Math.max(0.5, Math.min(2.0, 1 / zoomLevel));
             
-            ctx.font = "600 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+            const label = node.label || node.id;
+            const basePadding = 12;
+            const padding = basePadding * scaleFactor;
+            const baseBoxXOffset = 15;
+            const baseBoxYOffset = -12;
+            const boxX = node.x + baseBoxXOffset * scaleFactor;
+            const boxY = node.y + baseBoxYOffset * scaleFactor;
+            
+            const baseFontSize = 13;
+            ctx.font = `600 ${baseFontSize * scaleFactor}px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
             const labelWidth = ctx.measureText(label).width;
-            let boxHeight = 32;
+            let boxHeight = 32 * scaleFactor;
             
             let actionText = "";
             let maxWidth = labelWidth;
             
             if (node.type === "house") {
                 const isInComparison = comparisonIdSet.has(node.id);
-                actionText = isInComparison ? "Right-click to remove" : "Right-click to compare";
-                ctx.font = "500 11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+                if (isCompareMode) {
+                    actionText = isInComparison ? "Click to remove" : "Click to add";
+                } else {
+                    actionText = isInComparison ? "Right-click to remove" : "Right-click to compare";
+                }
+                const actionFontSize = 11;
+                ctx.font = `500 ${actionFontSize * scaleFactor}px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
                 const actionWidth = ctx.measureText(actionText).width;
                 maxWidth = Math.max(labelWidth, actionWidth);
-                boxHeight = 48;
+                boxHeight = 48 * scaleFactor;
             }
             
             const boxWidth = maxWidth + padding * 2;
-            const borderRadius = 12;
+            const baseBorderRadius = 12;
+            const borderRadius = baseBorderRadius * scaleFactor;
             
             // Draw outer glow
             ctx.shadowColor = "rgba(59, 130, 246, 0.3)";
-            ctx.shadowBlur = 20;
+            const baseShadowBlur = 20;
+            ctx.shadowBlur = baseShadowBlur * scaleFactor;
             ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 4;
+            const baseShadowOffsetY = 4;
+            ctx.shadowOffsetY = baseShadowOffsetY * scaleFactor;
             
             // Draw glassmorphism background with gradient
             const gradient = ctx.createLinearGradient(boxX, boxY, boxX, boxY + boxHeight);
@@ -215,23 +232,25 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
             borderGradient.addColorStop(1, "rgba(203, 213, 225, 0.8)");
             
             ctx.strokeStyle = borderGradient;
-            ctx.lineWidth = 1.5;
+            const baseLineWidth = 1.5;
+            ctx.lineWidth = baseLineWidth * scaleFactor;
             ctx.beginPath();
             ctx.roundRect(boxX, boxY, boxWidth, boxHeight, borderRadius);
             ctx.stroke();
             
             // Draw main text with better typography
-            ctx.font = "600 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+            ctx.font = `600 ${baseFontSize * scaleFactor}px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
             ctx.fillStyle = "#0f172a";
             ctx.textAlign = "left";
             ctx.textBaseline = "middle";
-            ctx.fillText(label, boxX + padding, boxY + (actionText ? 16 : boxHeight / 2));
+            ctx.fillText(label, boxX + padding, boxY + (actionText ? 16 * scaleFactor : boxHeight / 2));
             
             // Draw action text for houses with modern styling
             if (actionText) {
-                ctx.font = "500 11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+                const actionFontSize = 11;
+                ctx.font = `500 ${actionFontSize * scaleFactor}px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
                 ctx.fillStyle = comparisonIdSet.has(node.id) ? "#3b82f6" : "#64748b";
-                ctx.fillText(actionText, boxX + padding, boxY + 34);
+                ctx.fillText(actionText, boxX + padding, boxY + 34 * scaleFactor);
             }
         }
     }, [hoverNode, comparisonIdSet]);
@@ -652,7 +671,12 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                     if (!node || node.type === "street" || node.type === "feeder" || node.type === "network") {
                         return;
                     }
-                    onNodeClick(node);
+                    // In compare mode, left-click adds/removes houses from comparison
+                    if (isCompareMode && node.type === "house") {
+                        toggleHouseInComparison(node);
+                    } else {
+                        onNodeClick(node);
+                    }
                 }}
                 onNodeRightClick={useCallback((node, event) => {
                     event?.preventDefault();

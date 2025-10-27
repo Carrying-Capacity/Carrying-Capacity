@@ -76,6 +76,14 @@ const TransformerGraphWrapperContent = () => {
         setShowComparison(false);
     };
 
+    const handleToggleComparison = () => {
+        // Clear focusNode when entering comparison mode to hide flow
+        if (!showComparison) {
+            setFocusNode(null);
+        }
+        toggleComparisonModal();
+    };
+
     const handleDropdownChange = (e) => {
         const nodeId = e.target.value;
         if (nodeId) {
@@ -259,11 +267,8 @@ const TransformerGraphWrapperContent = () => {
                             </>
                         )}
                         <button
-                            onClick={toggleComparisonModal}
-                            disabled={comparisonList.length === 0}
-                            className={`modern-btn modern-btn-primary ${
-                                comparisonList.length === 0 ? 'disabled' : ''
-                            } ${showComparison ? 'active' : ''}`}
+                            onClick={handleToggleComparison}
+                            className={`modern-btn modern-btn-primary ${showComparison ? 'active' : ''}`}
                             title={`Compare ${formatCount(comparisonList.length, 'house')}`}
                         >
                             <GitCompare size={16} />
@@ -314,6 +319,7 @@ const TransformerGraphWrapperContent = () => {
                     onNodeClick={handleNodeClick}
                     isMobile={isMobile}
                     autoZoomEnabled={autoZoomEnabled}
+                    isCompareMode={showComparison}
                 />
                 <InfoModal 
                     node={selectedNode} 

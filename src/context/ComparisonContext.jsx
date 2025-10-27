@@ -32,10 +32,8 @@ export const ComparisonProvider = ({ children }) => {
   }, []);
 
   const toggleComparisonModal = useCallback(() => {
-    if (comparisonList.length > 0) {
-      setShowComparison(prev => !prev);
-    }
-  }, [comparisonList.length]);
+    setShowComparison(prev => !prev);
+  }, []);
 
   const value = useMemo(() => ({
     comparisonList,

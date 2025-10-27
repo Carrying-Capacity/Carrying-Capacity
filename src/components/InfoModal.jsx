@@ -56,8 +56,8 @@ const InfoModal = memo(({ node, onClose, isComparison = false, onFullscreenChang
     const isInComparison = comparisonList?.some(h => h.id === node?.id);
 
     
-    // Show modal if we have a single node or if we're in comparison mode with houses to compare
-    if (!node && (!isComparison || comparisonList.length === 0)) return null;
+    // Show modal if we have a single node or if we're in comparison mode
+    if (!node && !isComparison) return null;
     
     return (
         <>

@@ -7,7 +7,7 @@ export const ComparisonSection = memo(({ comparisonList = [], onRemoveFromCompar
       <div className="mb-6 border-2 border-gray-200 rounded-lg p-4">
         <h4 className="text-xl font-semibold mb-3 text-gray-800">House Comparison</h4>
         <p className="text-gray-600">
-          No houses selected for comparison. Right-click on houses in the graph to add them.
+          No houses selected for comparison. Click on houses in the graph to add them.
         </p>
       </div>
     );
