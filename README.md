@@ -18,6 +18,7 @@ Interactive visualization tool for electrical grid phase identification and netw
 - **Supabase** - PostgreSQL backend for network data
 - **React Force Graph** - Canvas-based network visualization
 - **Recharts** - Time-series charts
+- **KaTex** - Required for displaying Math
 
 ## Setup
 
