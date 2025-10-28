@@ -3,6 +3,8 @@ import CollapsibleDiv from "../components/CollapsableDiv";
 import MathBlock from '../components/Mathblock';
 import {InlineMath } from 'react-katex';
 import { AlignCenter } from 'lucide-react';
+import SamResultTable from '../components/SamResultsTable'
+import MSTTopologySelector from '../components/MSTTopologySelector';
 
 export default function NetworkEstimate() {
   return (
@@ -45,20 +47,26 @@ export default function NetworkEstimate() {
         </div>
         
         <div className="modern-content-wrapper fade-in-up-delay-1">
-          <h3>Generated MST topologies</h3>
+          <h3>Raw topology data</h3>
           <figure className="text-center">
-            <img src="./figs/mst.png" alt="MST diagram" style={{ width: "50%", display: "block", margin: "0 auto"}} /> 
+            <img src="./figs/mst.png" alt="MST diagram" style={{ width: "60%", display: "block", margin: "0 auto"}} /> 
             <figcaption style={{ fontSize: "0.9rem", color: "#555", marginTop: "0.5rem" }}>
             Generated Topology MST before root node identification
             </figcaption>
           </figure>
-          <br />
-          <figure className="text-center">
+          <br />      
+          <h3>Generated MST topologies</h3>
+          <div>
+            <MSTTopologySelector/>
+          </div>
+          
+          
+          {/* <figure className="text-center">
             <img src="./figs/mst_2.png" alt="MST diagram 2" style={{ width: "80%", display: "block", margin: "0 auto"}} /> 
             <figcaption style={{ fontSize: "0.9rem", color: "#555", marginTop: "0.5rem" }}>
             Generated Topology MST after root node identification
             </figcaption>
-          </figure>
+          </figure> */}
         </div>
 
         <div className="modern-content-wrapper fade-in-up-delay-2">
@@ -70,6 +78,10 @@ export default function NetworkEstimate() {
           </ol>
           <p>As a result, the method that shows both consensus with peer methods and robustness can be deemed to be the most accurate and best fit for our data.</p>
           <p>For each transformer, an MST was generated using each method, as well for each time segment. The outputs were then compared to each other, with points being assigned for similarities on edge connections, branching similarity, degree similarity, and path similarity. Following testing, the most accurate method (utilising Kendall-Tau Correlation) is used to generate the displayed topology. </p> 
+          <h3>Results</h3>
+          <p>Below is the accuracy scores for each of the methods.</p>
+          <SamResultTable/>
+          <p>Therefore, the chosen method was the Kendall-Tau method.</p>
           <h3>Approximate Distance Calculation</h3>
           <p>In addition to generation of connected nodes using a tree, the approximated distance between nodes was also calculated using calculated impedance values for the connecting lines. This was done using a number of power equations: </p>
           <ul className="list-disc list-outside p-3 pl-6">

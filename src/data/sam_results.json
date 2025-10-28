@@ -1,0 +1,8 @@
+{
+  "results": {
+    "Kendall-Tau Correlation": 69.63,
+    "Graphical Lasso": 47.24,
+    "Pearson Correlation": 69.42,
+    "Mutual Information Scores": 62.66
+  }
+}
