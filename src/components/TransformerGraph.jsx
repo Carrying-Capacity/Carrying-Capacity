@@ -34,6 +34,9 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
     
     const [containerRef, dimensions] = useContainerSize();
     const { comparisonIdSet, toggleHouseInComparison } = useComparison();
+    
+    // Compute flag for active animations to control autoPauseRedraw
+    const hasActiveAnimations = flowLinks.length > 0 || pulsingNodeIds.size > 0;
 
     // Helper to attach onload handler for incomplete icons
     const ensureIconLoaded = useCallback((icon) => {
@@ -161,6 +164,25 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
         }
     }, [comparisonIdSet, ensureIconLoaded, pulsingNodeIds, selectedTransformerId, pulseTick]);
 
+    const renderFlowLinks = useCallback((ctx) => {
+        if (flowLinks.length === 0) return;
+        
+        flowLinks.forEach(link => {
+            ctx.strokeStyle = "#f97316";
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([5, 5]);
+            ctx.lineDashOffset = -tick;
+            
+            ctx.beginPath();
+            ctx.moveTo(link.source.x, link.source.y);
+            ctx.lineTo(link.target.x, link.target.y);
+            ctx.stroke();
+        });
+        
+        // Reset line dash for other rendering
+        ctx.setLineDash([]);
+    }, [flowLinks, tick]);
+
     const renderLabel = useCallback((node, ctx) => {
         if (hoverNode && hoverNode.id === node.id) {
             // Get current zoom level and calculate scale factor
@@ -282,11 +304,10 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
             (sourceNode.type === "feeder" && targetNode.type === "transformer") ||
             (sourceNode.type === "transformer" && targetNode.type === "feeder");
         
-        // Determine style: flow links get animated orange, feeder-to-transformer get thick dark, downstream links get static orange, others normal
+        // Determine style: feeder-to-transformer get thick dark, downstream links get static orange, others normal
+        // Flow links are rendered as overlay in onRenderFramePost, so we draw the base link here
         let style;
-        if (isFlowLink) {
-            style = LINK_STYLES.flow;
-        } else if (isFeederToTransformer) {
+        if (isFeederToTransformer) {
             style = LINK_STYLES.feederToTransformer;
         } else if (isDownstreamLink) {
             style = { strokeStyle: "#f97316", lineWidth: 2, fillStyle: "#f97316" };
@@ -297,19 +318,14 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
         // Set link style
         ctx.strokeStyle = style.strokeStyle;
         ctx.lineWidth = style.lineWidth;
-        if (isFlowLink) {
-            ctx.setLineDash([5, 5]);
-            ctx.lineDashOffset = -tick;
-        } else {
-            ctx.setLineDash([]);
-        }
+        ctx.setLineDash([]);
 
         // Draw the line
         ctx.beginPath();
         ctx.moveTo(link.source.x, link.source.y);
         ctx.lineTo(link.target.x, link.target.y);
         ctx.stroke();
-    }, [tick, flowLinkSet, downstreamLinks]);
+    }, [flowLinkSet, downstreamLinks]);
     
     useEffect(() => {
         if (!hasFlowLinks) {
@@ -336,6 +352,8 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
 
             while (flowAnimationAccumulatorRef.current >= frameDuration) {
                 setTick((t) => t + 1);
+                // Force a complete render cycle including onRenderFramePost callback
+                fgRef.current?.refresh?.();
                 flowAnimationAccumulatorRef.current -= frameDuration;
             }
 
@@ -403,11 +421,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
         if (fgRef.current) {
             // Request animation frame to ensure label renders immediately
             requestAnimationFrame(() => {
-                if (fgRef.current) {
-                    // Nudge the graph to trigger onRenderFramePost
-                    const currentZoom = fgRef.current.zoom();
-                    fgRef.current.zoom(currentZoom);
-                }
+                fgRef.current?.refresh?.();
             });
         }
     }, [hoverNode]);
@@ -616,6 +630,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 warmupTicks={0}
                 nodeRelSize={6}
                 nodeLabel={() => ""}
+                autoPauseRedraw={!hasActiveAnimations}
                 nodePointerAreaPaint={(node, color, ctx) => {
                     // Disable pointer area for street and feeder nodes - return immediately without drawing
                     if (node.type === "street" || node.type === "feeder" || node.type === "network") {
@@ -656,6 +671,9 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 }}
                 nodeCanvasObject={renderNode}
                 onRenderFramePost={(ctx) => {
+                    // Render flow links as overlay on top of all other elements
+                    renderFlowLinks(ctx);
+                    
                     // Render all hover labels after all nodes are rendered to ensure they appear on top
                     if (hoverNode) {
                         const node = data.nodes.find(n => n.id === hoverNode.id);
