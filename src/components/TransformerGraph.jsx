@@ -630,7 +630,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 warmupTicks={0}
                 nodeRelSize={6}
                 nodeLabel={() => ""}
-                autoPauseRedraw={!hasActiveAnimations}
+                autoPauseRedraw={false}
                 nodePointerAreaPaint={(node, color, ctx) => {
                     // Disable pointer area for street and feeder nodes - return immediately without drawing
                     if (node.type === "street" || node.type === "feeder" || node.type === "network") {
