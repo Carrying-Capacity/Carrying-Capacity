@@ -1,0 +1,1 @@
+import{j as e}from"./index-EXrCrtbg.js";import"./force-graph-D6mYncco.js";function r({children:r,className:s="",variant:a="classic"}){return"modern"===a?e.jsx("div",{className:`modern-page-container ${s}`,children:r}):e.jsx("div",{className:`home-container ${s}`,children:e.jsx("div",{className:"content-stripe",children:r})})}export{r as P};
