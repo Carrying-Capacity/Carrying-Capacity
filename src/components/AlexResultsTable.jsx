@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import data from "../data/alex_results.json";
 
 // Alex's result table, to display Alex's results for correlation.
 
-const AlexResultTable = () => {
+const AlexResultTable = memo(() => {
   // Dynamically get categories from JSON keys
   const categories = Object.keys(data);
 
@@ -60,32 +60,31 @@ const AlexResultTable = () => {
               </tr>
             </thead>
             <tbody>{currentData.map((item, idx) => {
-                const isTotalRow =
-                  Object.values(item).some(
-                    (val) =>
-                      typeof val === "string" &&
-                      val.toLowerCase().trim() === "total"
-                  ) ||
-                  Object.keys(item).some(
-                    (key) =>
-                      key.toLowerCase().trim() === "total"
-                  );
-
-                return (
-                  <tr
-                    key={idx}
-                    className={`hover:bg-gray-50 ${
-                      isTotalRow ? "bg-gray-50 font-bold" : ""
-                    }`}
-                  >
-                    {Object.values(item).map((val, i) => (
-                      <td key={i} className="border px-4 py-2 text-center align-middle">
-                      {renderValue(val)}
-                      </td>
-                    ))}
-                  </tr>
+              const isTotalRow =
+                Object.values(item).some(
+                  (val) =>
+                    typeof val === "string" &&
+                    val.toLowerCase().trim() === "total"
+                ) ||
+                Object.keys(item).some(
+                  (key) =>
+                    key.toLowerCase().trim() === "total"
                 );
-              })}
+
+              return (
+                <tr
+                  key={idx}
+                  className={`hover:bg-gray-50 ${isTotalRow ? "bg-gray-50 font-bold" : ""
+                    }`}
+                >
+                  {Object.values(item).map((val, i) => (
+                    <td key={i} className="border px-4 py-2 text-center align-middle">
+                      {renderValue(val)}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
             </tbody>
           </table>
         </div>
@@ -93,6 +92,8 @@ const AlexResultTable = () => {
       {currentData.length === 0 && <p className="mt-2">No data available.</p>}
     </div>
   );
-};
+});
+
+AlexResultTable.displayName = "AlexResultTable";
 
 export default AlexResultTable;

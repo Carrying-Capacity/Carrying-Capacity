@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, memo, useCallback } from "react";
 import { Search, Navigation, Layers, X, GitCompare, Home, Zap as ZapIcon, Network, ChevronDown } from "lucide-react";
 import TransformerGraph from "./TransformerGraph";
 import InfoModal from "./InfoModal";
@@ -15,11 +15,11 @@ import { formatCount } from "../utils/stringUtils.js";
 import { BREAKPOINTS, UI_CONSTANTS } from "../constants/index.js";
 import "./TransformerGraphWrapper.css";
 
-const TransformerGraphWrapperContent = () => {
+const TransformerGraphWrapperContent = memo(() => {
     const data = useTransformerData();
     const nodes = data?.nodes || [];
     const links = data?.links || [];
-    
+
     const [focusNode, setFocusNode] = useState(null);
     const [selectedNode, setSelectedNode] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -29,7 +29,7 @@ const TransformerGraphWrapperContent = () => {
     const [autoZoomEnabled, setAutoZoomEnabled] = useState(true);
     const searchContainerRef = useRef(null);
     const comparisonDropdownRef = useRef(null);
-    
+
     const isMobile = useMediaQuery(BREAKPOINTS.tablet);
     const {
         comparisonList,
@@ -44,20 +44,20 @@ const TransformerGraphWrapperContent = () => {
         const feeders = [];
         const transformers = [];
         let houses = 0;
-        
+
         nodes.forEach(n => {
             if (n.type === "feeder") feeders.push(n);
             else if (n.type === "transformer") transformers.push(n);
             else if (n.type === "house") houses++;
         });
-        
+
         // Sort transformers by transformer_number
         transformers.sort((a, b) => {
             const numA = a.transformer_number || a.transformer || 0;
             const numB = b.transformer_number || b.transformer || 0;
             return numA - numB;
         });
-        
+
         return {
             feederNodes: feeders,
             transformerNodes: transformers,
@@ -67,24 +67,24 @@ const TransformerGraphWrapperContent = () => {
         };
     }, [nodes, links]);
 
-    const handleNodeClick = (node) => {
+    const handleNodeClick = useCallback((node) => {
         setFocusNode(String(node.id));
         // Don't show info modal for feeder nodes, just zoom to them
         if (node.type !== 'feeder') {
             setSelectedNode(node);
         }
         setShowComparison(false);
-    };
+    }, [setShowComparison]);
 
-    const handleToggleComparison = () => {
+    const handleToggleComparison = useCallback(() => {
         // Clear focusNode when entering comparison mode to hide flow
         if (!showComparison) {
             setFocusNode(null);
         }
         toggleComparisonModal();
-    };
+    }, [showComparison, toggleComparisonModal]);
 
-    const handleDropdownChange = (e) => {
+    const handleDropdownChange = useCallback((e) => {
         const nodeId = e.target.value;
         if (nodeId) {
             const node = nodes.find(n => String(n.id) === nodeId);
@@ -100,57 +100,57 @@ const TransformerGraphWrapperContent = () => {
             setSelectedNode(null);
         }
         setShowComparison(false);
-    };
+    }, [nodes, setShowComparison]);
 
     const filteredNodes = useMemo(() => {
         if (!searchTerm.trim()) return [];
-        
+
         const lowerTerm = searchTerm.toLowerCase();
         return nodes
             .filter(n => {
                 // Exclude streets from search results
                 if (n.type === 'street') return false;
                 if (n.type === 'network') return false;
-                
+
                 const label = String(n.label || n.id).toLowerCase();
                 return label.includes(lowerTerm) || (n.type || '').toLowerCase().includes(lowerTerm);
             })
             .slice(0, UI_CONSTANTS.searchResultsLimit);
     }, [searchTerm, nodes]);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         const term = e.target.value;
         setSearchTerm(term);
         setShowSearchResults(term.trim().length > 0);
-    };
+    }, []);
 
-    const handleSearchSelect = (node) => {
+    const handleSearchSelect = useCallback((node) => {
         setFocusNode(String(node.id));
         setSelectedNode(node);
         setSearchTerm("");
         setShowSearchResults(false);
         setShowComparison(false);
-    };
+    }, [setShowComparison]);
 
-    const handleSearchClear = () => {
+    const handleSearchClear = useCallback(() => {
         setSearchTerm("");
         setShowSearchResults(false);
-    };
-    
-    const handleSearchFocus = () => {
-        if (searchTerm.trim()) setShowSearchResults(true);
-    };
+    }, []);
 
-    const closeModal = () => {
+    const handleSearchFocus = useCallback(() => {
+        if (searchTerm.trim()) setShowSearchResults(true);
+    }, [searchTerm]);
+
+    const closeModal = useCallback(() => {
         setFocusNode(null);
         setSelectedNode(null);
         setShowComparison(false);
         setIsModalFullscreen(false);
-    };
+    }, [setShowComparison]);
 
-    const handleSearchClickOutside = () => setShowSearchResults(false);
-    const handleComparisonClickOutside = () => setShowComparisonDropdown(false);
-    
+    const handleSearchClickOutside = useCallback(() => setShowSearchResults(false), []);
+    const handleComparisonClickOutside = useCallback(() => setShowComparisonDropdown(false), []);
+
     useClickOutside([searchContainerRef], handleSearchClickOutside);
     useClickOutside([comparisonDropdownRef], handleComparisonClickOutside);
 
@@ -165,8 +165,8 @@ const TransformerGraphWrapperContent = () => {
                             <div className="control-icon-wrapper">
                                 <Navigation size={18} className="control-icon" />
                             </div>
-                            <select 
-                                onChange={handleDropdownChange} 
+                            <select
+                                onChange={handleDropdownChange}
                                 value={focusNode || ""}
                                 className="modern-select"
                                 aria-label="Navigate to node"
@@ -209,16 +209,16 @@ const TransformerGraphWrapperContent = () => {
                                 aria-label="Search nodes"
                             />
                             {searchTerm && (
-                                <button 
+                                <button
                                     onClick={handleSearchClear}
                                     className="search-clear-btn"
                                 >
                                     <X size={16} />
                                 </button>
                             )}
-                            
+
                             {showSearchResults && (
-                                <SearchDropdown 
+                                <SearchDropdown
                                     nodes={filteredNodes}
                                     onSelect={handleSearchSelect}
                                 />
@@ -239,7 +239,7 @@ const TransformerGraphWrapperContent = () => {
                             </label>
                         )}
                     </div>
-                    
+
                     {/* Right side - Comparison Controls */}
                     <div className="control-panel-right">
                         {comparisonList.length > 0 && (
@@ -254,7 +254,7 @@ const TransformerGraphWrapperContent = () => {
                                         <span>{formatCount(comparisonList.length, 'house')}</span>
                                         <ChevronDown size={16} className={`comparison-chevron ${showComparisonDropdown ? 'open' : ''}`} />
                                     </button>
-                                    
+
                                     {showComparisonDropdown && (
                                         <ComparisonDropdown
                                             onClearAll={() => {
@@ -281,19 +281,19 @@ const TransformerGraphWrapperContent = () => {
             {/* Network Metrics - Hidden when modal is fullscreen or when any modal is open on mobile */}
             {!isModalFullscreen && !(isMobile && (selectedNode || showComparison)) && (
                 <div className="network-metrics">
-                    <MetricCard 
+                    <MetricCard
                         icon={Home}
                         value={houseCount}
                         label="Houses"
                         iconClass="metric-icon-houses"
                     />
-                    <MetricCard 
+                    <MetricCard
                         icon={ZapIcon}
                         value={transformerCount}
                         label="Transformers"
                         iconClass="metric-icon-transformers"
                     />
-                    <MetricCard 
+                    <MetricCard
                         icon={Network}
                         value={connectionCount}
                         label="Connections"
@@ -321,8 +321,8 @@ const TransformerGraphWrapperContent = () => {
                     autoZoomEnabled={autoZoomEnabled}
                     isCompareMode={showComparison}
                 />
-                <InfoModal 
-                    node={selectedNode} 
+                <InfoModal
+                    node={selectedNode}
                     onClose={closeModal}
                     isComparison={showComparison}
                     onFullscreenChange={setIsModalFullscreen}
@@ -330,7 +330,9 @@ const TransformerGraphWrapperContent = () => {
             </div>
         </div>
     );
-}
+});
+
+TransformerGraphWrapperContent.displayName = "TransformerGraphWrapperContent";
 
 export default function TransformerGraphWrapper() {
     return (

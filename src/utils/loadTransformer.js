@@ -24,43 +24,56 @@ export function loadTransformerData() {
     const nodes = [];
     const links = [];
     const nodeMap = new Map();
-    
+
     // Scale factor for positioning
     const scale = 100;
 
     // Process the single network (nodes.json contains the complete network)
     const network = datasets[0]; // Only one dataset now - the complete network
-    
+
     // Create a set of all valid node IDs for reference cleaning
-    const validNodeIds = new Set(network.map(node => node.id));
-    
+    const validNodeIds = new Set();
+    for (let i = 0; i < network.length; i++) {
+        validNodeIds.add(network[i].id);
+    }
+
     // Auto-assign numerical house IDs if they don't exist
     let nextHouseId = 1;
     const houseIdMap = new Map();
-    
-    // First pass: assign house IDs to houses that don't have them
-    network.forEach((node) => {
+
+    // Pre-calculate house IDs
+    for (let i = 0; i < network.length; i++) {
+        const node = network[i];
         if (normalizeType(node.type) === "house" && !node.HouseID && !node.house_number) {
             houseIdMap.set(node.id, nextHouseId++);
         }
-    });
-    
-    // Process all nodes in the network
-    network.forEach((node) => {
+    }
+
+    // Initialize adjacency maps
+    const childrenByNodeId = new Map();
+    const parentsByNodeId = new Map();
+    const streetsByNetNodeId = new Map();
+    const linkById = new Map();
+
+    // Single pass to process nodes and initialize maps
+    for (let i = 0; i < network.length; i++) {
+        const node = network[i];
+
         // Skip removed street nodes
         if (node.type === "street" && node.removed) {
-            return;
+            continue;
         }
+
+        const type = normalizeType(node.type);
+        const assignedHouseId = node.HouseID || node.house_number || houseIdMap.get(node.id);
 
         // Clean up broken node references
         const cleanPrevNodes = node.prev_nodes ? node.prev_nodes.filter(id => validNodeIds.has(id)) : [];
         const cleanNextNodes = node.next_nodes ? node.next_nodes.filter(id => validNodeIds.has(id)) : [];
-        
-        // Create node with JSON-defined position and auto-assigned house ID if needed
-        const assignedHouseId = node.HouseID || node.house_number || houseIdMap.get(node.id);
+
         const processedNode = {
             ...node,
-            type: normalizeType(node.type),
+            type,
             x: (node.x_meters || 0) * scale,
             y: (node.y_meters || 0) * scale,
             label: getNodeLabel({ ...node, HouseID: assignedHouseId, transformer_number: node.transformer_number || node.transformer }),
@@ -68,98 +81,86 @@ export function loadTransformerData() {
             next_nodes: cleanNextNodes,
             prev_node: cleanPrevNodes.length > 0 ? cleanPrevNodes[0] : null,
             current_node: node.id,
-            name: node.name || (node.type === "transformer" ? `Transformer ${node.transformer_number || node.transformer || 'Unknown'}` : node.type === "feeder" ? "Feeder" : null),
-            HouseID: assignedHouseId, // Ensure HouseID is always present for houses
-            parent: node.parent_transformer || node.parent || node.transformer, // Support multiple parent field formats
-            transformer_number: node.transformer_number || node.transformer // Preserve transformer number
+            name: node.name || (type === "transformer" ? `Transformer ${node.transformer_number || node.transformer || 'Unknown'}` : type === "feeder" ? "Feeder" : null),
+            HouseID: assignedHouseId,
+            parent: node.parent_transformer || node.parent || node.transformer,
+            transformer_number: node.transformer_number || node.transformer
         };
 
         nodes.push(processedNode);
         nodeMap.set(processedNode.id, processedNode);
-    });
 
-    // Create links based on JSON-defined connections
-    nodes.forEach((node) => {
+        // Initialize adjacency sets
+        childrenByNodeId.set(processedNode.id, new Set());
+        parentsByNodeId.set(processedNode.id, new Set());
+    }
+
+    // Second pass for relationships (links, children, parents)
+    // We need a second pass because we need to ensure all nodes are in nodeMap first
+    for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+
+        // Process next_nodes (links and children)
         if (node.next_nodes && Array.isArray(node.next_nodes)) {
-            node.next_nodes.forEach((targetId) => {
+            for (let j = 0; j < node.next_nodes.length; j++) {
+                const targetId = node.next_nodes[j];
                 if (nodeMap.has(targetId)) {
-                    links.push({ source: node.id, target: targetId });
+                    // Create link
+                    const link = { source: node.id, target: targetId };
+                    links.push(link);
+
+                    // Update adjacency
+                    childrenByNodeId.get(node.id).add(targetId);
+                    parentsByNodeId.get(targetId).add(node.id);
+
+                    // Update link map
+                    linkById.set(`${node.id}-${targetId}`, link);
+                    linkById.set(`${targetId}-${node.id}`, link);
                 }
-            });
+            }
         }
-    });
 
-    // Build adjacency maps for O(1) lookups
-    const childrenByNodeId = new Map(); // nodeId -> Set of child node IDs
-    const parentsByNodeId = new Map(); // nodeId -> Set of parent node IDs
-    const streetsByNetNodeId = new Map(); // netNodeId -> Set of street node IDs
-    const linkById = new Map(); // "sourceId-targetId" -> link object
-
-    // Initialize maps
-    nodes.forEach(node => {
-        childrenByNodeId.set(node.id, new Set());
-        parentsByNodeId.set(node.id, new Set());
-    });
-
-    // Populate children and parents from next_nodes
-    nodes.forEach(node => {
-        if (Array.isArray(node.next_nodes)) {
-            node.next_nodes.forEach(childId => {
-                if (nodeMap.has(childId)) {
-                    childrenByNodeId.get(node.id).add(childId);
-                    parentsByNodeId.get(childId).add(node.id);
-                }
-            });
-        }
-    });
-
-    // Populate parents from prev_nodes (in case next_nodes is incomplete)
-    nodes.forEach(node => {
-        if (Array.isArray(node.prev_nodes)) {
-            node.prev_nodes.forEach(parentId => {
+        // Process prev_nodes (parents)
+        if (node.prev_nodes && Array.isArray(node.prev_nodes)) {
+            for (let j = 0; j < node.prev_nodes.length; j++) {
+                const parentId = node.prev_nodes[j];
                 if (nodeMap.has(parentId)) {
                     parentsByNodeId.get(node.id).add(parentId);
                     childrenByNodeId.get(parentId).add(node.id);
                 }
-            });
-        }
-    });
-
-    // Build street-to-net-node map
-    nodes.forEach(node => {
-        if (node.type === "street" && node.net_node_id) {
-            if (!streetsByNetNodeId.has(node.net_node_id)) {
-                streetsByNetNodeId.set(node.net_node_id, new Set());
             }
-            streetsByNetNodeId.get(node.net_node_id).add(node.id);
-            
-            // Also establish bidirectional connection
-            childrenByNodeId.get(node.id).add(node.net_node_id);
-            childrenByNodeId.get(node.net_node_id).add(node.id);
         }
-    });
 
-    // Build street connected_nodes adjacency
-    nodes.forEach(node => {
-        if (node.type === "street" && Array.isArray(node.connected_nodes)) {
-            node.connected_nodes.forEach(connectedId => {
-                if (nodeMap.has(connectedId)) {
-                    childrenByNodeId.get(node.id).add(connectedId);
+        // Process street specific logic
+        if (node.type === "street") {
+            // Street to net node map
+            if (node.net_node_id) {
+                if (!streetsByNetNodeId.has(node.net_node_id)) {
+                    streetsByNetNodeId.set(node.net_node_id, new Set());
                 }
-            });
+                streetsByNetNodeId.get(node.net_node_id).add(node.id);
+
+                // Bidirectional connection
+                childrenByNodeId.get(node.id).add(node.net_node_id);
+                if (childrenByNodeId.has(node.net_node_id)) {
+                    childrenByNodeId.get(node.net_node_id).add(node.id);
+                }
+            }
+
+            // Street connected_nodes
+            if (Array.isArray(node.connected_nodes)) {
+                for (let j = 0; j < node.connected_nodes.length; j++) {
+                    const connectedId = node.connected_nodes[j];
+                    if (nodeMap.has(connectedId)) {
+                        childrenByNodeId.get(node.id).add(connectedId);
+                    }
+                }
+            }
         }
-    });
+    }
 
-    // Build link lookup map (bidirectional)
-    links.forEach(link => {
-        const sourceId = link.source;
-        const targetId = link.target;
-        linkById.set(`${sourceId}-${targetId}`, link);
-        linkById.set(`${targetId}-${sourceId}`, link);
-    });
-
-    return { 
-        nodes, 
+    return {
+        nodes,
         links,
         adjacency: {
             nodeById: nodeMap,
