@@ -56,8 +56,8 @@ export const DailyLineChart = ({ data, selectedMetrics }) => {
     <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
       <LineChart data={data} margin={CHART_DIMENSIONS.margin}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis 
-          dataKey="time" 
+        <XAxis
+          dataKey="time"
           tickFormatter={formatXAxisTick}
           interval={0}
         />
@@ -82,10 +82,10 @@ export const DailyLineChart = ({ data, selectedMetrics }) => {
 }
 
 // Control buttons component
-export const ChartControls = ({ 
-  chartType, 
-  setChartType, 
-  selectedMetrics, 
+export const ChartControls = ({
+  chartType,
+  setChartType,
+  selectedMetrics,
   setSelectedMetrics,
 }) => {
   const METRICS_CATEGORIES = {
@@ -121,8 +121,8 @@ export const ChartControls = ({
         <h5 className="text-md font-medium text-gray-700 mb-2">Select Chart Type</h5>
         <div className="grid grid-cols-2 gap-2">
           {Object.entries(CHART_TYPES).map(([chartKey, config]) => (
-            <label 
-              key={chartKey} 
+            <label
+              key={chartKey}
               className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded-lg border border-gray-200"
             >
               <input
@@ -147,8 +147,8 @@ export const ChartControls = ({
         <p className="text-xs text-gray-500 mb-3 italic">Data shows averages across all days in the selected time period</p>
         <div className="space-y-2">
           {Object.entries(METRICS_CATEGORIES).map(([metricKey, config]) => (
-            <label 
-              key={metricKey} 
+            <label
+              key={metricKey}
               className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded-lg border border-gray-200"
             >
               <input
@@ -188,7 +188,7 @@ export const PhasePieChart = ({ data }) => {
             label
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={PHASE_COLORS[entry.phase] || PHASE_COLORS.default} />
+              <Cell key={`cell-${index}`} fill={entry.color || PHASE_COLORS[entry.phase] || PHASE_COLORS.default} />
             ))}
           </Pie>
         </RePieChart>

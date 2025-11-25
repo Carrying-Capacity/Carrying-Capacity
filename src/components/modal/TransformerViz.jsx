@@ -34,6 +34,7 @@ export const TransformerViz = ({ node }) => {
     const [transformerChartMode, setTransformerChartMode] = useState('houses');
     const [downstreamHouses, setDownstreamHouses] = useState([]);
     const [phaseHouseCounts, setPhaseHouseCounts] = useState({ A: 0, B: 0, C: 0 });
+    const [solarHouseCounts, setSolarHouseCounts] = useState({ solar: 0, noSolar: 0 });
     const [monthlyPhasePowerData, setMonthlyPhasePowerData] = useState([]);
     const [powerLoading, setPowerLoading] = useState(false);
     const [powerError, setPowerError] = useState(null);
@@ -44,11 +45,12 @@ export const TransformerViz = ({ node }) => {
         if (!graphData?.nodes || !node) {
             setDownstreamHouses([]);
             setPhaseHouseCounts({ A: 0, B: 0, C: 0 });
+            setSolarHouseCounts({ solar: 0, noSolar: 0 });
             return;
         }
-        
+
         let cancelled = false;
-        
+
         const loadHouses = async () => {
             // If node has transformer_number, find houses by matching transformer number locally
             if (node.transformer_number) {
@@ -72,12 +74,22 @@ export const TransformerViz = ({ node }) => {
                     return acc;
                 }, { A: 0, B: 0, C: 0 });
 
+                const solarCounts = houses.reduce((acc, h) => {
+                    if (h.solar) {
+                        acc.solar++;
+                    } else {
+                        acc.noSolar++;
+                    }
+                    return acc;
+                }, { solar: 0, noSolar: 0 });
+
                 setPhaseHouseCounts(counts);
+                setSolarHouseCounts(solarCounts);
             } else {
                 // Fallback to graph-based downstream collection
                 const start = graphData.nodes.find(n => n.id === node.id);
                 if (!start) return;
-                
+
                 const dsNodes = collectDownstreamNodes(graphData, start);
                 const houses = dsNodes
                     .filter(n => n.type === 'house')
@@ -94,11 +106,21 @@ export const TransformerViz = ({ node }) => {
                     });
                     return acc;
                 }, { A: 0, B: 0, C: 0 });
-                
+
+                const solarCounts = houses.reduce((acc, h) => {
+                    if (h.solar) {
+                        acc.solar++;
+                    } else {
+                        acc.noSolar++;
+                    }
+                    return acc;
+                }, { solar: 0, noSolar: 0 });
+
                 setPhaseHouseCounts(counts);
+                setSolarHouseCounts(solarCounts);
             }
         };
-        
+
         loadHouses();
         return () => { cancelled = true; };
     }, [graphData, node]);
@@ -110,23 +132,23 @@ export const TransformerViz = ({ node }) => {
         }
 
         let cancelled = false;
-        
+
         const fetchPower = async () => {
             const houseIds = downstreamHouses
                 .map(h => h.HouseID)
                 .filter(Boolean)
                 .map(id => Number(id) || id); // ensure numeric where possible
             if (!houseIds.length) return;
-            
+
             setPowerLoading(true);
             setPowerError(null);
-            
+
             const { data, error } = await fetchMultipleHousesData(
-                'house_monthly_metric_avg_compact', 
-                houseIds, 
+                'house_monthly_metric_avg_compact',
+                houseIds,
                 'import_power'
             );
-            
+
             if (!cancelled) {
                 if (error) {
                     setPowerError(error);
@@ -134,7 +156,7 @@ export const TransformerViz = ({ node }) => {
                     return;
                 }
             }
-            
+
             if (!cancelled) {
                 const phasesByHouse = {};
                 downstreamHouses.forEach(h => {
@@ -143,11 +165,11 @@ export const TransformerViz = ({ node }) => {
                         phasesByHouse[String(h.HouseID)] = phases;
                     }
                 });
-                
+
                 const monthlyData = MONTH_OPTIONS.map((monthOption, index) => {
                     const monthCol = `month_${String(index + 1).padStart(2, '0')}`;
                     const totals = { A: 0, B: 0, C: 0 };
-                    
+
                     data?.forEach(row => {
                         const houseKey = String(row.house_id ?? row.House_id ?? row.HouseID);
                         const phases = phasesByHouse[houseKey] || [];
@@ -160,7 +182,7 @@ export const TransformerViz = ({ node }) => {
                             }
                         });
                     });
-                    
+
                     return {
                         month: monthOption.label,
                         A: totals.A,
@@ -168,7 +190,7 @@ export const TransformerViz = ({ node }) => {
                         C: totals.C
                     };
                 });
-                
+
                 setMonthlyPhasePowerData(monthlyData);
                 setPowerLoading(false);
             }
@@ -183,13 +205,18 @@ export const TransformerViz = ({ node }) => {
         { name: 'Phase C', phase: 'C', value: phaseHouseCounts.C || 0 },
     ]), [phaseHouseCounts]);
 
+    const solarPieData = useMemo(() => ([
+        { name: 'Solar', value: solarHouseCounts.solar || 0, color: '#FDB813' }, // Sun yellow
+        { name: 'No Solar', value: solarHouseCounts.noSolar || 0, color: '#9CA3AF' }, // Cool gray
+    ]), [solarHouseCounts]);
+
     return (
         <div className="mb-3 border-2 border-gray-200 rounded-lg p-3 md:p-4">
             <h4 className="text-lg md:text-xl font-semibold mb-3 text-gray-800">Transformer Visualisation</h4>
 
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
                 <h5 className="text-md font-medium text-gray-700 mb-2">Select Analysis Type</h5>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                     <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-3 rounded-lg border border-gray-200">
                         <input
                             type="radio"
@@ -216,13 +243,30 @@ export const TransformerViz = ({ node }) => {
                             <p className="text-xs text-gray-500">Power consumption per phase by month</p>
                         </div>
                     </label>
+                    <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-3 rounded-lg border border-gray-200">
+                        <input
+                            type="radio"
+                            name="transformer-mode-selection"
+                            checked={transformerChartMode === 'solar'}
+                            onChange={() => setTransformerChartMode('solar')}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                        />
+                        <div>
+                            <span className="text-sm font-medium text-gray-700">Solar Distribution</span>
+                            <p className="text-xs text-gray-500">Houses with vs without solar</p>
+                        </div>
+                    </label>
                 </div>
             </div>
 
             <div className="border border-gray-200 rounded-lg p-2 md:p-3 bg-white overflow-visible">
-                {transformerChartMode === 'houses' ? (
+                {transformerChartMode === 'houses' && (
                     <PhasePieChart data={housesPieData} title="Houses per Phase" />
-                ) : (
+                )}
+                {transformerChartMode === 'solar' && (
+                    <PhasePieChart data={solarPieData} title="Solar Distribution" />
+                )}
+                {transformerChartMode === 'power' && (
                     <DataStateWrapper
                         loading={powerLoading}
                         error={powerError}
