@@ -4,7 +4,7 @@ import { isHouse as isHouseNode } from "../../utils/nodeUtils.js";
 import { getPhaseColor, PHASE_COLORS } from "../../constants/index.js";
 import { useTransformerData } from "../../hooks/useTransformerData.js";
 
-export const NodeInfoSection = memo(({ node }) => {
+export const NodeInfoSection = memo(({ node, imbalanceMetrics }) => {
   const isHouse = isHouseNode(node);
   const isTransformer = node?.type === 'transformer';
   const graphData = useTransformerData();
@@ -12,11 +12,11 @@ export const NodeInfoSection = memo(({ node }) => {
   // Count houses assigned to this transformer
   const houseCount = useMemo(() => {
     if (!isTransformer || !graphData?.nodes) return 0;
-    return graphData.nodes.filter(n => 
-      n.type === 'house' && 
-      (n.parent_transformer === node.transformer_number || 
-       n.parent === node.transformer_number ||
-       n.parent === `Transformer ${node.transformer_number}`)
+    return graphData.nodes.filter(n =>
+      n.type === 'house' &&
+      (n.parent_transformer === node.transformer_number ||
+        n.parent === node.transformer_number ||
+        n.parent === `Transformer ${node.transformer_number}`)
     ).length;
   }, [isTransformer, graphData?.nodes, node?.transformer_number]);
 
@@ -35,7 +35,7 @@ export const NodeInfoSection = memo(({ node }) => {
           </span>
         </div>
       </div>
-      
+
       {isTransformer && node?.transformer_number && (
         <div className="mb-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -56,9 +56,55 @@ export const NodeInfoSection = memo(({ node }) => {
               </div>
             </div>
           </div>
+
+          {/* Imbalance Score Card */}
+          {imbalanceMetrics && (
+            <div className="mt-4 pt-4 border-t border-slate-200/60">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+                  <NetworkIcon size={16} className="flex-shrink-0" />
+                  <span>Imbalance Score</span>
+                </div>
+                <div
+                  className="px-3 py-1 rounded-full text-sm font-bold text-white shadow-sm"
+                  style={{ backgroundColor: imbalanceMetrics.color }}
+                >
+                  {imbalanceMetrics.score}/100
+                </div>
+              </div>
+
+              <div
+                className="p-3 rounded-lg border flex items-start gap-3"
+                style={{
+                  backgroundColor: `${imbalanceMetrics.color}10`, // 10% opacity
+                  borderColor: `${imbalanceMetrics.color}40`,     // 40% opacity
+                  color: imbalanceMetrics.level === 'Balanced' ? '#166534' : (imbalanceMetrics.level === 'Moderate' ? '#854d0e' : '#991b1b')
+                }}
+              >
+                <div className="mt-0.5 p-1 rounded-full bg-white/50">
+                  {imbalanceMetrics.level === 'Balanced' ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill={imbalanceMetrics.color}>
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill={imbalanceMetrics.color}>
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                <div>
+                  <h5 className="font-semibold text-sm">
+                    {imbalanceMetrics.level} Phase Distribution
+                  </h5>
+                  <p className="text-xs opacity-90 font-medium">{imbalanceMetrics.message}</p>
+                </div>
+              </div>
+
+            </div>
+          )}
         </div>
       )}
-      
+
       {isHouse && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
@@ -68,7 +114,7 @@ export const NodeInfoSection = memo(({ node }) => {
             </div>
             <div className="text-base font-semibold text-slate-900 pl-6">{node?.HouseID ?? "—"}</div>
           </div>
-          
+
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
               <Zap size={16} className="flex-shrink-0" />
@@ -78,13 +124,13 @@ export const NodeInfoSection = memo(({ node }) => {
               {(() => {
                 const isThreePhase = Array.isArray(node?.predicted_phase) && node.predicted_phase.length > 1;
                 const phase = Array.isArray(node?.predicted_phase) ? node.predicted_phase[0] : node?.predicted_phase;
-                
+
                 if (isThreePhase) {
                   return (
                     <div className="flex flex-col gap-2">
-                      <span 
+                      <span
                         className="inline-block px-3.5 py-1.5 border rounded-lg text-sm font-bold uppercase tracking-wide"
-                        style={{ 
+                        style={{
                           backgroundColor: `${PHASE_COLORS.THREE_PHASE}15`,
                           color: PHASE_COLORS.THREE_PHASE,
                           borderColor: `${PHASE_COLORS.THREE_PHASE}40`
@@ -98,11 +144,11 @@ export const NodeInfoSection = memo(({ node }) => {
                     </div>
                   );
                 }
-                
+
                 return (
-                  <span 
+                  <span
                     className="inline-block px-3.5 py-1.5 border rounded-lg text-sm font-bold uppercase tracking-wide"
-                    style={{ 
+                    style={{
                       backgroundColor: `${getPhaseColor(phase)}15`,
                       color: getPhaseColor(phase),
                       borderColor: `${getPhaseColor(phase)}40`
@@ -114,23 +160,22 @@ export const NodeInfoSection = memo(({ node }) => {
               })()}
             </div>
           </div>
-          
+
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
               <Sun size={16} className="flex-shrink-0" />
               <span>Solar Panel</span>
             </div>
             <div className="pl-6">
-              <span className={`inline-block px-3.5 py-1.5 rounded-lg text-sm font-semibold border ${
-                node?.solar 
-                  ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30' 
-                  : 'bg-slate-500/10 text-slate-600 border-slate-500/30'
-              }`}>
+              <span className={`inline-block px-3.5 py-1.5 rounded-lg text-sm font-semibold border ${node?.solar
+                ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30'
+                : 'bg-slate-500/10 text-slate-600 border-slate-500/30'
+                }`}>
                 {node?.solar ? "Yes" : "No"}
               </span>
             </div>
           </div>
-          
+
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-600">
               <NetworkIcon size={16} className="flex-shrink-0" />

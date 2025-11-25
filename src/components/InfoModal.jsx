@@ -13,9 +13,10 @@ import "./InfoModal.css";
 
 const InfoModal = memo(({ node, onClose, isComparison = false, onFullscreenChange }) => {
     const [isFullscreen, setIsFullscreen] = useState(false);
-    
+    const [imbalanceMetrics, setImbalanceMetrics] = useState(null);
+
     const toggleFullscreen = () => setIsFullscreen(prev => !prev);
-    
+
     const handleClose = () => {
         setIsFullscreen(false);
         onClose();
@@ -24,9 +25,9 @@ const InfoModal = memo(({ node, onClose, isComparison = false, onFullscreenChang
     useEffect(() => {
         onFullscreenChange?.(isFullscreen);
     }, [isFullscreen, onFullscreenChange]);
-    
+
     useModalPosition();
-    
+
     useEffect(() => {
         const handleKeydown = (event) => {
             const target = event.target;
@@ -39,26 +40,26 @@ const InfoModal = memo(({ node, onClose, isComparison = false, onFullscreenChang
                 toggleFullscreen();
             }
         };
-        
+
         document.body.classList.add('modal-open');
         document.addEventListener('keydown', handleKeydown);
-        
+
         return () => {
             document.removeEventListener('keydown', handleKeydown);
             document.body.classList.remove('modal-open');
         };
     }, [onClose]);
-    
+
     const { comparisonList, removeFromComparison, toggleHouseInComparison } = useComparison();
-    
+
     const nodeIsHouse = isHouse(node);
     const nodeIsTransformer = isTransformer(node);
     const isInComparison = comparisonList?.some(h => h.id === node?.id);
 
-    
+
     // Show modal if we have a single node or if we're in comparison mode
     if (!node && !isComparison) return null;
-    
+
     return (
         <>
             {isFullscreen && (
@@ -99,31 +100,36 @@ const InfoModal = memo(({ node, onClose, isComparison = false, onFullscreenChang
                     }
 
                 />
-                
+
                 {isComparison ? (
                     <div>
-                        <ComparisonSection 
+                        <ComparisonSection
                             comparisonList={comparisonList}
                             onRemoveFromComparison={removeFromComparison}
                         />
                         {comparisonList.length > 0 && (
-                            <ComparisonTimeSeriesViz 
+                            <ComparisonTimeSeriesViz
                                 comparisonList={comparisonList}
                                 isFullscreen={isFullscreen}
                             />
                         )}
                     </div>
                 ) : null}
-                
+
                 {/* Basic Node Information (Single Node Mode) */}
                 {!isComparison && node && (
-                <div>
-                    <NodeInfoSection node={node} />
-                    <Suspense fallback={<div>Loading visualizations…</div>}>
-                        {nodeIsTransformer && <TransformerViz node={node} />}
-                        {nodeIsHouse && <HouseEnergyViz node={node} />}
-                    </Suspense>
-                </div>
+                    <div>
+                        <NodeInfoSection node={node} imbalanceMetrics={imbalanceMetrics} />
+                        <Suspense fallback={<div>Loading visualizations…</div>}>
+                            {nodeIsTransformer && (
+                                <TransformerViz
+                                    node={node}
+                                    onImbalanceUpdate={setImbalanceMetrics}
+                                />
+                            )}
+                            {nodeIsHouse && <HouseEnergyViz node={node} />}
+                        </Suspense>
+                    </div>
                 )}
             </div>
         </>

@@ -2,10 +2,15 @@ import { useRef, useState, useEffect, useCallback, useMemo, memo } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 import { iconCache, getNodeSize } from "../utils/iconCache.js";
 import { PHASE_COLORS_SOFT } from "../constants/index.js";
+import { calculateImbalanceScore, isTransformer } from "../utils/nodeUtils.js";
 import { useContainerSize } from "../hooks/useContainerSize.js";
 import { useComparison } from "../context/ComparisonContext.jsx";
 import { collectDownstreamNodes, tracePathToFeeder } from "../utils/graphUtils.js";
 import { ANIMATION_CONFIG } from '../constants/index.js';
+
+import { normalizePhase } from "../utils/stringUtils.js";
+import { fetchMultipleHousesData } from "../utils/dataFetching.js";
+import { MONTH_OPTIONS } from "../constants/index.js";
 
 // Style constants extracted from render path
 const LINK_STYLES = {
@@ -31,34 +36,210 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
     const pulseAnimationFrameRef = useRef(null);
     const pulseAnimationLastTimeRef = useRef(null);
     const pulseAnimationAccumulatorRef = useRef(0);
-    
+
+    const [globalPowerData, setGlobalPowerData] = useState({ import: [], export: [] });
+
     const [containerRef, dimensions] = useContainerSize();
     const { comparisonIdSet, toggleHouseInComparison } = useComparison();
-    
+
     // Compute flag for active animations to control autoPauseRedraw
     const hasActiveAnimations = flowLinks.length > 0 || pulsingNodeIds.size > 0;
+
+    // Fetch global power data once on load
+    useEffect(() => {
+        if (!data?.nodes) return;
+
+        const houseIds = data.nodes
+            .filter(n => n.type === 'house')
+            .map(h => h.HouseID)
+            .filter(Boolean)
+            .map(id => Number(id) || id);
+
+        if (!houseIds.length) return;
+
+        // Limit to first 500 houses to avoid massive payload if network is huge
+        // Or fetch in chunks. For now, we'll try fetching all but handle errors gracefully.
+        // Optimization: In a real app, this should be a dedicated backend endpoint.
+
+        const fetchGlobal = async () => {
+            try {
+                const [importRes, exportRes] = await Promise.all([
+                    fetchMultipleHousesData('house_monthly_metric_avg_compact', houseIds, 'import_power'),
+                    fetchMultipleHousesData('house_monthly_metric_avg_compact', houseIds, 'export_power')
+                ]);
+
+                setGlobalPowerData({
+                    import: importRes.data || [],
+                    export: exportRes.data || []
+                });
+            } catch (err) {
+                console.error("Failed to fetch global power data for map coloring", err);
+            }
+        };
+
+        fetchGlobal();
+    }, [data]);
+
+    // Pre-calculate transformer imbalance colors
+    const transformerColors = useMemo(() => {
+        const colors = new Map();
+        if (!data?.nodes) return colors;
+
+        const transformers = data.nodes.filter(n => n.type === 'transformer');
+
+        // Index power data by house ID for O(1) lookup
+        const powerByHouse = new Map(); // { houseId: { import: {A:0...}, export: {A:0...} } }
+
+        const processMetric = (rows, type) => {
+            rows.forEach(row => {
+                const hid = String(row.house_id ?? row.House_id ?? row.HouseID);
+                if (!powerByHouse.has(hid)) {
+                    powerByHouse.set(hid, { import: { A: 0, B: 0, C: 0 }, export: { A: 0, B: 0, C: 0 } });
+                }
+
+                // Sum all months
+                let total = 0;
+                MONTH_OPTIONS.forEach((_, idx) => {
+                    const col = `month_${String(idx + 1).padStart(2, '0')}`;
+                    total += Number(row[col]) || 0;
+                });
+
+                // Store avg monthly value (simplification, but sufficient for relative scoring)
+                // Actually, we need to distribute this total to phases later based on house phase
+                // So just store the raw total here
+                powerByHouse.get(hid)[type] = total;
+            });
+        };
+
+        processMetric(globalPowerData.import, 'import');
+        processMetric(globalPowerData.export, 'export');
+
+        // Helper to determine phases (same as in TransformerViz)
+        const getHousePhases = (predictedPhase) => {
+            if (!predictedPhase) return [];
+            if (Array.isArray(predictedPhase)) {
+                if (predictedPhase.length > 1) return ['A', 'B', 'C'];
+                const p = normalizePhase(predictedPhase);
+                return p ? [p] : [];
+            }
+            const s = predictedPhase.toString().trim().toUpperCase();
+            if (!s) return [];
+            if (s.length === 1) {
+                const p = normalizePhase(s);
+                return p ? [p] : [];
+            }
+            const set = new Set([...s].filter(ch => ch === 'A' || ch === 'B' || ch === 'C'));
+            if (set.size > 1) return ['A', 'B', 'C'];
+            const only = [...set][0];
+            return only ? [only] : [];
+        };
+
+        transformers.forEach(tx => {
+            // Find downstream houses efficiently
+            const txNum = String(tx.transformer_number);
+            const houses = data.nodes.filter(n =>
+                n.type === 'house' &&
+                String(n.transformer_number ?? n.transformer ?? n.parent) === txNum
+            );
+
+            // 1. Connection Counts
+            const connCounts = { A: 0, B: 0, C: 0 };
+            // 2. Power Totals
+            const importTotals = { A: 0, B: 0, C: 0 };
+            const exportTotals = { A: 0, B: 0, C: 0 };
+
+            let hasPowerData = false;
+            let hasExportData = false;
+
+            houses.forEach(h => {
+                const phases = getHousePhases(h.predicted_phase);
+
+                phases.forEach(p => {
+                    if (p === 'A' || p === 'B' || p === 'C') {
+                        connCounts[p]++;
+                    }
+                });
+
+                // Distribute power across phases
+                if (phases.length > 0) {
+                    const housePower = powerByHouse.get(String(h.HouseID));
+                    if (housePower) {
+                        if (housePower.import) {
+                            const share = housePower.import / phases.length;
+                            phases.forEach(p => {
+                                if (p === 'A' || p === 'B' || p === 'C') {
+                                    importTotals[p] += share;
+                                }
+                            });
+                            hasPowerData = true;
+                        }
+                        if (housePower.export) {
+                            const share = housePower.export / phases.length;
+                            phases.forEach(p => {
+                                if (p === 'A' || p === 'B' || p === 'C') {
+                                    exportTotals[p] += share;
+                                }
+                            });
+                            hasExportData = true;
+                        }
+                    }
+                }
+            });
+
+            const scores = [];
+
+            // Connection Score
+            scores.push(calculateImbalanceScore(connCounts).score);
+
+            // Power Score
+            if (hasPowerData) {
+                scores.push(calculateImbalanceScore(importTotals).score);
+            }
+
+            // Export Score
+            if (hasExportData) {
+                scores.push(calculateImbalanceScore(exportTotals).score);
+            }
+
+            // Composite Score
+            const totalScore = scores.reduce((a, b) => a + b, 0);
+            const avgScore = scores.length > 0 ? Math.round(totalScore / scores.length) : 0;
+
+            // Determine Color
+            let finalColor = '#22c55e'; // Green
+            if (avgScore > 30) {
+                finalColor = '#ef4444'; // Red
+            } else if (avgScore > 10) {
+                finalColor = '#eab308'; // Yellow
+            }
+
+            colors.set(tx.id, finalColor);
+        });
+
+        return colors;
+    }, [data, globalPowerData]);
 
     // Helper to attach onload handler for incomplete icons
     const ensureIconLoaded = useCallback((icon) => {
         if (!icon || icon.complete) return;
-        
+
         // Check if we already have a handler for this icon
         if (iconLoadHandlersRef.current.has(icon)) return;
-        
+
         const handler = () => {
             // Trigger a refresh when the icon loads
             fgRef.current?.refresh?.();
             // Clean up the handler
             iconLoadHandlersRef.current.delete(icon);
         };
-        
+
         icon.addEventListener('load', handler, { once: true });
         iconLoadHandlersRef.current.set(icon, handler);
     }, []);
 
     const renderNode = useCallback((node, ctx) => {
         const size = getNodeSize(node.type);
-        
+
         // Select icon based on node type and solar status
         let icon = iconCache[node.type];
         if (node.type === "house" && node.solar) {
@@ -70,10 +251,10 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
 
         if (node.type === "house") {
             ctx.save();
-            
+
             // Check if 3-phase customer (array with multiple phases)
             const isThreePhase = Array.isArray(node.predicted_phase) && node.predicted_phase.length > 1;
-            
+
             let bgColor;
             if (isThreePhase) {
                 bgColor = PHASE_COLORS_SOFT.THREE_PHASE;
@@ -82,13 +263,13 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 const phase = Array.isArray(node.predicted_phase) ? node.predicted_phase[0] : node.predicted_phase;
                 bgColor = PHASE_COLORS_SOFT[phase] || PHASE_COLORS_SOFT.default;
             }
-            
+
             // Draw pulsing ring for houses connected to selected transformer
             if (pulsingNodeIds.has(node.id)) {
                 const pulseProgress = (pulseTick % 60) / 60; // 0 to 1 over 60 frames
                 const pulseScale = 1 + Math.sin(pulseProgress * Math.PI * 2) * 0.3; // Oscillate between 1 and 1.3
                 const pulseAlpha = 0.6 - (Math.sin(pulseProgress * Math.PI * 2) * 0.3); // Oscillate opacity
-                
+
                 ctx.strokeStyle = "#f97316"; // Orange color
                 ctx.lineWidth = 3;
                 ctx.globalAlpha = pulseAlpha;
@@ -104,7 +285,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 ctx.stroke();
                 ctx.globalAlpha = 1.0;
             }
-            
+
             // Draw rounded square background (full opacity)
             const squareSize = size * 1.2;
             const cornerRadius = 4;
@@ -112,23 +293,23 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
             ctx.globalAlpha = 1.0;
             ctx.beginPath();
             ctx.roundRect(
-                node.x - squareSize / 2, 
-                node.y - squareSize / 2, 
-                squareSize, 
-                squareSize, 
+                node.x - squareSize / 2,
+                node.y - squareSize / 2,
+                squareSize,
+                squareSize,
                 cornerRadius
             );
             ctx.fill();
-            
+
             // Add border for houses in comparison list
             if (comparisonIdSet.has(node.id)) {
                 ctx.strokeStyle = "#3b82f6";
                 ctx.lineWidth = 3;
                 ctx.stroke();
             }
-            
+
             ctx.restore();
-            
+
             // Draw the icon, slightly smaller
             if (icon && icon.complete) {
                 ctx.save();
@@ -146,7 +327,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 const pulseProgress = (pulseTick % 60) / 60; // 0 to 1 over 60 frames
                 const pulseScale = 1 + Math.sin(pulseProgress * Math.PI * 2) * 0.3; // Oscillate between 1 and 1.3
                 const pulseAlpha = 0.6 - (Math.sin(pulseProgress * Math.PI * 2) * 0.3); // Oscillate opacity
-                
+
                 ctx.strokeStyle = "#f97316"; // Orange color
                 ctx.lineWidth = 3;
                 ctx.globalAlpha = pulseAlpha;
@@ -157,28 +338,40 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 ctx.globalAlpha = 1.0;
                 ctx.restore();
             }
-            
+
             if (icon && icon.complete) {
                 ctx.drawImage(icon, node.x - size / 2, node.y - size / 2, size, size);
             }
+
+            // Draw colored ring for transformer imbalance
+            if (node.type === "transformer") {
+                const color = transformerColors.get(node.id);
+                if (color) {
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, size / 2 + 2, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
+            }
         }
-    }, [comparisonIdSet, ensureIconLoaded, pulsingNodeIds, selectedTransformerId, pulseTick]);
+    }, [comparisonIdSet, ensureIconLoaded, pulsingNodeIds, selectedTransformerId, pulseTick, transformerColors]);
 
     const renderFlowLinks = useCallback((ctx) => {
         if (flowLinks.length === 0) return;
-        
+
         flowLinks.forEach(link => {
             ctx.strokeStyle = "#f97316";
             ctx.lineWidth = 1.5;
             ctx.setLineDash([5, 5]);
             ctx.lineDashOffset = -tick;
-            
+
             ctx.beginPath();
             ctx.moveTo(link.source.x, link.source.y);
             ctx.lineTo(link.target.x, link.target.y);
             ctx.stroke();
         });
-        
+
         // Reset line dash for other rendering
         ctx.setLineDash([]);
     }, [flowLinks, tick]);
@@ -189,7 +382,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
             const zoomLevel = fgRef.current?.zoom?.() || 1;
             // Clamp scale factor between 0.5 and 2.0 for readability
             const scaleFactor = Math.max(0.5, Math.min(2.0, 1 / zoomLevel));
-            
+
             const label = node.label || node.id;
             const basePadding = 12;
             const padding = basePadding * scaleFactor;
@@ -197,15 +390,15 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
             const baseBoxYOffset = -12;
             const boxX = node.x + baseBoxXOffset * scaleFactor;
             const boxY = node.y + baseBoxYOffset * scaleFactor;
-            
+
             const baseFontSize = 13;
             ctx.font = `600 ${baseFontSize * scaleFactor}px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
             const labelWidth = ctx.measureText(label).width;
             let boxHeight = 32 * scaleFactor;
-            
+
             let actionText = "";
             let maxWidth = labelWidth;
-            
+
             if (node.type === "house") {
                 const isInComparison = comparisonIdSet.has(node.id);
                 if (isCompareMode) {
@@ -219,11 +412,11 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 maxWidth = Math.max(labelWidth, actionWidth);
                 boxHeight = 48 * scaleFactor;
             }
-            
+
             const boxWidth = maxWidth + padding * 2;
             const baseBorderRadius = 12;
             const borderRadius = baseBorderRadius * scaleFactor;
-            
+
             // Draw outer glow
             ctx.shadowColor = "rgba(59, 130, 246, 0.3)";
             const baseShadowBlur = 20;
@@ -231,42 +424,42 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
             ctx.shadowOffsetX = 0;
             const baseShadowOffsetY = 4;
             ctx.shadowOffsetY = baseShadowOffsetY * scaleFactor;
-            
+
             // Draw glassmorphism background with gradient
             const gradient = ctx.createLinearGradient(boxX, boxY, boxX, boxY + boxHeight);
             gradient.addColorStop(0, "rgba(255, 255, 255, 0.95)");
             gradient.addColorStop(1, "rgba(248, 250, 252, 0.95)");
-            
+
             ctx.fillStyle = gradient;
             ctx.beginPath();
             ctx.roundRect(boxX, boxY, boxWidth, boxHeight, borderRadius);
             ctx.fill();
-            
+
             // Reset shadow for border
             ctx.shadowColor = "transparent";
             ctx.shadowBlur = 0;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
-            
+
             // Draw border with subtle gradient
             const borderGradient = ctx.createLinearGradient(boxX, boxY, boxX, boxY + boxHeight);
             borderGradient.addColorStop(0, "rgba(226, 232, 240, 0.8)");
             borderGradient.addColorStop(1, "rgba(203, 213, 225, 0.8)");
-            
+
             ctx.strokeStyle = borderGradient;
             const baseLineWidth = 1.5;
             ctx.lineWidth = baseLineWidth * scaleFactor;
             ctx.beginPath();
             ctx.roundRect(boxX, boxY, boxWidth, boxHeight, borderRadius);
             ctx.stroke();
-            
+
             // Draw main text with better typography
             ctx.font = `600 ${baseFontSize * scaleFactor}px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
             ctx.fillStyle = "#0f172a";
             ctx.textAlign = "left";
             ctx.textBaseline = "middle";
             ctx.fillText(label, boxX + padding, boxY + (actionText ? 16 * scaleFactor : boxHeight / 2));
-            
+
             // Draw action text for houses with modern styling
             if (actionText) {
                 const actionFontSize = 11;
@@ -291,19 +484,19 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
     // Only run animation when there are flow links to animate
     const hasFlowLinks = flowLinks.length > 0;
     const flowLinkSet = useMemo(() => new Set(flowLinks), [flowLinks]);
-    
+
     // Memoize linkCanvasObject to avoid per-frame allocations
     const linkCanvasObject = useCallback((link, ctx) => {
         const isFlowLink = flowLinkSet.has(link);
         const isDownstreamLink = downstreamLinks.has(link);
-        
+
         // Check if this is a feeder-to-transformer link
         const sourceNode = link.source;
         const targetNode = link.target;
-        const isFeederToTransformer = 
+        const isFeederToTransformer =
             (sourceNode.type === "feeder" && targetNode.type === "transformer") ||
             (sourceNode.type === "transformer" && targetNode.type === "feeder");
-        
+
         // Determine style: feeder-to-transformer get thick dark, downstream links get static orange, others normal
         // Flow links are rendered as overlay in onRenderFramePost, so we draw the base link here
         let style;
@@ -314,7 +507,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
         } else {
             style = LINK_STYLES.normal;
         }
-        
+
         // Set link style
         ctx.strokeStyle = style.strokeStyle;
         ctx.lineWidth = style.lineWidth;
@@ -326,7 +519,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
         ctx.lineTo(link.target.x, link.target.y);
         ctx.stroke();
     }, [flowLinkSet, downstreamLinks]);
-    
+
     useEffect(() => {
         if (!hasFlowLinks) {
             if (flowAnimationFrameRef.current !== null) {
@@ -435,13 +628,13 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
     // Initial zoom-to-fit when graph first loads
     useEffect(() => {
         if (!fgRef.current || !data.nodes.length || isMobile) return;
-        
+
         const timeoutId = setTimeout(() => {
             if (fgRef.current) {
                 fgRef.current.zoomToFit(1000, 50);
             }
         }, 200);
-        
+
         return () => clearTimeout(timeoutId);
     }, [data.nodes.length, isMobile]);
 
@@ -474,7 +667,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
 
             if (node.type === "feeder" || node.type === "transformer") {
                 setFlowLinks([]);
-                
+
                 if (node.type === "feeder") {
                     // Zoom to show entire network for feeder (only if auto-zoom enabled)
                     if (autoZoomEnabled) {
@@ -487,7 +680,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                     // For transformer, find all downstream nodes (recursively)
                     const allDownstreamNodes = collectDownstreamNodes(data, node);
                     const downstreamIds = new Set(allDownstreamNodes.map(dn => dn.id));
-                    
+
                     // Set pulsing for houses connected to this transformer only
                     const pulsingIds = new Set(
                         allDownstreamNodes
@@ -496,7 +689,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                     );
                     setPulsingNodeIds(pulsingIds);
                     setSelectedTransformerId(node.id);
-                    
+
                     // Collect all links between downstream nodes for orange coloring
                     // Use adjacency map for O(1) lookups instead of scanning all links
                     const downstreamLinkSet = new Set();
@@ -605,7 +798,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                         <li key={node.id}>
                             {node.type}: {node.label || node.id}
                             {node.type === 'house' && (
-                                <button 
+                                <button
                                     onClick={() => onNodeClick(node)}
                                     aria-label={`Select ${node.label || node.id}`}
                                 >
@@ -673,7 +866,7 @@ const TransformerGraph = memo(({ data, focusNode, onNodeClick, isMobile = false,
                 onRenderFramePost={(ctx) => {
                     // Render flow links as overlay on top of all other elements
                     renderFlowLinks(ctx);
-                    
+
                     // Render all hover labels after all nodes are rendered to ensure they appear on top
                     if (hoverNode) {
                         const node = data.nodes.find(n => n.id === hoverNode.id);
