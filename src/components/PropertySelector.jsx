@@ -8,7 +8,7 @@ const PROPERTY_CATEGORIES = {
     description: 'Import and Export Power'
   },
   reactivePower: {
-    label: 'Reactive Power', 
+    label: 'Reactive Power',
     description: 'Inductive and Capacitive Power'
   }
 };
@@ -24,8 +24,8 @@ export default function PropertySelector({ selectedProperty, onPropertyChange, c
       {/* Property category radio buttons */}
       <div className="space-y-2">
         {Object.entries(PROPERTY_CATEGORIES).map(([propertyKey, config]) => (
-          <label 
-            key={propertyKey} 
+          <label
+            key={propertyKey}
             className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded-lg border border-gray-200"
           >
             <input
@@ -37,7 +37,6 @@ export default function PropertySelector({ selectedProperty, onPropertyChange, c
             />
             <div>
               <span className="text-sm font-medium text-gray-700">{config.label}</span>
-              <p className="text-xs text-gray-500">{config.description}</p>
             </div>
           </label>
         ))}

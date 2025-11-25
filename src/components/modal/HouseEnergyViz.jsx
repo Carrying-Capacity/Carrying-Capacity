@@ -1,4 +1,4 @@
-import { useState, useMemo} from 'react';
+import { useState, useMemo } from 'react';
 import { useMonthlyData, useDailyData, transformMonthlyData, transformDailyData } from "../../hooks/useEnergyData";
 import { MonthlyBarChart, DailyLineChart, ChartControls } from "../EnergyCharts";
 import { METRICS_MAP } from "../../constants/index.js";
@@ -7,7 +7,7 @@ import { hasEnergyData } from "../../utils/nodeUtils.js";
 export const HouseEnergyViz = ({ node }) => {
     const [chartType, setChartType] = useState('monthly');
     const [selectedMetrics, setSelectedMetrics] = useState('voltage');
-    
+
     const houseId = hasEnergyData(node) ? node?.HouseID : null;
     if (!houseId) {
         return (
@@ -21,15 +21,30 @@ export const HouseEnergyViz = ({ node }) => {
     }
     const { monthlyData, loading: monthlyLoading, error: monthlyError } = useMonthlyData(houseId);
     const { dailyData, loading: dailyLoading, error: dailyError } = useDailyData(houseId);
-    
+
     const chartData = useMemo(() => {
         return chartType === 'monthly'
             ? transformMonthlyData(monthlyData, METRICS_MAP[selectedMetrics] || [])
             : transformDailyData(dailyData, METRICS_MAP[selectedMetrics] || []);
     }, [chartType, monthlyData, dailyData, selectedMetrics]);
-    
+
     const isLoading = (chartType === 'monthly' && monthlyLoading) || (chartType === 'daily' && dailyLoading);
     const error = (chartType === 'monthly' && monthlyError) || (chartType === 'daily' && dailyError);
+
+    const getChartTitle = (type, metric) => {
+        const typeLabel = type === 'monthly' ? 'Monthly Bar Chart' : 'Average Daily Line Chart';
+        const metricLabel = metric === 'voltage' ? 'Voltage' : metric === 'power' ? 'Real Power' : 'Reactive Power';
+        return `${typeLabel} - ${metricLabel}`;
+    };
+
+    const getChartSubtitle = (type, metric) => {
+        const typeDesc = type === 'monthly' ? 'Average values for each month' : 'Average values throughout the day for the year';
+        const metricDesc = metric === 'voltage' ? 'All voltage phases (A, B, C)' : metric === 'power' ? 'Import and Export Power' : 'Inductive and Capacitive Power';
+        return `${typeDesc}. ${metricDesc}`;
+    };
+
+    const title = getChartTitle(chartType, selectedMetrics);
+    const subtitle = getChartSubtitle(chartType, selectedMetrics);
 
     return (
         <div className="mb-3 border-2 border-gray-200 rounded-lg p-3 md:p-4">
@@ -63,9 +78,19 @@ export const HouseEnergyViz = ({ node }) => {
             {!isLoading && !error && (
                 <div className="border border-gray-200 rounded-lg p-2 md:p-3 bg-white overflow-visible">
                     {chartType === 'monthly' ? (
-                        <MonthlyBarChart data={chartData} selectedMetrics={selectedMetrics} />
+                        <MonthlyBarChart
+                            data={chartData}
+                            selectedMetrics={selectedMetrics}
+                            title={title}
+                            subtitle={subtitle}
+                        />
                     ) : (
-                        <DailyLineChart data={chartData} selectedMetrics={selectedMetrics} />
+                        <DailyLineChart
+                            data={chartData}
+                            selectedMetrics={selectedMetrics}
+                            title={title}
+                            subtitle={subtitle}
+                        />
                     )}
                 </div>
             )}

@@ -216,7 +216,7 @@ export const TransformerViz = ({ node }) => {
 
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
                 <h5 className="text-md font-medium text-gray-700 mb-2">Select Analysis Type</h5>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="flex flex-col gap-2">
                     <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-3 rounded-lg border border-gray-200">
                         <input
                             type="radio"
@@ -227,7 +227,6 @@ export const TransformerViz = ({ node }) => {
                         />
                         <div>
                             <span className="text-sm font-medium text-gray-700">Houses per Phase</span>
-                            <p className="text-xs text-gray-500">Distribution of houses across phases</p>
                         </div>
                     </label>
                     <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-3 rounded-lg border border-gray-200">
@@ -240,7 +239,6 @@ export const TransformerViz = ({ node }) => {
                         />
                         <div>
                             <span className="text-sm font-medium text-gray-700">Monthly Power by Phase</span>
-                            <p className="text-xs text-gray-500">Power consumption per phase by month</p>
                         </div>
                     </label>
                     <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-3 rounded-lg border border-gray-200">
@@ -253,7 +251,6 @@ export const TransformerViz = ({ node }) => {
                         />
                         <div>
                             <span className="text-sm font-medium text-gray-700">Solar Distribution</span>
-                            <p className="text-xs text-gray-500">Houses with vs without solar</p>
                         </div>
                     </label>
                 </div>
@@ -261,10 +258,18 @@ export const TransformerViz = ({ node }) => {
 
             <div className="border border-gray-200 rounded-lg p-2 md:p-3 bg-white overflow-visible">
                 {transformerChartMode === 'houses' && (
-                    <PhasePieChart data={housesPieData} title="Houses per Phase" />
+                    <PhasePieChart
+                        data={housesPieData}
+                        title="Houses per Phase"
+                        subtitle="Distribution of houses across phases"
+                    />
                 )}
                 {transformerChartMode === 'solar' && (
-                    <PhasePieChart data={solarPieData} title="Solar Distribution" />
+                    <PhasePieChart
+                        data={solarPieData}
+                        title="Solar Distribution"
+                        subtitle="Houses with vs without solar"
+                    />
                 )}
                 {transformerChartMode === 'power' && (
                     <DataStateWrapper
@@ -274,7 +279,11 @@ export const TransformerViz = ({ node }) => {
                         loadingMessage="Loading monthly power data..."
                         errorMessage="Failed to load power data"
                     >
-                        <MonthlyPhaseBarChart data={monthlyPhasePowerData} />
+                        <MonthlyPhaseBarChart
+                            data={monthlyPhasePowerData}
+                            title="Monthly Power by Phase"
+                            subtitle="Power consumption per phase by month"
+                        />
                     </DataStateWrapper>
                 )}
             </div>

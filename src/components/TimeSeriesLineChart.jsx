@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TIME_SERIES_PROPERTIES, HOUSE_COLORS, PHASE_COLORS } from '../constants/index.js';
+import { ChartHeader } from './EnergyCharts.jsx';
 
 // Property category mappings
 const PROPERTY_MAPPINGS = {
@@ -20,23 +21,25 @@ const VOLTAGE_PHASE_COLORS = {
   'CapacitivePower': '#ff7c7c'
 };
 
-export default function TimeSeriesLineChart({ 
-  data, 
-  selectedProperty, 
-  houses, 
+export default function TimeSeriesLineChart({
+  data,
+  selectedProperty,
+  houses,
   className = "",
-  height = 400 
+  height = 400,
+  title,
+  subtitle
 }) {
   // Get the actual properties to display based on category
   const propertiesToShow = PROPERTY_MAPPINGS[selectedProperty] || [];
-  
+
   // Calculate dynamic range for all properties in the selected category
   const axisRange = useMemo(() => {
     if (!data?.length || !selectedProperty) return null;
-    
+
     let min = Infinity;
     let max = -Infinity;
-    
+
     // Find min/max values across all properties and houses
     propertiesToShow.forEach(property => {
       houses.forEach(house => {
@@ -50,7 +53,7 @@ export default function TimeSeriesLineChart({
         });
       });
     });
-    
+
     if (min !== Infinity && max !== -Infinity) {
       // Add 5% padding to the range
       const padding = (max - min) * 0.05;
@@ -59,14 +62,14 @@ export default function TimeSeriesLineChart({
         max: max + padding
       };
     }
-    
+
     return null;
   }, [data, selectedProperty, houses, propertiesToShow]);
 
   // Generate line configurations
   const lineConfigs = useMemo(() => {
     if (!selectedProperty || !data?.length) return [];
-    
+
     // Helper function to check if a property has all zero values
     const isPropertyAllZeros = (houseId, property) => {
       const hasData = data.some(dataPoint => {
@@ -75,7 +78,7 @@ export default function TimeSeriesLineChart({
       });
       return !hasData;
     };
-    
+
     // Helper function to get all actual voltage properties that exist in the data
     const getActualVoltageProperties = () => {
       const actualProperties = new Set();
@@ -89,13 +92,13 @@ export default function TimeSeriesLineChart({
       });
       return Array.from(actualProperties);
     };
-    
+
     const configs = [];
-    
+
     if (selectedProperty === 'voltage') {
       // Get actual voltage properties from the data (including renamed ones)
       const actualVoltageProperties = getActualVoltageProperties();
-      
+
       // Different dash patterns and stroke widths for better differentiation
       const dashPatterns = [
         undefined,           // Solid line
@@ -105,22 +108,22 @@ export default function TimeSeriesLineChart({
         "8 4 2 4",          // Long-short dash
         "4 2 4 2",          // Alternating dash
       ];
-      
+
       const strokeWidths = [3, 2.5, 2, 2.5, 3, 2];
-      
+
       // For voltage, show each phase as separate lines across all houses, but skip all-zero phases
       actualVoltageProperties.forEach(property => {
         houses.forEach((house, houseIndex) => {
           const key = `${house.HouseID}_${property}`;
-          
+
           // Skip this phase if it's all zeros
           if (isPropertyAllZeros(house.HouseID, property)) {
             return;
           }
-          
+
           const phaseName = property.replace('Voltage.Ph', 'Phase ');
           const patternIndex = houseIndex % dashPatterns.length;
-          
+
           const config = {
             key,
             name: `${house.label || house.HouseID} - ${phaseName}`,
@@ -130,7 +133,7 @@ export default function TimeSeriesLineChart({
             property,
             houseId: house.HouseID
           };
-          
+
           configs.push(config);
         });
       });
@@ -138,11 +141,11 @@ export default function TimeSeriesLineChart({
       // For power types, show each house with different colors for each property type
       houses.forEach((house, houseIndex) => {
         const baseColor = HOUSE_COLORS[houseIndex % HOUSE_COLORS.length];
-        
+
         propertiesToShow.forEach((property, propIndex) => {
           const key = `${house.HouseID}_${property}`;
           const propertyName = property.replace('Power', ' Power');
-          
+
           configs.push({
             key,
             name: `${house.label || house.HouseID} - ${propertyName}`,
@@ -155,13 +158,13 @@ export default function TimeSeriesLineChart({
         });
       });
     }
-    
+
     return configs;
   }, [houses, selectedProperty, propertiesToShow, data]);
 
   // Get unit for the selected category
   const getCategoryUnit = (category) => {
-    switch(category) {
+    switch (category) {
       case 'voltage': return 'V';
       case 'realPower': return 'kW';
       case 'reactivePower': return 'kVAr';
@@ -176,7 +179,7 @@ export default function TimeSeriesLineChart({
     const categoryUnit = getCategoryUnit(selectedProperty);
     const categoryLabels = {
       voltage: 'Voltage',
-      realPower: 'Real Power', 
+      realPower: 'Real Power',
       reactivePower: 'Reactive Power'
     };
 
@@ -187,12 +190,12 @@ export default function TimeSeriesLineChart({
         {payload.map((entry, index) => {
           const config = lineConfigs.find(c => c.key === entry.dataKey);
           if (!config) return null;
-          
+
           const value = entry.value != null ? entry.value.toFixed(2) : 'N/A';
-          
+
           return (
             <div key={index} className="flex items-center space-x-2 mb-1">
-              <div 
+              <div
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: entry.color }}
               />
@@ -210,7 +213,7 @@ export default function TimeSeriesLineChart({
   const CustomLegend = (props) => {
     const { payload } = props;
     const hasMany = payload?.length > 8;
-    
+
     return (
       <div className="relative">
         {hasMany && (
@@ -235,7 +238,7 @@ export default function TimeSeriesLineChart({
             {payload?.map((entry, index) => {
               const config = lineConfigs.find(c => c.key === entry.dataKey);
               if (!config) return null;
-              
+
               return (
                 <div key={index} className="flex items-center space-x-2 shrink-0">
                   <svg width="24" height="12" style={{ marginTop: '2px' }}>
@@ -278,30 +281,31 @@ export default function TimeSeriesLineChart({
 
   return (
     <div className={className}>
+      <ChartHeader title={title} subtitle={subtitle} />
       <ResponsiveContainer width="100%" height={height}>
         <LineChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis 
-            dataKey="time" 
+          <XAxis
+            dataKey="time"
             tick={{ fontSize: 12 }}
             angle={-45}
             textAnchor="end"
             height={60}
             interval="preserveStartEnd"
           />
-          <YAxis 
+          <YAxis
             tick={{ fontSize: 12 }}
             tickFormatter={(value) => value.toFixed(1)}
             domain={axisRange ? [axisRange.min, axisRange.max] : ['auto', 'auto']}
-            label={{ 
-              value: categoryUnit, 
-              angle: -90, 
+            label={{
+              value: categoryUnit,
+              angle: -90,
               position: 'insideLeft',
               style: { textAnchor: 'middle', fontSize: 12, fill: '#666' }
             }}
           />
           <Tooltip content={<CustomTooltip />} />
-          
+
           {lineConfigs.map((config) => (
             <Line
               key={config.key}
@@ -317,7 +321,7 @@ export default function TimeSeriesLineChart({
           ))}
         </LineChart>
       </ResponsiveContainer>
-      
+
       {/* External Legend - positioned outside chart container */}
       <div className="mt-4 pb-2">
         <CustomLegend payload={lineConfigs.map(config => ({

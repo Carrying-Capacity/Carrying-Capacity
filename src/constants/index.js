@@ -58,7 +58,7 @@ export const METRICS_MAP = {
 
 export const UNITS = {
   voltage: 'V',
-  power: 'kWh', 
+  power: 'kWh',
   reactive: 'kVArh'
 };
 
@@ -86,7 +86,7 @@ export const MODAL_STYLES = {
   normal: {
     position: "fixed",
     top: "var(--modal-top, 152px)",
-    right: `${UI_CONSTANTS.modalOffset}px`, 
+    right: `${UI_CONSTANTS.modalOffset}px`,
     width: "480px",
     maxWidth: "calc(100vw - 40px)",
     maxHeight: `calc(100vh - var(--modal-top, 172px) - ${UI_CONSTANTS.modalOffset}px)`,
@@ -127,7 +127,7 @@ export const TIME_SERIES_PROPERTIES = {
     unit: 'V'
   },
   'Voltage.PhB': {
-    label: 'Voltage Phase B (V)', 
+    label: 'Voltage Phase B (V)',
     color: PHASE_COLORS.B,
     unit: 'V'
   },
@@ -160,7 +160,7 @@ export const TIME_SERIES_PROPERTIES = {
 
 // Colors for different houses in comparison charts
 export const HOUSE_COLORS = [
-  '#8884d8', '#82ca9d', '#ff7300', '#ffc658', '#ff7c7c', 
+  '#8884d8', '#82ca9d', '#ff7300', '#ffc658', '#ff7c7c',
   '#4CFF4C', '#4C4CFF', '#999999', '#e91e63', '#9c27b0',
   '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4',
   '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b'

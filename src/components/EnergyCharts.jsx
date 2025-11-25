@@ -15,35 +15,48 @@ import { PieChart as RePieChart, Pie, Cell } from 'recharts'
 import { PHASE_COLORS, CHART_CONFIGS, UNITS, CHART_DIMENSIONS } from '../constants/index.js'
 import { ChartTooltip } from './shared/ChartTooltip.jsx'
 
+export const ChartHeader = ({ title, subtitle }) => {
+  if (!title && !subtitle) return null;
+  return (
+    <div className="mb-4 text-center">
+      {title && <h3 className="text-lg font-semibold text-gray-800">{title}</h3>}
+      {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
+    </div>
+  );
+};
+
 // Monthly Bar Chart Component
-export const MonthlyBarChart = ({ data, selectedMetrics }) => {
+export const MonthlyBarChart = ({ data, selectedMetrics, title, subtitle }) => {
   const barConfig = CHART_CONFIGS[selectedMetrics] || []
   const unit = UNITS[selectedMetrics] || ''
 
   return (
-    <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
-      <BarChart data={data} margin={CHART_DIMENSIONS.margin}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="month" />
-        <YAxis />
-        {selectedMetrics === 'power' && <ReferenceLine y={0} stroke="#000" strokeWidth={2} />}
-        <Tooltip content={<ChartTooltip unit={unit} />} />
-        <Legend />
-        {barConfig.map(config => (
-          <Bar
-            key={config.key}
-            dataKey={config.key}
-            name={config.name}
-            fill={config.color}
-          />
-        ))}
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="w-full">
+      <ChartHeader title={title} subtitle={subtitle} />
+      <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
+        <BarChart data={data} margin={CHART_DIMENSIONS.margin}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" />
+          <YAxis />
+          {selectedMetrics === 'power' && <ReferenceLine y={0} stroke="#000" strokeWidth={2} />}
+          <Tooltip content={<ChartTooltip unit={unit} />} />
+          <Legend />
+          {barConfig.map(config => (
+            <Bar
+              key={config.key}
+              dataKey={config.key}
+              name={config.name}
+              fill={config.color}
+            />
+          ))}
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   )
 }
 
 // Daily Line Chart Component
-export const DailyLineChart = ({ data, selectedMetrics }) => {
+export const DailyLineChart = ({ data, selectedMetrics, title, subtitle }) => {
   const lineConfig = (CHART_CONFIGS[selectedMetrics] || []).map(config => ({ ...config, strokeWidth: 2 }))
   const unit = UNITS[selectedMetrics] || ''
 
@@ -53,31 +66,34 @@ export const DailyLineChart = ({ data, selectedMetrics }) => {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
-      <LineChart data={data} margin={CHART_DIMENSIONS.margin}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="time"
-          tickFormatter={formatXAxisTick}
-          interval={0}
-        />
-        <YAxis />
-        <Tooltip content={<ChartTooltip unit={unit} />} />
-        <Legend />
-        {lineConfig.map(config => (
-          <Line
-            key={config.key}
-            type="monotone"
-            dataKey={config.key}
-            stroke={config.color}
-            strokeWidth={config.strokeWidth}
-            name={config.name}
-            dot={false}
-            activeDot={{ r: 4 }}
+    <div className="w-full">
+      <ChartHeader title={title} subtitle={subtitle} />
+      <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
+        <LineChart data={data} margin={CHART_DIMENSIONS.margin}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="time"
+            tickFormatter={formatXAxisTick}
+            interval={0}
           />
-        ))}
-      </LineChart>
-    </ResponsiveContainer>
+          <YAxis />
+          <Tooltip content={<ChartTooltip unit={unit} />} />
+          <Legend />
+          {lineConfig.map(config => (
+            <Line
+              key={config.key}
+              type="monotone"
+              dataKey={config.key}
+              stroke={config.color}
+              strokeWidth={config.strokeWidth}
+              name={config.name}
+              dot={false}
+              activeDot={{ r: 4 }}
+            />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   )
 }
 
@@ -91,26 +107,21 @@ export const ChartControls = ({
   const METRICS_CATEGORIES = {
     voltage: {
       label: 'Voltage',
-      description: 'All voltage phases (A, B, C)'
     },
     power: {
       label: 'Real Power',
-      description: 'Import and Export Power'
     },
     reactive: {
       label: 'Reactive Power',
-      description: 'Inductive and Capacitive Power'
     }
   };
 
   const CHART_TYPES = {
     monthly: {
       label: 'Monthly Bar Chart',
-      description: 'Average values for each month'
     },
     daily: {
       label: 'Average Daily Line Chart',
-      description: 'Average values throughout the day for the year'
     }
   };
 
@@ -134,7 +145,6 @@ export const ChartControls = ({
               />
               <div>
                 <span className="text-sm font-medium text-gray-700">{config.label}</span>
-                <p className="text-xs text-gray-500">{config.description}</p>
               </div>
             </label>
           ))}
@@ -144,7 +154,6 @@ export const ChartControls = ({
       {/* Metrics Selection */}
       <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
         <h5 className="text-md font-medium text-gray-700 mb-2">Select Property Category</h5>
-        <p className="text-xs text-gray-500 mb-3 italic">Data shows averages across all days in the selected time period</p>
         <div className="space-y-2">
           {Object.entries(METRICS_CATEGORIES).map(([metricKey, config]) => (
             <label
@@ -160,7 +169,6 @@ export const ChartControls = ({
               />
               <div>
                 <span className="text-sm font-medium text-gray-700">{config.label}</span>
-                <p className="text-xs text-gray-500">{config.description}</p>
               </div>
             </label>
           ))}
@@ -171,9 +179,10 @@ export const ChartControls = ({
 }
 
 // Phase Pie Chart Component
-export const PhasePieChart = ({ data }) => {
+export const PhasePieChart = ({ data, title, subtitle }) => {
   return (
     <div className="w-full h-full">
+      <ChartHeader title={title} subtitle={subtitle} />
       <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
         <RePieChart>
           <Tooltip />
@@ -198,19 +207,22 @@ export const PhasePieChart = ({ data }) => {
 }
 
 // Stacked Bar Chart for Monthly Power by Phase
-export const MonthlyPhaseBarChart = ({ data }) => {
+export const MonthlyPhaseBarChart = ({ data, title, subtitle }) => {
   return (
-    <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
-      <BarChart data={data} margin={CHART_DIMENSIONS.margin}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="month" />
-        <YAxis label={{ value: 'Power (kWh)', angle: -90, position: 'insideLeft' }} />
-        <Tooltip content={<ChartTooltip unit="kWh" />} />
-        <Legend />
-        <Bar dataKey="A" name="Phase A" stackId="power" fill={PHASE_COLORS.A} />
-        <Bar dataKey="B" name="Phase B" stackId="power" fill={PHASE_COLORS.B} />
-        <Bar dataKey="C" name="Phase C" stackId="power" fill={PHASE_COLORS.C} />
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="w-full">
+      <ChartHeader title={title} subtitle={subtitle} />
+      <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.height}>
+        <BarChart data={data} margin={CHART_DIMENSIONS.margin}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" />
+          <YAxis label={{ value: 'Power (kWh)', angle: -90, position: 'insideLeft' }} />
+          <Tooltip content={<ChartTooltip unit="kWh" />} />
+          <Legend />
+          <Bar dataKey="A" name="Phase A" stackId="power" fill={PHASE_COLORS.A} />
+          <Bar dataKey="B" name="Phase B" stackId="power" fill={PHASE_COLORS.B} />
+          <Bar dataKey="C" name="Phase C" stackId="power" fill={PHASE_COLORS.C} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   )
 }
