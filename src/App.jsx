@@ -2,6 +2,7 @@ import { useEffect, memo, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { Navigation, NAVIGATION_ROUTES } from "./components/Navigation";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { usePageTracking } from "./hooks/usePageTracking";
 const Home = lazy(() => import("./pages/Home"));
 const PhaseEstimate = lazy(() => import("./pages/PhaseEstimate"));
 const NetworkEstimate = lazy(() => import("./pages/NetworkEstimate"));
@@ -12,49 +13,55 @@ const Transformer = lazy(() => import("./components/TransformerGraphWrapper"));
 const ReferencesCitations = lazy(() => import("./pages/ReferencesCitations"));
 
 const ScrollToTop = () => {
-    const location = useLocation();
+  const location = useLocation();
 
-    useEffect(() => {
-        // Scroll window
-        window.scrollTo(0, 0);
-    }, [location.pathname]);
+  useEffect(() => {
+    // Scroll window
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
-    return null;
+  return null;
 };
 
 ScrollToTop.displayName = "ScrollToTop";
 
 const RedirectHandler = () => {
-    const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-    useEffect(() => {
-        const redirectPath = searchParams.get('redirect');
-        
-        if (redirectPath) {
-            // Validate redirect path against allowed routes
-            const validPaths = NAVIGATION_ROUTES.map(route => route.path);
-            const normalizedPath = redirectPath.startsWith('/') ? redirectPath : '/' + redirectPath;
-            
-            if (validPaths.includes(normalizedPath)) {
-                navigate(normalizedPath, { replace: true });
-            } else {
-                // Invalid redirect, navigate to home
-                navigate('/', { replace: true });
-            }
-        }
-    }, [navigate, searchParams]);
+  useEffect(() => {
+    const redirectPath = searchParams.get('redirect');
 
-    return null;
+    if (redirectPath) {
+      // Validate redirect path against allowed routes
+      const validPaths = NAVIGATION_ROUTES.map(route => route.path);
+      const normalizedPath = redirectPath.startsWith('/') ? redirectPath : '/' + redirectPath;
+
+      if (validPaths.includes(normalizedPath)) {
+        navigate(normalizedPath, { replace: true });
+      } else {
+        // Invalid redirect, navigate to home
+        navigate('/', { replace: true });
+      }
+    }
+  }, [navigate, searchParams]);
+
+  return null;
 };
 
 RedirectHandler.displayName = "RedirectHandler";
+
+const PageTracker = () => {
+  usePageTracking();
+  return null;
+};
 
 export default function App() {
   return (
     <ErrorBoundary>
       <Router basename="/Carrying-Capacity">
         <ScrollToTop />
+        <PageTracker />
         <RedirectHandler />
         <div className="app-container">
           <Navigation />
